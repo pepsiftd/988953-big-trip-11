@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владимир Санников](https://up.htmlacademy.ru/ecmascript/11/user/988953).
-* Наставник: `Неизвестно`.
+* Наставник: [Игорь Тараканов](https://up.htmlacademy.ru/ecmascript/11/user/487569).
 
 ---
 
