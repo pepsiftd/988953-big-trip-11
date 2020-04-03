@@ -324,3 +324,24 @@ const createEventTemplate = () => {
     </li>`
   );
 };
+
+const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+// header
+const tripMainElement = document.querySelector(`.trip-main`);
+const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
+const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2:first-of-type`);
+
+render(tripMainElement, createTripInfoTemplate(), `afterbegin`);
+
+const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
+
+render(tripInfoElement, createPriceInfoTemplate(), `beforeend`);
+
+render(tripControlsFirstHeaderElement, createTripTabsTemplate(), `afterend`);
+render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
+
+// main
+
