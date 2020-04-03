@@ -332,7 +332,7 @@ const render = (container, template, place) => {
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
-const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2:first-of-type`);
+const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2`);
 
 render(tripMainElement, createTripInfoTemplate(), `afterbegin`);
 
@@ -345,3 +345,10 @@ render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 
 // main
 
+const tripEventsElement = document.querySelector(`.trip-events`);
+const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
+
+render(tripEventsFirstHeaderElement, createTripEditFormTemplate(), `afterend`);
+render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
+
+render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
