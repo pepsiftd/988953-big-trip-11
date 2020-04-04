@@ -352,3 +352,14 @@ render(tripEventsFirstHeaderElement, createTripEditFormTemplate(), `afterend`);
 render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
 
 render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
+
+// days and events
+const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
+
+render(tripDaysListElement, createDayTemplate(), `beforeend`);
+
+const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
+
+render(tripEventsListElements[0], createEventTemplate(), `beforeend`);
+render(tripEventsListElements[0], createEventTemplate(), `beforeend`);
+render(tripEventsListElements[0], createEventTemplate(), `beforeend`);
