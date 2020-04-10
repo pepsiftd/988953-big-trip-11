@@ -11,5 +11,11 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, `public`),
     watchContentBase: true
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve('./src')
+    },
+    extensions: ['*', '.js', '.json']
   }
 };
