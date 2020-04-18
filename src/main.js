@@ -9,7 +9,7 @@ import {createDayTemplate} from '@/components/trip-day';
 import {createEventTemplate} from '@/components/trip-event';
 import {generateEvent, generateEvents} from '@/mock/events';
 
-const EVENTS_AMOUNT = 22;
+const EVENTS_AMOUNT = 10;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);

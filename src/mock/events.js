@@ -1,4 +1,5 @@
 import {getRandomArrayItem, getRandomIntegerNumber} from '@/util';
+import {generateOffers} from '@/mock/offers';
 
 const MS_IN_DAY = 86400000;
 
@@ -54,18 +55,7 @@ const generateEvent = () => {
   const dateEnd = getRandomEndDate(dateStart);
   const price = getRandomIntegerNumber(10, 250);
 
-  const offers = [{
-    title: `Order Uber`,
-    price: 20,
-  },
-  {
-    title: `Add luggage`,
-    price: 30,
-  },
-  {
-    title: `Rent a car`,
-    price: 200,
-  }];
+  const offers = generateOffers(type);
 
   return {
     type,
