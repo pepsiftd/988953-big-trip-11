@@ -1,5 +1,18 @@
 import {createOffersTemplate} from "@/components/offers";
 
+const EventTypes = {
+  'taxi': `Taxi to `,
+  'bus': `Bus to `,
+  'train': `Train to `,
+  'ship': `Ship to `,
+  'transport': `Transport to `,
+  'drive': `Drive to `,
+  'flight': `Flight to `,
+  'check-in': `Check-in in `,
+  'sightseeing': `Sightseeing in`,
+  'restaurant': `Restaurant in`,
+};
+
 const addLeadingZero = (time) => {
   return (`00` + time).slice(-2);
 };
@@ -27,29 +40,13 @@ const getDuration = (startDate, endDate) => {
   return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
 };
 
-export const createEventTemplate = () => {
-  const type = `Taxi`.toLowerCase();
-  const typeMarkup = `Taxi to`;
-  const destination = `Amsterdam`;
-  const dateStart = new Date(`2019-03-18T05:30`);
-  const dateEnd = new Date(`2019-03-19T11:00`);
+export const createEventTemplate = (event) => {
+  const {destination, dateStart, dateEnd, price, offers} = event;
+  const type = event.type.toLowerCase();
+  const typeMarkup = EventTypes[type];
   const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
-  const price = 20;
-
-  const offers = [{
-    title: `Order Uber`,
-    price: 20,
-  },
-  {
-    title: `Add luggage`,
-    price: 30,
-  },
-  {
-    title: `Rent a car`,
-    price: 200,
-  }];
 
   const offersMarkup = createOffersTemplate(offers);
 

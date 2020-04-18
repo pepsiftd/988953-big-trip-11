@@ -7,6 +7,9 @@ import {createTripEditFormTemplate} from '@/components/trip-edit';
 import {createTripDaysListTemplate} from '@/components/days-list';
 import {createDayTemplate} from '@/components/trip-day';
 import {createEventTemplate} from '@/components/trip-event';
+import {generateEvent, generateEvents} from '@/mock/events';
+
+const EVENTS_AMOUNT = 22;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -42,7 +45,9 @@ const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 render(tripDaysListElement, createDayTemplate(), `beforeend`);
 
 const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
+const events = generateEvents(EVENTS_AMOUNT);
 
-render(tripEventsListElements[0], createEventTemplate(), `beforeend`);
-render(tripEventsListElements[0], createEventTemplate(), `beforeend`);
-render(tripEventsListElements[0], createEventTemplate(), `beforeend`);
+events.forEach((event) => {
+  render(tripEventsListElements[0], createEventTemplate(event), `beforeend`);
+});
+
