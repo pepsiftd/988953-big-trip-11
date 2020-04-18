@@ -1,3 +1,5 @@
+import {createOffersTemplate} from "@/components/offers";
+
 const addLeadingZero = (time) => {
   return (`00` + time).slice(-2);
 };
@@ -11,14 +13,18 @@ const getMinutes = (date) => {
 };
 
 const getDuration = (startDate, endDate) => {
+  const MS_IN_DAY = 86400000;
   const MS_IN_HOUR = 3600000;
   const MS_IN_MINUTE = 60000;
-  const ms = endDate - startDate;
-  let minutes = ms % MS_IN_HOUR;
-  const hours = (ms - minutes) / MS_IN_HOUR;
-  minutes /= MS_IN_MINUTE;
+  let ms = endDate - startDate;
 
-  return `${hours ? hours + `H ` : ``}${minutes}M`;
+  const days = Math.floor(ms / MS_IN_DAY);
+  ms -= days * MS_IN_DAY;
+  const hours = Math.floor(ms / MS_IN_HOUR);
+  ms -= hours * MS_IN_HOUR;
+  const minutes = Math.floor(ms / MS_IN_MINUTE);
+
+  return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
 };
 
 export const createEventTemplate = () => {
@@ -26,10 +32,26 @@ export const createEventTemplate = () => {
   const typeMarkup = `Taxi to`;
   const destination = `Amsterdam`;
   const dateStart = new Date(`2019-03-18T05:30`);
-  const dateEnd = new Date(`2019-03-18T11:00`);
+  const dateEnd = new Date(`2019-03-19T11:00`);
   const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
+  const price = 20;
+
+  const offers = [{
+    title: `Order Uber`,
+    price: 20,
+  },
+  {
+    title: `Add luggage`,
+    price: 30,
+  },
+  {
+    title: `Rent a car`,
+    price: 200,
+  }];
+
+  const offersMarkup = createOffersTemplate(offers);
 
   return (
     `<li class="trip-events__item">
@@ -49,16 +71,12 @@ export const createEventTemplate = () => {
         </div>
 
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">20</span>
+          &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">20</span>
-           </li>
+          ${offersMarkup}
         </ul>
 
         <button class="event__rollup-btn" type="button">
