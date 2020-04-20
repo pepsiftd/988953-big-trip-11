@@ -56,6 +56,7 @@ const generateEvent = () => {
   const price = getRandomIntegerNumber(10, 250);
 
   const offers = generateOffers(type);
+  console.log(offers);
 
   return {
     type,

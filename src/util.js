@@ -7,3 +7,7 @@ export const getRandomArrayItem = (array) => {
 export const getRandomIntegerNumber = (min, max) => {
   return min + Math.floor(Math.random() * (max - min));
 };
+
+export const getRandomBoolean = () => {
+  return Math.random() > 0.5;
+};

@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from '@/util';
+import {getRandomIntegerNumber, getRandomBoolean} from '@/util';
 
 const MAX_OFFERS = 5;
 
@@ -21,22 +21,17 @@ const getRandomOffers = () => {
   return randomOffers
     .fill(``)
     .map((it, i) => {
-      return `Random offer #${++i}`;
+      return {
+        title: `Random offer #${++i}`,
+        price: getRandomIntegerNumber(10, 50),
+        selected: getRandomBoolean(),
+      };
   });
 };
 
 export const generateOffers = () => {
 
-  return [{
-    title: `Order Uber`,
-    price: 20,
-  },
-  {
-    title: `Add luggage`,
-    price: 30,
-  },
-  {
-    title: `Rent a car`,
-    price: 200,
-  }];
+  return getRandomOffers().filter((it) => {
+    return it.selected;
+  });
 };
