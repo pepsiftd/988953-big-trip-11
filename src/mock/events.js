@@ -55,8 +55,9 @@ const generateEvent = () => {
   const dateEnd = getRandomEndDate(dateStart);
   const price = getRandomIntegerNumber(10, 250);
 
-  const offers = generateOffers(type);
-  console.log(offers);
+  const offers = generateOffers(type).filter((it) => {
+    return it.selected;
+  });
 
   return {
     type,
@@ -70,8 +71,8 @@ const generateEvent = () => {
 
 const generateEvents = (amount) => {
   return new Array(amount)
-  .fill(``)
-  .map(generateEvent);
+    .fill(``)
+    .map(generateEvent);
 };
 
 export {generateEvent, generateEvents};

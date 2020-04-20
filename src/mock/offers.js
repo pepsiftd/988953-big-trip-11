@@ -2,7 +2,7 @@ import {getRandomIntegerNumber, getRandomBoolean} from '@/util';
 
 const MAX_OFFERS = 5;
 
-const offerTypes = [
+const eventTypes = [
   'taxi',
   'bus',
   'train',
@@ -21,7 +21,8 @@ const getRandomOffers = () => {
     .fill(``)
     .map((it, i) => {
       return {
-        title: `Random offer #${++i}`,
+        id: `rdo${i+1}`,
+        title: `Random offer #${i+1}`,
         price: getRandomIntegerNumber(10, 50),
         selected: getRandomBoolean(),
       };
@@ -32,12 +33,10 @@ const getRandomOffers = () => {
 
 const offersMap = new Map();
 
-offerTypes.forEach((type) => {
+eventTypes.forEach((type) => {
   offersMap.set(type, getRandomOffers());
 });
 
 export const generateOffers = (type) => {
-  return offersMap.get(type).filter((it) => {
-    return it.selected;
-  });
+  return offersMap.get(type);
 };

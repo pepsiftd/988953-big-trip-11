@@ -34,7 +34,7 @@ render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 const tripEventsElement = document.querySelector(`.trip-events`);
 const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
 
-render(tripEventsFirstHeaderElement, createTripEditFormTemplate(), `afterend`);
+render(tripEventsFirstHeaderElement, createTripEditFormTemplate(generateEvent()), `afterend`);
 render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
 
 render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
