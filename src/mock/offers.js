@@ -17,8 +17,7 @@ const offerTypes = [
 
 const getRandomOffers = () => {
   const count = getRandomIntegerNumber(0, MAX_OFFERS);
-  const randomOffers = new Array(count);
-  return randomOffers
+  const randomOffers = new Array(count)
     .fill(``)
     .map((it, i) => {
       return {
@@ -27,11 +26,18 @@ const getRandomOffers = () => {
         selected: getRandomBoolean(),
       };
   });
+
+  return randomOffers;
 };
 
-export const generateOffers = () => {
+const offersMap = new Map();
 
-  return getRandomOffers().filter((it) => {
+offerTypes.forEach((type) => {
+  offersMap.set(type, getRandomOffers());
+});
+
+export const generateOffers = (type) => {
+  return offersMap.get(type).filter((it) => {
     return it.selected;
   });
 };
