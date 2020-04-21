@@ -59,10 +59,18 @@ render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
 // days and events
 sortByStartDate(events);
 console.log(events.map((it) => it.dateStart).join(`\n`));
+const dates = events
+  .map((event) => event.dateStart.toString().slice(4, 10))
+  .filter((it, i, arr) => {
+    return arr.indexOf(it) === i;
+  });
+console.log(dates.join(`\n`));
 
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 
-render(tripDaysListElement, createDayTemplate(), `beforeend`);
+dates.forEach((day, counter) => {
+  render(tripDaysListElement, createDayTemplate(day, counter + 1), `beforeend`);
+});
 
 const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
 
