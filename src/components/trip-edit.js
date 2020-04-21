@@ -1,4 +1,5 @@
 import {createOffersTemplate, createOfferSelectorsTemplate} from "@/components/offers";
+import {getRandomIntegerNumber} from "@/util";
 
 const EventTypes = {
   'taxi': `Taxi to `,
@@ -54,9 +55,14 @@ const getFormattedDate = (date) => {
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
+const createPhotoMarkup = (photosArray) => {
+  return photosArray.map((photoLink) => {
+    return `<img class="event__photo" src="${photoLink}" alt="Event photo">`
+  }).join(`\n`);
+};
+
 export const createTripEditFormTemplate = (event) => {
-  console.log(event);
-  const {destination, dateStart, dateEnd, price, offers} = event;
+  const {destination, dateStart, dateEnd, price, offers, description, photos} = event;
   const type = event.type.toLowerCase();
   const typeMarkup = EventTypes[type];
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
@@ -66,6 +72,7 @@ export const createTripEditFormTemplate = (event) => {
 
   const offersMarkup = createOfferSelectorsTemplate(offers);
 
+  const photosMarkup = createPhotoMarkup(photos);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -182,15 +189,11 @@ export const createTripEditFormTemplate = (event) => {
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+          <p class="event__destination-description">${description}</p>
 
           <div class="event__photos-container">
             <div class="event__photos-tape">
-              <img class="event__photo" src="img/photos/1.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/2.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/3.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/4.jpg" alt="Event photo">
-              <img class="event__photo" src="img/photos/5.jpg" alt="Event photo">
+              ${photosMarkup}
             </div>
           </div>
         </section>
