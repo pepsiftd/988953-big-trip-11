@@ -48,7 +48,7 @@ export const createEventTemplate = (event) => {
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
 
-  const offersMarkup = createOffersTemplate(offers);
+  const offersMarkup = createOffersTemplate(offers.filter((it) => it.selected));
 
   return (
     `<li class="trip-events__item">

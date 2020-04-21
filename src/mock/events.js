@@ -72,9 +72,7 @@ const generateEvent = () => {
   const dateEnd = getRandomEndDate(dateStart);
   const price = getRandomIntegerNumber(10, 250);
 
-  const offers = generateOffers(type).filter((it) => {
-    return it.selected;
-  });
+  const offers = generateOffers(type);
 
   const description = getRandomDescription();
   const photos = getPhotosList();

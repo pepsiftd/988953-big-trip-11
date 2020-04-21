@@ -48,7 +48,8 @@ const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
 
 render(tripEventsFirstHeaderElement, createTripEditFormTemplate(current), `afterend`);
 
-// render(tripEventsFirstHeaderElement, createTripEditFormTemplate(emptyEvent), `afterend`);
+// empty form edit
+render(tripEventsFirstHeaderElement, createTripEditFormTemplate(emptyEvent), `afterend`);
 
 render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
 

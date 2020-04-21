@@ -58,10 +58,11 @@ const getFormattedDate = (date) => {
 };
 
 export const createTripEditFormTemplate = (event) => {
-  const {destination, dateStart, dateEnd, price, offers, description, photos} = event;
+  const {destination = ``, dateStart = new Date(), dateEnd = new Date(), price = ``, offers = [], description = ``, photos = []} = event;
   const type = event.type ? event.type.toLowerCase() : ``;
-  const typeMarkup = eventTypeToMarkup[type];
+  const typeMarkup = event.type ? eventTypeToMarkup[type] : ``;
   const typeList = createTypeListMarkup(type);
+
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
 
@@ -76,7 +77,7 @@ export const createTripEditFormTemplate = (event) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
+            ${type ? `<img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">` : ``}
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
