@@ -30,11 +30,26 @@ render(tripControlsFirstHeaderElement, createTripTabsTemplate(), `afterend`);
 render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 
 // main
+const events = generateEvents(EVENTS_AMOUNT);
+const current = events[0];
+const emptyEvent = {
+  type: undefined,
+  destination: undefined,
+  dateStart: undefined,
+  dateEnd: undefined,
+  price: undefined,
+  offers: undefined,
+  description: undefined,
+  photos: undefined,
+};
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
 
-render(tripEventsFirstHeaderElement, createTripEditFormTemplate(generateEvent()), `afterend`);
+render(tripEventsFirstHeaderElement, createTripEditFormTemplate(current), `afterend`);
+
+// render(tripEventsFirstHeaderElement, createTripEditFormTemplate(emptyEvent), `afterend`);
+
 render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
 
 render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
@@ -45,9 +60,10 @@ const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 render(tripDaysListElement, createDayTemplate(), `beforeend`);
 
 const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
-const events = generateEvents(EVENTS_AMOUNT);
 
-events.forEach((event) => {
+for (const event of events) {
+  if (current === event) {
+    continue;
+  }
   render(tripEventsListElements[0], createEventTemplate(event), `beforeend`);
-});
-
+}

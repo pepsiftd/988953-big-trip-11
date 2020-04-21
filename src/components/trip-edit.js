@@ -1,15 +1,17 @@
-import {createOffersTemplate, createOfferSelectorsTemplate} from "@/components/offers";
+import {createOffersTemplate} from "@/components/offers";
+import {createTypeListMarkup} from "@/components/event-type-list";
+import {createEventDetailsMarkup} from "@/components/event-details";
 import {getRandomIntegerNumber} from "@/util";
 
-const EventTypes = {
-  'taxi': `Taxi to `,
-  'bus': `Bus to `,
-  'train': `Train to `,
-  'ship': `Ship to `,
-  'transport': `Transport to `,
-  'drive': `Drive to `,
-  'flight': `Flight to `,
-  'check-in': `Check-in in `,
+const eventTypeToMarkup = {
+  'taxi': `Taxi to`,
+  'bus': `Bus to`,
+  'train': `Train to`,
+  'ship': `Ship to`,
+  'transport': `Transport to`,
+  'drive': `Drive to`,
+  'flight': `Flight to`,
+  'check-in': `Check-in in`,
   'sightseeing': `Sightseeing in`,
   'restaurant': `Restaurant in`,
 };
@@ -55,24 +57,18 @@ const getFormattedDate = (date) => {
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
-const createPhotoMarkup = (photosArray) => {
-  return photosArray.map((photoLink) => {
-    return `<img class="event__photo" src="${photoLink}" alt="Event photo">`
-  }).join(`\n`);
-};
-
 export const createTripEditFormTemplate = (event) => {
   const {destination, dateStart, dateEnd, price, offers, description, photos} = event;
-  const type = event.type.toLowerCase();
-  const typeMarkup = EventTypes[type];
+  const type = event.type ? event.type.toLowerCase() : ``;
+  const typeMarkup = eventTypeToMarkup[type];
+  const typeList = createTypeListMarkup(type);
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
 
   const destinationsList = getDestinationsListMarkup();
 
-  const offersMarkup = createOfferSelectorsTemplate(offers);
+  const eventDetails = createEventDetailsMarkup(offers, description, photos);
 
-  const photosMarkup = createPhotoMarkup(photos);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -85,63 +81,7 @@ export const createTripEditFormTemplate = (event) => {
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
           <div class="event__type-list">
-            <fieldset class="event__type-group">
-              <legend class="visually-hidden">Transfer</legend>
-
-              <div class="event__type-item">
-                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
-                <label class="event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-              </div>
-            </fieldset>
-
-            <fieldset class="event__type-group">
-              <legend class="visually-hidden">Activity</legend>
-
-              <div class="event__type-item">
-                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-              </div>
-            </fieldset>
+            ${typeList}
           </div>
         </div>
 
@@ -178,26 +118,7 @@ export const createTripEditFormTemplate = (event) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
       </header>
-      <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers">
-            ${offersMarkup}
-          </div>
-        </section>
-
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${description}</p>
-
-          <div class="event__photos-container">
-            <div class="event__photos-tape">
-              ${photosMarkup}
-            </div>
-          </div>
-        </section>
-      </section>
+      ${eventDetails}
     </form>`
   );
 };
