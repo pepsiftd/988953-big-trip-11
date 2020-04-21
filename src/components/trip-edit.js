@@ -37,8 +37,8 @@ const getDestinationsListMarkup = () => {
     }).join(`\n`);
 };
 
-const addLeadingZero = (time) => {
-  return (`00` + time).slice(-2);
+const addLeadingZero = (string) => {
+  return (`00` + string).slice(-2);
 };
 
 const getHours = (date) => {
@@ -51,14 +51,15 @@ const getMinutes = (date) => {
 
 const getFormattedDate = (date) => {
   const year = addLeadingZero(date.getFullYear());
-  const month = addLeadingZero(date.getMonth());
-  const day = addLeadingZero(date.getDay());
+  const month = addLeadingZero(date.getMonth() + 1);
+  const day = addLeadingZero(date.getDate());
 
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
 export const createTripEditFormTemplate = (event) => {
   const {destination = ``, dateStart = new Date(), dateEnd = new Date(), price = ``, offers = [], description = ``, photos = []} = event;
+
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? eventTypeToMarkup[type] : ``;
   const typeList = createTypeListMarkup(type);
@@ -68,8 +69,7 @@ export const createTripEditFormTemplate = (event) => {
 
   const destinationsList = getDestinationsListMarkup();
 
-  const eventDetails = createEventDetailsMarkup(offers, description, photos);
-
+  const eventDetails = destination || type ? createEventDetailsMarkup(offers, description, photos) : ``;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">

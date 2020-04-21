@@ -37,11 +37,17 @@ const createOffersTemplate = (offers) => {
 };
 
 const createOfferSelectorsTemplate = (offers) => {
-  return offers
-    .map((offer) => {
-      return createOfferSelectorMarkup(offer);
-    })
-    .join(`\n`);
+  const offersMarkup = offers.map((offer) => createOfferSelectorMarkup(offer)).join(`\n`);
+
+  return (
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+      <div class="event__available-offers">
+        ${offersMarkup}
+      </div>
+    </section>`
+  );
 };
 
 export {createOffersTemplate, createOfferSelectorsTemplate};
