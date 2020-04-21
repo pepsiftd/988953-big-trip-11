@@ -8,6 +8,7 @@ import {createTripDaysListTemplate} from '@/components/days-list';
 import {createDayTemplate} from '@/components/trip-day';
 import {createEventTemplate} from '@/components/trip-event';
 import {generateEvent, generateEvents} from '@/mock/events';
+import {sortByStartDate} from '@/components/sort';
 
 const EVENTS_AMOUNT = 10;
 
@@ -56,6 +57,9 @@ render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
 render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
 
 // days and events
+sortByStartDate(events);
+console.log(events.map((it) => it.dateStart).join(`\n`));
+
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 
 render(tripDaysListElement, createDayTemplate(), `beforeend`);
