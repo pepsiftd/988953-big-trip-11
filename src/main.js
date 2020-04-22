@@ -8,7 +8,7 @@ import {createTripDaysListTemplate} from '@/components/days-list';
 import {createDayTemplate} from '@/components/trip-day';
 import {createEventTemplate} from '@/components/trip-event';
 import {generateEvent, generateEvents} from '@/mock/events';
-import {sortByStartDate} from '@/components/sort';
+import {sortByStartDate, splitEventsByDays} from '@/components/sort';
 
 const EVENTS_AMOUNT = 10;
 
@@ -51,32 +51,36 @@ render(tripEventsFirstHeaderElement, createTripEditFormTemplate(current), `after
 
 // empty form edit
 render(tripEventsFirstHeaderElement, createTripEditFormTemplate(emptyEvent), `afterend`);
-
+// sorting line
 render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
-
+// days and events container
 render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
 
 // days and events
 sortByStartDate(events);
-console.log(events.map((it) => it.dateStart).join(`\n`));
-const dates = events
-  .map((event) => event.dateStart.toString().slice(4, 10))
-  .filter((it, i, arr) => {
-    return arr.indexOf(it) === i;
-  });
-console.log(dates.join(`\n`));
 
+const [eventsByDays, dates] = splitEventsByDays(events);
+
+// render days column
 const tripDaysListElement = tripEventsElement.querySelector(`.trip-days`);
 
-dates.forEach((day, counter) => {
+dates.forEach((day, i, arr) => {
+  const getDifferenceInDays = (start, end) => {
+    const MS_IN_DAY = 86400000;
+
+    return Math.floor((end - start) / MS_IN_DAY);
+  };
+
+  const counter = getDifferenceInDays(arr[0], day);
+
   render(tripDaysListElement, createDayTemplate(day, counter + 1), `beforeend`);
 });
 
+// render events inside of days
 const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
 
-for (const event of events) {
-  if (current === event) {
-    continue;
-  }
-  render(tripEventsListElements[0], createEventTemplate(event), `beforeend`);
-}
+tripEventsListElements.forEach((it, i) => {
+  eventsByDays[i].forEach((event) => {
+    render(it, createEventTemplate(event), `beforeend`);
+  });
+});
