@@ -10,27 +10,13 @@ import {createEventTemplate} from '@/components/trip-event';
 import {generateEvent, generateEvents} from '@/mock/events';
 import {sortByStartDate, splitEventsByDays} from '@/components/sort';
 
-const EVENTS_AMOUNT = 10;
+const EVENTS_AMOUNT = 1;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-// header
-const tripMainElement = document.querySelector(`.trip-main`);
-const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
-const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2`);
-
-render(tripMainElement, createTripInfoTemplate(), `afterbegin`);
-
-const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
-
-render(tripInfoElement, createPriceInfoTemplate(), `beforeend`);
-
-render(tripControlsFirstHeaderElement, createTripTabsTemplate(), `afterend`);
-render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
-
-// main
+// generate mock
 const events = generateEvents(EVENTS_AMOUNT);
 const current = events[0];
 const emptyEvent = {
@@ -43,6 +29,22 @@ const emptyEvent = {
   description: undefined,
   photos: undefined,
 };
+
+// header
+const tripMainElement = document.querySelector(`.trip-main`);
+const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
+const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2`);
+
+render(tripMainElement, createTripInfoTemplate(events), `afterbegin`);
+
+const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
+
+render(tripInfoElement, createPriceInfoTemplate(), `beforeend`);
+
+render(tripControlsFirstHeaderElement, createTripTabsTemplate(), `afterend`);
+render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
+
+// main
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
