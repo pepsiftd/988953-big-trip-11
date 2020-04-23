@@ -20,12 +20,12 @@ const render = (container, template, place) => {
 const events = generateEvents(EVENTS_AMOUNT);
 const current = events[0];
 const emptyEvent = {
-  type: undefined,
+  type: `taxi`,
   destination: undefined,
   dateStart: undefined,
   dateEnd: undefined,
   price: undefined,
-  offers: undefined,
+  offers: [{id: `rdo`, title: `11`, price: 20, selected: true}],
   description: undefined,
   photos: undefined,
 };

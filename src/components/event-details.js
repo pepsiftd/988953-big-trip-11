@@ -7,6 +7,10 @@ const createPhotoMarkup = (photosArray) => {
 };
 
 const createDestinationMarkup = (description, photos) => {
+  if (!description && photos.length < 1) {
+    return ``;
+  }
+
   const photosMarkup = createPhotoMarkup(photos);
 
   return (
@@ -25,7 +29,7 @@ const createDestinationMarkup = (description, photos) => {
 
 export const createEventDetailsMarkup = (offers, description, photos) => {
   const offersMarkup = createOfferSelectorsTemplate(offers);
-  const destinationMarkup = description || photos ? createDestinationMarkup(description, photos) : ``;
+  const destinationMarkup = createDestinationMarkup(description, photos);
 
   return (
     `<section class="event__details">
