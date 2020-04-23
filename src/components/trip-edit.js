@@ -1,7 +1,5 @@
-import {createOffersTemplate} from "@/components/offers";
 import {createTypeListMarkup} from "@/components/event-type-list";
 import {createEventDetailsMarkup} from "@/components/event-details";
-import {getRandomIntegerNumber} from "@/util";
 
 const eventTypeToMarkup = {
   'taxi': `Taxi to`,
@@ -33,7 +31,7 @@ const destinations = [
 const getDestinationsListMarkup = () => {
   return destinations
     .map((it) => {
-      return `<option value="${it}"></option>`
+      return `<option value="${it}"></option>`;
     }).join(`\n`);
 };
 

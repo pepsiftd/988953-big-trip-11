@@ -7,7 +7,7 @@ import {createTripEditFormTemplate} from '@/components/trip-edit';
 import {createTripDaysListTemplate} from '@/components/days-list';
 import {createDayTemplate} from '@/components/trip-day';
 import {createEventTemplate} from '@/components/trip-event';
-import {generateEvent, generateEvents} from '@/mock/events';
+import {generateEvents} from '@/mock/events';
 import {splitEventsByDays} from '@/components/sort';
 
 const EVENTS_AMOUNT = 20;

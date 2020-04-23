@@ -59,7 +59,7 @@ const getPhotosList = (count) => {
   const photosAmount = count ? count : getRandomIntegerNumber(1, 5);
   const photosArray = [];
   for (let i = 0; i < photosAmount; i++) {
-    photosArray[i] = `http://picsum.photos/248/152?r=${Math.random()}`
+    photosArray[i] = `http://picsum.photos/248/152?r=${Math.random()}`;
   }
 
   return photosArray;

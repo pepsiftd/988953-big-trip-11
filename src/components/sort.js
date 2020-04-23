@@ -21,7 +21,7 @@ const splitEventsByDays = (events) => {
 const sortByStartDate = (events = []) => {
   return events.slice().sort((a, b) => {
     return a.dateStart - b.dateStart;
-  });;
+  });
 };
 
 export {splitEventsByDays, sortByStartDate};

@@ -2,7 +2,7 @@ import {createOfferSelectorsTemplate} from "@/components/offers";
 
 const createPhotoMarkup = (photosArray) => {
   return photosArray.map((photoLink) => {
-    return `<img class="event__photo" src="${photoLink}" alt="Event photo">`
+    return `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
   }).join(`\n`);
 };
 

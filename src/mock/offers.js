@@ -3,16 +3,16 @@ import {getRandomIntegerNumber, getRandomBoolean} from '@/util';
 const MAX_OFFERS = 5;
 
 const eventTypes = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'transport',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+  `check-in`,
+  `sightseeing`,
+  `restaurant`
 ];
 
 const getRandomOffers = () => {
@@ -21,12 +21,12 @@ const getRandomOffers = () => {
     .fill(``)
     .map((it, i) => {
       return {
-        id: `rdo${i+1}`,
-        title: `Random offer #${i+1}`,
+        id: `rdo${i + 1}`,
+        title: `Random offer #${i + 1}`,
         price: getRandomIntegerNumber(10, 50),
         selected: getRandomBoolean(),
       };
-  });
+    });
 
   return randomOffers;
 };

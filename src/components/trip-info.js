@@ -22,7 +22,7 @@ const getTripTitle = (sortedEvents = []) => {
 
   let titleMarkup;
 
-  switch(moves) {
+  switch (moves) {
     case 0:
       titleMarkup = `${spots[0]}`;
       break;
