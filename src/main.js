@@ -10,7 +10,7 @@ import {createEventTemplate} from '@/components/trip-event';
 import {generateEvent, generateEvents} from '@/mock/events';
 import {splitEventsByDays} from '@/components/sort';
 
-const EVENTS_AMOUNT = 5;
+const EVENTS_AMOUNT = 22;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -19,16 +19,6 @@ const render = (container, template, place) => {
 // generate mock
 const events = generateEvents(EVENTS_AMOUNT);
 const current = events[0];
-const emptyEvent = {
-  type: `taxi`,
-  destination: undefined,
-  dateStart: undefined,
-  dateEnd: undefined,
-  price: undefined,
-  offers: [{id: `rdo`, title: `11`, price: 20, selected: true}],
-  description: undefined,
-  photos: undefined,
-};
 
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -39,7 +29,7 @@ render(tripMainElement, createTripInfoTemplate(events), `afterbegin`);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 
-render(tripInfoElement, createPriceInfoTemplate(), `beforeend`);
+render(tripInfoElement, createPriceInfoTemplate(events), `beforeend`);
 
 render(tripControlsFirstHeaderElement, createTripTabsTemplate(), `afterend`);
 render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
@@ -49,8 +39,19 @@ render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 const tripEventsElement = document.querySelector(`.trip-events`);
 const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
 
-// empty form edit
-render(tripEventsFirstHeaderElement, createTripEditFormTemplate(emptyEvent), `afterend`);
+// // test edit form with custom event-object
+// const testEvent = {
+//   type: undefined,
+//   destination: undefined,
+//   dateStart: undefined,
+//   dateEnd: undefined,
+//   price: undefined,
+//   offers: [{id: `rdo`, title: `11`, price: 20, selected: true}],
+//   description: undefined,
+//   photos: undefined,
+// };
+// render(tripEventsFirstHeaderElement, createTripEditFormTemplate(testEvent), `afterend`);
+
 // sorting line
 render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
 // days and events container
