@@ -24,9 +24,9 @@ const createOfferSelectorMarkup = (offer) => {
 };
 
 const createOffersTemplate = (offers) => {
-  const OFFERS_AMOUNT = 3;
+  const MAX_OFFERS_AMOUNT = 3;
 
-  const offersToShow = offers.slice(0, OFFERS_AMOUNT);
+  const offersToShow = offers.slice(0, MAX_OFFERS_AMOUNT);
   const offersMarkup = offersToShow
     .map((offer) => {
       return createOfferMarkup(offer);
@@ -36,7 +36,11 @@ const createOffersTemplate = (offers) => {
   return offersMarkup;
 };
 
-const createOfferSelectorsTemplate = (offers) => {
+const createOfferSelectorsTemplate = (offers = []) => {
+  if (offers.length < 1) {
+    return ``;
+  }
+
   const offersMarkup = offers.map((offer) => createOfferSelectorMarkup(offer)).join(`\n`);
 
   return (
