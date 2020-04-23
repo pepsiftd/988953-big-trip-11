@@ -8,9 +8,9 @@ import {createTripDaysListTemplate} from '@/components/days-list';
 import {createDayTemplate} from '@/components/trip-day';
 import {createEventTemplate} from '@/components/trip-event';
 import {generateEvent, generateEvents} from '@/mock/events';
-import {sortByStartDate, splitEventsByDays} from '@/components/sort';
+import {splitEventsByDays} from '@/components/sort';
 
-const EVENTS_AMOUNT = 1;
+const EVENTS_AMOUNT = 13;
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -49,8 +49,6 @@ render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 const tripEventsElement = document.querySelector(`.trip-events`);
 const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
 
-render(tripEventsFirstHeaderElement, createTripEditFormTemplate(current), `afterend`);
-
 // empty form edit
 render(tripEventsFirstHeaderElement, createTripEditFormTemplate(emptyEvent), `afterend`);
 // sorting line
@@ -59,8 +57,6 @@ render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
 render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
 
 // days and events
-sortByStartDate(events);
-
 const [eventsByDays, dates] = splitEventsByDays(events);
 
 // render days column
@@ -83,6 +79,10 @@ const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-event
 
 tripEventsListElements.forEach((it, i) => {
   eventsByDays[i].forEach((event) => {
-    render(it, createEventTemplate(event), `beforeend`);
+    if (event !== current) {
+      render(it, createEventTemplate(event), `beforeend`);
+    } else {
+      render(it, createTripEditFormTemplate(current), `beforeend`);
+    }
   });
 });

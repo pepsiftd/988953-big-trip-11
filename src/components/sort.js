@@ -3,8 +3,9 @@ const splitEventsByDays = (events) => {
   let counter = -1;
   const eventsByDays = [];
   const uniqueDates = [];
+  const sorted = sortByStartDate(events);
 
-  events.forEach((it) => {
+  sorted.forEach((it) => {
     if (date === it.dateStart.toISOString().slice(0, 10)) {
       eventsByDays[counter].push(it);
     } else {
@@ -18,9 +19,9 @@ const splitEventsByDays = (events) => {
 };
 
 const sortByStartDate = (events = []) => {
-  events.sort((a, b) => {
+  return events.slice().sort((a, b) => {
     return a.dateStart - b.dateStart;
-  });
+  });;
 };
 
 export {splitEventsByDays, sortByStartDate};
