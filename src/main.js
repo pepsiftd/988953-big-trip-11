@@ -15,12 +15,10 @@ const EVENTS_AMOUNT = 20;
 
 // generate mock
 const events = generateEvents(EVENTS_AMOUNT);
-// const current = events[0];
 
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
-// const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2`);
 
 render(tripMainElement, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
 
@@ -34,20 +32,6 @@ render(tripControlsElement, new FiltersComponent().getElement(), RenderPosition.
 // main
 
 const tripEventsElement = document.querySelector(`.trip-events`);
-// const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
-
-// // test edit form with custom event-object
-// const testEvent = {
-//   type: undefined,
-//   destination: undefined,
-//   dateStart: undefined,
-//   dateEnd: undefined,
-//   price: undefined,
-//   offers: [{id: `rdo`, title: `11`, price: 20, selected: true}],
-//   description: undefined,
-//   photos: undefined,
-// };
-// render(tripEventsFirstHeaderElement, createTripEditFormTemplate(testEvent), `afterend`);
 
 // sorting line
 render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);

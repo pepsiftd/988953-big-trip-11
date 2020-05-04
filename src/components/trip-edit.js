@@ -69,7 +69,7 @@ const createTripEditFormTemplate = (event) => {
 
   const destinationsList = getDestinationsListMarkup();
 
-  const eventDetailsMarkup = createEventDetailsMarkup(event);
+  const eventDetailsMarkup = destination && (event.description || Boolean(event.offers)) ? createEventDetailsMarkup(event) : ``;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
