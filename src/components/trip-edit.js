@@ -1,4 +1,6 @@
-import {createElement} from "@/util";
+import {createElement} from '@/util';
+import {createEventDetailsMarkup} from '@/components/event-details';
+import {createTypeListMarkup} from '@/components/event-type-list';
 
 const eventTypeToMarkup = {
   'taxi': `Taxi to`,
@@ -60,10 +62,14 @@ const createTripEditFormTemplate = (event) => {
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? eventTypeToMarkup[type] : ``;
 
+  const typeListMarkup = createTypeListMarkup(event);
+
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
 
   const destinationsList = getDestinationsListMarkup();
+
+  const eventDetailsMarkup = createEventDetailsMarkup(event);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -75,7 +81,7 @@ const createTripEditFormTemplate = (event) => {
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
-          <!-- type list markup --> type list
+          ${typeListMarkup}
         </div>
 
         <div class="event__field-group  event__field-group--destination">
@@ -111,7 +117,7 @@ const createTripEditFormTemplate = (event) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
       </header>
-      <!-- event details markup --> event details
+      ${eventDetailsMarkup}
     </form>`
   );
 };

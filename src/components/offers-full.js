@@ -1,5 +1,3 @@
-import {createElement} from "@/util";
-
 const createOfferSelectorMarkup = (offer) => {
   const {id, title, price, selected} = offer;
   const isCheckedMarkup = selected ? `checked` : ``;
@@ -16,7 +14,7 @@ const createOfferSelectorMarkup = (offer) => {
   );
 };
 
-const createOfferSelectorsTemplate = (offers = []) => {
+export const createOfferSelectorsMarkup = (offers = []) => {
   if (offers.length < 1) {
     return ``;
   }
@@ -33,27 +31,3 @@ const createOfferSelectorsTemplate = (offers = []) => {
     </section>`
   );
 };
-
-export default class Offers {
-  contstructor(offers) {
-    this._offers = offers;
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createOfferSelectorsTemplate(this._offers);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
-  }
-}

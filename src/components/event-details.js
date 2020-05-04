@@ -1,34 +1,15 @@
-import {createElement} from "@/util";
+import {createDestinationMarkup} from '@/components/destination';
+import {createOfferSelectorsMarkup} from '@/components/offers-full';
 
-const createEventDetailsTemplate = () => {
+export const createEventDetailsMarkup = (event) => {
+  const destinationMarkup = createDestinationMarkup(event);
+  const offersMarkup = createOfferSelectorsMarkup(event.offers);
+
   return (
     `<section class="event__details">
-      <!-- offer selectors markup --> offer selectors
+      ${offersMarkup}
 
-      <!-- destination markup --> destination
+      ${destinationMarkup}
     </section>`
   );
 };
-
-export default class EventDetails {
-  constructor() {
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createEventDetailsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
-  }
-}

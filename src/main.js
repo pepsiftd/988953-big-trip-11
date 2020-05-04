@@ -9,8 +9,6 @@ import DayComponent from '@/components/trip-day';
 import EventComponent from '@/components/trip-event';
 import {generateEvents} from '@/mock/events';
 import {splitEventsByDays} from '@/components/sort';
-import DestinationComponent from '@/components/destination';
-import OffersComponent from '@/components/offers-full';
 import {RenderPosition, render} from '@/util';
 
 const EVENTS_AMOUNT = 20;

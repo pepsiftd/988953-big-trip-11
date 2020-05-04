@@ -1,4 +1,4 @@
-import {createElement} from "@/util";
+import {createElement} from '@/util.js';
 
 const createDayTemplate = (day, counter) => {
   const shortDay = day.toString().slice(4, 10);

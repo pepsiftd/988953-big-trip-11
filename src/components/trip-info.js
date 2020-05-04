@@ -1,5 +1,5 @@
-import {sortByStartDate} from "@/components/sort";
-import {createElement} from "@/util";
+import {sortByStartDate} from '@/components/sort';
+import {createElement} from '@/util';
 
 const getTripTitle = (sortedEvents = []) => {
   if (sortedEvents.length < 1) {

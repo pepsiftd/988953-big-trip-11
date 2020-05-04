@@ -1,5 +1,3 @@
-import {createElement} from "@/util";
-
 const eventTypes = {
   transfer:
   [
@@ -37,7 +35,7 @@ const createActivityListMarkup = (selectedType) => {
   return eventTypes.activity.map((type) => createTypeItemMarkup(type, 1, type === selectedType)).join(`\n`);
 };
 
-const createTypeListTemplate = (event) => {
+export const createTypeListMarkup = (event) => {
   const selectedType = event.type;
   const transferList = createTransferListMarkup(selectedType);
   const activityList = createActivityListMarkup(selectedType);
@@ -58,27 +56,3 @@ const createTypeListTemplate = (event) => {
     </div>`
   );
 };
-
-export default class TypeList {
-  constructor(event) {
-    this._event = event;
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createTypeListTemplate(this._event);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
-  }
-}
