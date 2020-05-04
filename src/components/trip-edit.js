@@ -57,7 +57,12 @@ const getFormattedDate = (date) => {
 };
 
 const createTripEditFormTemplate = (event) => {
-  const {destination = ``, dateStart = new Date(), dateEnd = new Date(), price = ``} = event;
+  const {
+    destination = ``,
+    dateStart = new Date(),
+    dateEnd = new Date(),
+    price = ``
+  } = event;
 
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? eventTypeToMarkup[type] : ``;
