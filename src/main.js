@@ -18,7 +18,7 @@ const EVENTS_AMOUNT = 20;
 
 // generate mock
 const events = generateEvents(EVENTS_AMOUNT);
-const current = events[0];
+// const current = events[0];
 
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -75,15 +75,32 @@ dates.forEach((day, i, arr) => {
   render(tripDaysListElement, new DayComponent(day, counter + 1).getElement(), RenderPosition.BEFOREEND);
 });
 
+const renderEvent = (eventListElement, event) => {
+  const rollupButtonClickHandler = () => {
+    eventListElement.replaceChild(editEventComponent.getElement(), eventComponent.getElement());
+  };
+
+  const editFormSubmitHandler = () => {
+    eventListElement.replaceChild(eventComponent.getElement(), editEventComponent.getElement());
+  };
+
+  const eventComponent = new EventComponent(event);
+  const rollupButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
+
+  const editEventComponent = new EditEventComponent(event);
+  const eventEditForm = editEventComponent.getElement();
+
+  rollupButton.addEventListener(`click`, rollupButtonClickHandler);
+  eventEditForm.addEventListener(`submit`, editFormSubmitHandler);
+
+  render(eventListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
 // render events inside of days
 const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
 
 tripEventsListElements.forEach((it, i) => {
   eventsByDays[i].forEach((event) => {
-    if (event !== current) {
-      render(it, new EventComponent(event).getElement(), RenderPosition.BEFOREEND);
-    } else {
-      render(it, new EditEventComponent(current).getElement(), RenderPosition.BEFOREEND);
-    }
+    renderEvent(it, event);
   });
 });
