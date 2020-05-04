@@ -12,12 +12,9 @@ import {splitEventsByDays} from '@/components/sort';
 import DestinationComponent from '@/components/destination';
 import SelectedOffersComponent from '@/components/offers';
 import OffersComponent from '@/components/offers-full';
+import {RenderPosition, render} from '@/util';
 
 const EVENTS_AMOUNT = 20;
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 // generate mock
 const events = generateEvents(EVENTS_AMOUNT);
@@ -26,21 +23,21 @@ const current = events[0];
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
-const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2`);
+// const tripControlsFirstHeaderElement = tripControlsElement.querySelector(`h2`);
 
-render(tripMainElement, createTripInfoTemplate(events), `afterbegin`);
+render(tripMainElement, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 
-render(tripInfoElement, createPriceInfoTemplate(events), `beforeend`);
+render(tripInfoElement, new PriceInfoComponent(events).getElement(), RenderPosition.BEFOREEND);
 
-render(tripControlsFirstHeaderElement, createTripTabsTemplate(), `afterend`);
-render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
+render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
+render(tripControlsElement, new FiltersComponent().getElement(), RenderPosition.BEFOREEND);
 
 // main
 
 const tripEventsElement = document.querySelector(`.trip-events`);
-const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
+// const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
 
 // // test edit form with custom event-object
 // const testEvent = {
@@ -56,9 +53,9 @@ const tripEventsFirstHeaderElement = tripEventsElement.querySelector(`h2`);
 // render(tripEventsFirstHeaderElement, createTripEditFormTemplate(testEvent), `afterend`);
 
 // sorting line
-render(tripEventsFirstHeaderElement, createTripSortTemplate(), `afterend`);
+render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
 // days and events container
-render(tripEventsElement, createTripDaysListTemplate(), `beforeend`);
+render(tripEventsElement, new DaysListComponent().getElement(), RenderPosition.BEFOREEND);
 
 // days and events
 const [eventsByDays, dates] = splitEventsByDays(events);
@@ -75,7 +72,7 @@ dates.forEach((day, i, arr) => {
 
   const counter = getDifferenceInDays(arr[0], day);
 
-  render(tripDaysListElement, createDayTemplate(day, counter + 1), `beforeend`);
+  render(tripDaysListElement, new DayComponent(day, counter + 1).getElement(), RenderPosition.BEFOREEND);
 });
 
 // render events inside of days
@@ -84,9 +81,9 @@ const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-event
 tripEventsListElements.forEach((it, i) => {
   eventsByDays[i].forEach((event) => {
     if (event !== current) {
-      render(it, createEventTemplate(event), `beforeend`);
+      render(it, new EventComponent(event).getElement(), RenderPosition.BEFOREEND);
     } else {
-      render(it, createTripEditFormTemplate(current), `beforeend`);
+      render(it, new EditEventComponent(current).getElement(), RenderPosition.BEFOREEND);
     }
   });
 });
