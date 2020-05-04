@@ -1,4 +1,4 @@
-import {createElement} from "@/util.js";
+const MAX_OFFERS_AMOUNT = 3;
 
 const createOfferMarkup = (offer) => {
   return (
@@ -10,9 +10,7 @@ const createOfferMarkup = (offer) => {
   );
 };
 
-const createOffersTemplate = (offers) => {
-  const MAX_OFFERS_AMOUNT = 3;
-
+export const createOffersTemplate = (offers) => {
   const offersToShow = offers.slice(0, MAX_OFFERS_AMOUNT);
   const offersMarkup = offersToShow
     .map((offer) => {
@@ -26,27 +24,3 @@ const createOffersTemplate = (offers) => {
     </ul>`
   );
 };
-
-export default class Offers {
-  contstructor(offers) {
-    this._offers = offers;
-    this._element = null;
-  }
-
-  getTemplate() {
-    return createOffersTemplate(this._offers);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
-  }
-}

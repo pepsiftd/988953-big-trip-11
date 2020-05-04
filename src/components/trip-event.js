@@ -1,4 +1,5 @@
-import {createElement} from "@/util";
+import {createElement} from '@/util';
+import {createOffersTemplate} from '@/components/offers';
 
 const EventTypes = {
   'taxi': `Taxi to `,
@@ -41,12 +42,14 @@ const getDuration = (startDate, endDate) => {
 };
 
 const createEventTemplate = (event) => {
-  const {destination, dateStart, dateEnd, price} = event;
+  const {destination, dateStart, dateEnd, price, offers} = event;
   const type = event.type.toLowerCase();
   const typeMarkup = EventTypes[type];
   const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
+
+  const selectedOffers = createOffersTemplate(offers);
 
   return (
     `<li class="trip-events__item">
@@ -71,7 +74,7 @@ const createEventTemplate = (event) => {
 
         <h4 class="visually-hidden">Offers:</h4>
 
-        <!-- selected offers -->selected offers here
+        ${selectedOffers}
 
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>

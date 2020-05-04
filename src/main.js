@@ -10,7 +10,6 @@ import EventComponent from '@/components/trip-event';
 import {generateEvents} from '@/mock/events';
 import {splitEventsByDays} from '@/components/sort';
 import DestinationComponent from '@/components/destination';
-import SelectedOffersComponent from '@/components/offers';
 import OffersComponent from '@/components/offers-full';
 import {RenderPosition, render} from '@/util';
 
