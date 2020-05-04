@@ -1,41 +1,34 @@
-import {createOfferSelectorsTemplate} from "@/components/offers";
+import {createElement} from "@/util";
 
-const createPhotoMarkup = (photosArray) => {
-  return photosArray.map((photoLink) => {
-    return `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
-  }).join(`\n`);
-};
-
-const createDestinationMarkup = (description, photos) => {
-  if (!description && photos.length < 1) {
-    return ``;
-  }
-
-  const photosMarkup = createPhotoMarkup(photos);
-
-  return (
-    `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${description}</p>
-
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${photosMarkup}
-        </div>
-      </div>
-    </section>`
-  );
-};
-
-export const createEventDetailsMarkup = (offers, description, photos) => {
-  const offersMarkup = createOfferSelectorsTemplate(offers);
-  const destinationMarkup = createDestinationMarkup(description, photos);
-
+const createEventDetailsTemplate = () => {
   return (
     `<section class="event__details">
-      ${offersMarkup}
+      <!-- offer selectors markup --> offer selectors
 
-      ${destinationMarkup}
+      <!-- destination markup --> destination
     </section>`
   );
 };
+
+export default class EventDetails {
+  constructor() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventDetailsTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}

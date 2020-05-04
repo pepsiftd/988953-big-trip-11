@@ -1,3 +1,5 @@
+import {createElement} from "@/util.js";
+
 const createOfferMarkup = (offer) => {
   return (
     `<li class="event__offer">
@@ -5,21 +7,6 @@ const createOfferMarkup = (offer) => {
       &plus;
       &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
     </li>`
-  );
-};
-
-const createOfferSelectorMarkup = (offer) => {
-  const {id, title, price, selected} = offer;
-
-  return (
-    `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}-1" type="checkbox" name="event-offer-${id}" ${selected ? `checked` : ``}>
-      <label class="event__offer-label" for="event-offer-${id}-1">
-        <span class="event__offer-title">${title}</span>
-        &plus;
-        &euro;&nbsp;<span class="event__offer-price">${price}</span>
-      </label>
-    </div>`
   );
 };
 
@@ -33,25 +20,33 @@ const createOffersTemplate = (offers) => {
     })
     .join(`\n`);
 
-  return offersMarkup;
-};
-
-const createOfferSelectorsTemplate = (offers = []) => {
-  if (offers.length < 1) {
-    return ``;
-  }
-
-  const offersMarkup = offers.map((offer) => createOfferSelectorMarkup(offer)).join(`\n`);
-
   return (
-    `<section class="event__section  event__section--offers">
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-      <div class="event__available-offers">
-        ${offersMarkup}
-      </div>
-    </section>`
+    `<ul class="event__selected-offers">
+      ${offersMarkup}
+    </ul>`
   );
 };
 
-export {createOffersTemplate, createOfferSelectorsTemplate};
+export default class Offers {
+  contstructor(offers) {
+    this._offers = offers;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createOffersTemplate(this._offers);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}

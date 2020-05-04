@@ -1,3 +1,5 @@
+import {createElement} from "@/util";
+
 const eventTypes = {
   transfer:
   [
@@ -35,21 +37,48 @@ const createActivityListMarkup = (selectedType) => {
   return eventTypes.activity.map((type) => createTypeItemMarkup(type, 1, type === selectedType)).join(`\n`);
 };
 
-export const createTypeListMarkup = (selectedType) => {
+const createTypeListTemplate = (event) => {
+  const selectedType = event.type;
   const transferList = createTransferListMarkup(selectedType);
   const activityList = createActivityListMarkup(selectedType);
 
   return (
-    `<fieldset class="event__type-group">
-      <legend class="visually-hidden">Transfer</legend>
+    `<div class="event__type-list">
+      <fieldset class="event__type-group">
+        <legend class="visually-hidden">Transfer</legend>
 
-      ${transferList}
-    </fieldset>
+        ${transferList}
+      </fieldset>
 
-    <fieldset class="event__type-group">
-      <legend class="visually-hidden">Activity</legend>
+      <fieldset class="event__type-group">
+        <legend class="visually-hidden">Activity</legend>
 
-      ${activityList}
-    </fieldset>`
+        ${activityList}
+      </fieldset>
+    </div>`
   );
 };
+
+export default class TypeList {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTypeListTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}

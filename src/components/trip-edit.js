@@ -1,5 +1,4 @@
-import {createTypeListMarkup} from "@/components/event-type-list";
-import {createEventDetailsMarkup} from "@/components/event-details";
+import {createElement} from "@/util";
 
 const eventTypeToMarkup = {
   'taxi': `Taxi to`,
@@ -55,19 +54,16 @@ const getFormattedDate = (date) => {
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
-export const createTripEditFormTemplate = (event) => {
-  const {destination = ``, dateStart = new Date(), dateEnd = new Date(), price = ``, offers = [], description = ``, photos = []} = event;
+const createTripEditFormTemplate = (event) => {
+  const {destination = ``, dateStart = new Date(), dateEnd = new Date(), price = ``} = event;
 
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? eventTypeToMarkup[type] : ``;
-  const typeList = createTypeListMarkup(type);
 
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
 
   const destinationsList = getDestinationsListMarkup();
-
-  const eventDetails = destination || type ? createEventDetailsMarkup(offers, description, photos) : ``;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -79,9 +75,7 @@ export const createTripEditFormTemplate = (event) => {
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
-          <div class="event__type-list">
-            ${typeList}
-          </div>
+          <!-- type list markup --> type list
         </div>
 
         <div class="event__field-group  event__field-group--destination">
@@ -117,7 +111,31 @@ export const createTripEditFormTemplate = (event) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
       </header>
-      ${eventDetails}
+      <!-- event details markup --> event details
     </form>`
   );
 };
+
+export default class EventEdit {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripEditFormTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}

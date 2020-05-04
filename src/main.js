@@ -1,14 +1,17 @@
-import {createTripInfoTemplate} from '@/components/trip-info';
-import {createPriceInfoTemplate} from '@/components/price-info';
-import {createTripTabsTemplate} from '@/components/trip-tabs';
-import {createTripFiltersTemplate} from '@/components/trip-filters';
-import {createTripSortTemplate} from '@/components/trip-sort';
-import {createTripEditFormTemplate} from '@/components/trip-edit';
-import {createTripDaysListTemplate} from '@/components/days-list';
-import {createDayTemplate} from '@/components/trip-day';
-import {createEventTemplate} from '@/components/trip-event';
+import TripInfoComponent from '@/components/trip-info';
+import PriceInfoComponent from '@/components/price-info';
+import TripTabsComponent from '@/components/trip-tabs';
+import FiltersComponent from '@/components/trip-filters';
+import SortComponent from '@/components/trip-sort';
+import EditEventComponent from '@/components/trip-edit';
+import DaysListComponent from '@/components/days-list';
+import DayComponent from '@/components/trip-day';
+import EventComponent from '@/components/trip-event';
 import {generateEvents} from '@/mock/events';
 import {splitEventsByDays} from '@/components/sort';
+import DestinationComponent from '@/components/destination';
+import SelectedOffersComponent from '@/components/offers';
+import OffersComponent from '@/components/offers-full';
 
 const EVENTS_AMOUNT = 20;
 
