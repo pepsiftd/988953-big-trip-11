@@ -1,4 +1,5 @@
-import {sortByStartDate} from "@/components/sort";
+import {sortByStartDate} from '@/components/sort';
+import {createElement} from '@/util';
 
 const getTripTitle = (sortedEvents = []) => {
   if (sortedEvents.length < 1) {
@@ -40,7 +41,7 @@ const getTripTitle = (sortedEvents = []) => {
   return titleMarkup;
 };
 
-export const createTripInfoTemplate = (events) => {
+const createTripInfoTemplate = (events) => {
   const sortedEvents = sortByStartDate(events.slice());
   const tripStartDate = sortedEvents[0].dateStart.toString().slice(4, 10);
   const tripEndDate = sortedEvents[sortedEvents.length - 1].dateEnd.toString().slice(4, 10);
@@ -57,3 +58,27 @@ export const createTripInfoTemplate = (events) => {
     </section>`
   );
 };
+
+export default class TripInfo {
+  constructor(events) {
+    this._events = events;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._events);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}

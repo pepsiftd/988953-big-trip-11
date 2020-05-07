@@ -1,35 +1,9 @@
-import {createOfferSelectorsTemplate} from "@/components/offers";
+import {createDestinationMarkup} from '@/components/destination';
+import {createOfferSelectorsMarkup} from '@/components/offers-full';
 
-const createPhotoMarkup = (photosArray) => {
-  return photosArray.map((photoLink) => {
-    return `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
-  }).join(`\n`);
-};
-
-const createDestinationMarkup = (description, photos) => {
-  if (!description && photos.length < 1) {
-    return ``;
-  }
-
-  const photosMarkup = createPhotoMarkup(photos);
-
-  return (
-    `<section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${description}</p>
-
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          ${photosMarkup}
-        </div>
-      </div>
-    </section>`
-  );
-};
-
-export const createEventDetailsMarkup = (offers, description, photos) => {
-  const offersMarkup = createOfferSelectorsTemplate(offers);
-  const destinationMarkup = createDestinationMarkup(description, photos);
+export const createEventDetailsMarkup = (event) => {
+  const destinationMarkup = event.description ? createDestinationMarkup(event) : ``;
+  const offersMarkup = event.offers ? createOfferSelectorsMarkup(event.offers) : ``;
 
   return (
     `<section class="event__details">

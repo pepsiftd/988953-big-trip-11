@@ -35,21 +35,24 @@ const createActivityListMarkup = (selectedType) => {
   return eventTypes.activity.map((type) => createTypeItemMarkup(type, 1, type === selectedType)).join(`\n`);
 };
 
-export const createTypeListMarkup = (selectedType) => {
+export const createTypeListMarkup = (event) => {
+  const selectedType = event.type;
   const transferList = createTransferListMarkup(selectedType);
   const activityList = createActivityListMarkup(selectedType);
 
   return (
-    `<fieldset class="event__type-group">
-      <legend class="visually-hidden">Transfer</legend>
+    `<div class="event__type-list">
+      <fieldset class="event__type-group">
+        <legend class="visually-hidden">Transfer</legend>
 
-      ${transferList}
-    </fieldset>
+        ${transferList}
+      </fieldset>
 
-    <fieldset class="event__type-group">
-      <legend class="visually-hidden">Activity</legend>
+      <fieldset class="event__type-group">
+        <legend class="visually-hidden">Activity</legend>
 
-      ${activityList}
-    </fieldset>`
+        ${activityList}
+      </fieldset>
+    </div>`
   );
 };

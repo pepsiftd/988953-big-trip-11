@@ -1,4 +1,5 @@
-import {createOffersTemplate} from "@/components/offers";
+import {createElement} from '@/util';
+import {createOffersTemplate} from '@/components/offers';
 
 const EventTypes = {
   'taxi': `Taxi to `,
@@ -40,7 +41,7 @@ const getDuration = (startDate, endDate) => {
   return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
 };
 
-export const createEventTemplate = (event) => {
+const createEventTemplate = (event) => {
   const {destination, dateStart, dateEnd, price, offers} = event;
   const type = event.type.toLowerCase();
   const typeMarkup = EventTypes[type];
@@ -48,7 +49,7 @@ export const createEventTemplate = (event) => {
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
 
-  const offersMarkup = createOffersTemplate(offers.filter((it) => it.selected));
+  const selectedOffers = createOffersTemplate(offers);
 
   return (
     `<li class="trip-events__item">
@@ -72,9 +73,8 @@ export const createEventTemplate = (event) => {
         </p>
 
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-          ${offersMarkup}
-        </ul>
+
+        ${selectedOffers}
 
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
@@ -83,3 +83,27 @@ export const createEventTemplate = (event) => {
     </li>`
   );
 };
+
+export default class Event {
+  constructor(event) {
+    this._event = event;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventTemplate(this._event);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element.remove();
+    this._element = null;
+  }
+}
