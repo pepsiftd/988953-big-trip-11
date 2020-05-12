@@ -1,5 +1,5 @@
 import {sortByStartDate} from '@/components/sort';
-import {createElement} from '@/util';
+import AbstractComponent from '@/components/abstract-component';
 
 const getTripTitle = (sortedEvents = []) => {
   if (sortedEvents.length < 1) {
@@ -59,26 +59,13 @@ const createTripInfoTemplate = (events) => {
   );
 };
 
-export default class TripInfo {
+export default class TripInfo extends AbstractComponent {
   constructor(events) {
+    super();
     this._events = events;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripInfoTemplate(this._events);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
   }
 }
