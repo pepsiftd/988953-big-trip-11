@@ -9,7 +9,7 @@ import DayComponent from '@/components/trip-day';
 import EventComponent from '@/components/trip-event';
 import {generateEvents} from '@/mock/events';
 import {splitEventsByDays} from '@/components/sort';
-import {RenderPosition, render} from '@/util';
+import {RenderPosition, render} from '@/utils/render';
 
 const EVENTS_AMOUNT = 20;
 
