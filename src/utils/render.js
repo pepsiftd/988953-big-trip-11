@@ -20,3 +20,14 @@ export const render = (container, component, place) => {
       break;
   }
 };
+
+export const replace = (newComponent, oldComponent) => {
+  const parentElement = oldComponent.getElement().parentElement;
+  const oldElement = oldComponent.getElement();
+  const newElement = newComponent.getElement();
+
+  const isExistElements = !!(parentElement && oldElement && newElement);
+  if (isExistElements) {
+    parentElement.replaceChild(newElement, oldElement);
+  }
+};

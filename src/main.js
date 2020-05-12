@@ -9,7 +9,7 @@ import DayComponent from '@/components/trip-day';
 import EventComponent from '@/components/trip-event';
 import {generateEvents} from '@/mock/events';
 import {splitEventsByDays} from '@/components/sort';
-import {RenderPosition, render} from '@/utils/render';
+import {RenderPosition, replace, render} from '@/utils/render';
 
 const EVENTS_AMOUNT = 20;
 
@@ -58,11 +58,11 @@ dates.forEach((day, i, arr) => {
 
 const renderEvent = (eventListElement, event) => {
   const rollupButtonClickHandler = () => {
-    eventListElement.replaceChild(editEventComponent.getElement(), eventComponent.getElement());
+    replace(editEventComponent, eventComponent);
   };
 
   const editFormSubmitHandler = () => {
-    eventListElement.replaceChild(eventComponent.getElement(), editEventComponent.getElement());
+    replace(eventComponent, editEventComponent);
   };
 
   const eventComponent = new EventComponent(event);
