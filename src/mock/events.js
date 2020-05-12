@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomIntegerNumber} from '@/util';
+import {getRandomArrayItem, getRandomIntegerNumber} from '@/utils/common';
 import {generateOffers} from '@/mock/offers';
 
 const MS_IN_DAY = 86400000;
