@@ -20,23 +20,23 @@ const events = generateEvents(EVENTS_AMOUNT);
 const tripMainElement = document.querySelector(`.trip-main`);
 const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
 
-render(tripMainElement, new TripInfoComponent(events).getElement(), RenderPosition.AFTERBEGIN);
+render(tripMainElement, new TripInfoComponent(events), RenderPosition.AFTERBEGIN);
 
 const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 
-render(tripInfoElement, new PriceInfoComponent(events).getElement(), RenderPosition.BEFOREEND);
+render(tripInfoElement, new PriceInfoComponent(events), RenderPosition.BEFOREEND);
 
-render(tripControlsElement, new TripTabsComponent().getElement(), RenderPosition.BEFOREEND);
-render(tripControlsElement, new FiltersComponent().getElement(), RenderPosition.BEFOREEND);
+render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
+render(tripControlsElement, new FiltersComponent(), RenderPosition.BEFOREEND);
 
 // main
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
 // sorting line
-render(tripEventsElement, new SortComponent().getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new SortComponent(), RenderPosition.BEFOREEND);
 // days and events container
-render(tripEventsElement, new DaysListComponent().getElement(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new DaysListComponent(), RenderPosition.BEFOREEND);
 
 // days and events
 const [eventsByDays, dates] = splitEventsByDays(events);
@@ -53,7 +53,7 @@ dates.forEach((day, i, arr) => {
 
   const counter = getDifferenceInDays(arr[0], day);
 
-  render(tripDaysListElement, new DayComponent(day, counter + 1).getElement(), RenderPosition.BEFOREEND);
+  render(tripDaysListElement, new DayComponent(day, counter + 1), RenderPosition.BEFOREEND);
 });
 
 const renderEvent = (eventListElement, event) => {
@@ -74,7 +74,7 @@ const renderEvent = (eventListElement, event) => {
   rollupButton.addEventListener(`click`, rollupButtonClickHandler);
   eventEditForm.addEventListener(`submit`, editFormSubmitHandler);
 
-  render(eventListElement, eventComponent.getElement(), RenderPosition.BEFOREEND);
+  render(eventListElement, eventComponent, RenderPosition.BEFOREEND);
 };
 
 // render events inside of days
