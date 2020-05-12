@@ -136,4 +136,8 @@ export default class EventEdit extends AbstractComponent {
   getTemplate() {
     return createTripEditFormTemplate(this._event);
   }
+
+  setSubmitHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
+  }
 }

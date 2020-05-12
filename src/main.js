@@ -66,13 +66,10 @@ const renderEvent = (eventListElement, event) => {
   };
 
   const eventComponent = new EventComponent(event);
-  const rollupButton = eventComponent.getElement().querySelector(`.event__rollup-btn`);
-
   const editEventComponent = new EditEventComponent(event);
-  const eventEditForm = editEventComponent.getElement();
 
-  rollupButton.addEventListener(`click`, rollupButtonClickHandler);
-  eventEditForm.addEventListener(`submit`, editFormSubmitHandler);
+  eventComponent.setRollupButtonClickHandler(rollupButtonClickHandler);
+  editEventComponent.setSubmitHandler(editFormSubmitHandler);
 
   render(eventListElement, eventComponent, RenderPosition.BEFOREEND);
 };
