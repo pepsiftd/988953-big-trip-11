@@ -9,12 +9,30 @@ export default class TripController {
   constructor(container) {
     this._container = container;
 
+    this._events = [];
     this._eventControllers = [];
     this._sortComponent = new SortComponent();
     this._daysListComponent = new DaysListComponent();
+
+    this._onDataChange = this._onDataChange.bind(this);
+  }
+
+  _onDataChange(eventController, oldData, newData) {
+    const index = this._events.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._events = [].concat(this._events.slice(0, index),
+      newData,
+      this._events.slice(index + 1));
+    eventController.render(this._events[index]);
   }
 
   render(events) {
+    this._events = events;
+
     // sorting line
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     // days and events container
@@ -43,7 +61,7 @@ export default class TripController {
 
     tripEventsListElements.forEach((it, i) => {
       eventsByDays[i].forEach((event) => {
-        const eventController = new EventController(it);
+        const eventController = new EventController(it, this._onDataChange);
         this._eventControllers.push(eventController);
         eventController.render(event);
       });

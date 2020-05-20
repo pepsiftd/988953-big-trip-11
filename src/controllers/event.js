@@ -3,28 +3,45 @@ import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render} from '@/utils/render';
 
 export default class EventController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
-    this._event = {};
+    this._eventComponent = null;
+    this._editEventComponent = null;
+
+    this._onDataChange = onDataChange;
   }
 
   render(event) {
-    this._event = event;
-
     const rollupButtonClickHandler = () => {
-      replace(editEventComponent, eventComponent);
+      replace(this._editEventComponent, this._eventComponent);
     };
 
-    const editFormSubmitHandler = () => {
-      replace(eventComponent, editEventComponent);
+    const editFormSubmitHandler = (evt) => {
+      evt.preventDefault();
+      replace(this._eventComponent, this._editEventComponent);
     };
 
-    const eventComponent = new EventComponent(this._event);
-    const editEventComponent = new EditEventComponent(this._event);
+    const favoriteClickHandler = () => {
+      this._onDataChange(this, event, Object.assign({}, event, {
+        isFavorite: !event.isFavorite
+      }));
+    };
 
-    eventComponent.setRollupButtonClickHandler(rollupButtonClickHandler);
-    editEventComponent.setSubmitHandler(editFormSubmitHandler);
+    const oldEventComponent = this._eventComponent;
+    const oldEditEventComponent = this._editEventComponent;
 
-    render(this._container, eventComponent, RenderPosition.BEFOREEND);
+    this._eventComponent = new EventComponent(event);
+    this._editEventComponent = new EditEventComponent(event);
+
+    this._eventComponent.setRollupButtonClickHandler(rollupButtonClickHandler);
+    this._editEventComponent.setSubmitHandler(editFormSubmitHandler);
+    this._editEventComponent.setFavoriteClickHandler(favoriteClickHandler);
+
+    if (oldEventComponent && oldEditEventComponent) {
+      replace(this._eventComponent, oldEventComponent);
+      replace(this._editEventComponent, oldEditEventComponent);
+    } else {
+      render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
+    }
   }
 }
