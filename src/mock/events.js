@@ -1,4 +1,4 @@
-import {getRandomArrayItem, getRandomIntegerNumber} from '@/utils/common';
+import {getRandomArrayItem, getRandomIntegerNumber, getRandomBoolean} from '@/utils/common';
 import {generateOffers} from '@/mock/offers';
 
 const MS_IN_DAY = 86400000;
@@ -66,6 +66,7 @@ const getPhotosList = (count) => {
 };
 
 const generateEvent = () => {
+  const isFavorite = getRandomBoolean();
   const type = getRandomArrayItem(eventTypes);
   const destination = getRandomArrayItem(destinations);
   const dateStart = getRandomStartDate();
@@ -79,6 +80,7 @@ const generateEvent = () => {
 
   return {
     type,
+    isFavorite,
     destination,
     dateStart,
     dateEnd,
