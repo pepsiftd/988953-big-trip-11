@@ -1,15 +1,15 @@
 import SortComponent from '@/components/trip-sort';
-import EditEventComponent from '@/components/trip-edit';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
-import EventComponent from '@/components/trip-event';
+import EventController from '@/controllers/event';
 import {splitEventsByDays} from '@/components/sort';
-import {RenderPosition, replace, render} from '@/utils/render';
+import {RenderPosition, render} from '@/utils/render';
 
 export default class TripController {
   constructor(container) {
     this._container = container;
 
+    this._eventControllers = [];
     this._sortComponent = new SortComponent();
     this._daysListComponent = new DaysListComponent();
   }
@@ -38,30 +38,14 @@ export default class TripController {
       render(tripDaysListElement, new DayComponent(day, counter + 1), RenderPosition.BEFOREEND);
     });
 
-    const renderEvent = (eventListElement, event) => {
-      const rollupButtonClickHandler = () => {
-        replace(editEventComponent, eventComponent);
-      };
-
-      const editFormSubmitHandler = () => {
-        replace(eventComponent, editEventComponent);
-      };
-
-      const eventComponent = new EventComponent(event);
-      const editEventComponent = new EditEventComponent(event);
-
-      eventComponent.setRollupButtonClickHandler(rollupButtonClickHandler);
-      editEventComponent.setSubmitHandler(editFormSubmitHandler);
-
-      render(eventListElement, eventComponent, RenderPosition.BEFOREEND);
-    };
-
     // render events inside of days
     const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
 
     tripEventsListElements.forEach((it, i) => {
       eventsByDays[i].forEach((event) => {
-        renderEvent(it, event);
+        const eventController = new EventController(it);
+        this._eventControllers.push(eventController);
+        eventController.render(event);
       });
     });
   }
