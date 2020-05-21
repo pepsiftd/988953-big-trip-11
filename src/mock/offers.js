@@ -2,18 +2,24 @@ import {getRandomIntegerNumber, getRandomBoolean} from '@/utils/common';
 
 const MAX_OFFERS = 5;
 
-const eventTypes = [
-  `taxi`,
-  `bus`,
-  `train`,
-  `ship`,
-  `transport`,
-  `drive`,
-  `flight`,
-  `check-in`,
-  `sightseeing`,
-  `restaurant`
-];
+export const eventTypes = {
+  transfer:
+  [
+    `taxi`,
+    `bus`,
+    `train`,
+    `ship`,
+    `transport`,
+    `drive`,
+    `flight`,
+  ],
+  activity:
+  [
+    `check-in`,
+    `sightseeing`,
+    `restaurant`
+  ]
+};
 
 const getRandomOffers = () => {
   const count = getRandomIntegerNumber(0, MAX_OFFERS);
@@ -24,19 +30,23 @@ const getRandomOffers = () => {
         id: `rdo${i + 1}`,
         title: `Random offer #${i + 1}`,
         price: getRandomIntegerNumber(10, 50),
-        selected: getRandomBoolean(),
       };
     });
 
   return randomOffers;
 };
 
-const offersMap = new Map();
+const activityOffersMap = new Map();
+const transferOffersMap = new Map();
 
-eventTypes.forEach((type) => {
-  offersMap.set(type, getRandomOffers());
+eventTypes.transfer.forEach((type) => {
+  transferOffersMap.set(type, getRandomOffers());
+});
+
+eventTypes.activity.forEach((type) => {
+  activityOffersMap.set(type, getRandomOffers());
 });
 
 export const generateOffers = (type) => {
-  return offersMap.get(type);
+  return transferOffersMap.get(type) ? transferOffersMap.get(type) : activityOffersMap.get(type);
 };

@@ -1,21 +1,8 @@
 import {destinations} from '@/mock/destinations';
 import {getRandomArrayItem, getRandomIntegerNumber, getRandomBoolean} from '@/utils/common';
-import {generateOffers} from '@/mock/offers';
+import {generateOffers, eventTypes} from '@/mock/offers';
 
 const MS_IN_DAY = 86400000;
-
-const eventTypes = [
-  `taxi`,
-  `bus`,
-  `train`,
-  `ship`,
-  `transport`,
-  `drive`,
-  `flight`,
-  `check-in`,
-  `sightseeing`,
-  `restaurant`
-];
 
 const getRandomStartDate = () => {
   const MAX_DAYS_FROM_NOW = 20;
@@ -35,15 +22,23 @@ const getRandomEndDate = (startDate) => {
   return endDate;
 };
 
+const selectRandomOffers = (offers) => {
+  return offers.map((it) => {
+    return Object.assign({}, it, {
+      selected: getRandomBoolean()
+    });
+  });
+};
+
 const generateEvent = () => {
   const isFavorite = getRandomBoolean();
-  const type = getRandomArrayItem(eventTypes);
+  const type = getRandomArrayItem(eventTypes[getRandomArrayItem([`transfer`, `activity`])]);
   const destination = getRandomArrayItem(destinations);
   const dateStart = getRandomStartDate();
   const dateEnd = getRandomEndDate(dateStart);
   const price = getRandomIntegerNumber(10, 250);
 
-  const offers = generateOffers(type);
+  const offers = selectRandomOffers(generateOffers(type));
 
   return {
     type,

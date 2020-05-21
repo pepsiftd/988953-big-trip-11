@@ -1,36 +1,24 @@
 import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
+import {destinations} from '@/mock/destinations';
+import {eventTypes} from '@/mock/offers';
 
-const eventTypeToMarkup = {
-  'taxi': `Taxi to`,
-  'bus': `Bus to`,
-  'train': `Train to`,
-  'ship': `Ship to`,
-  'transport': `Transport to`,
-  'drive': `Drive to`,
-  'flight': `Flight to`,
-  'check-in': `Check-in in`,
-  'sightseeing': `Sightseeing in`,
-  'restaurant': `Restaurant in`,
+const getEventTypeMarkup = (type) => {
+  let markup = type.charAt(0).toUpperCase() + type.slice(1);
+  if (eventTypes.transfer.includes(type)) {
+    markup += ` to `;
+  } else {
+    markup += ` in `;
+  }
+
+  return markup;
 };
 
-const destinations = [
-  `Amsterdam`,
-  `London`,
-  `Barcelona`,
-  `Machu-Pikchu`,
-  `Rome`,
-  `Pataya`,
-  `Sidney`,
-  `Melbourne`,
-  `St.Petersburg`,
-  `Vilnius`,
-  `Budapest`
-];
+const destinationNames = destinations.map((it) => it.name);
 
 const getDestinationsListMarkup = () => {
-  return destinations
+  return destinationNames
     .map((it) => {
       return `<option value="${it}"></option>`;
     }).join(`\n`);
@@ -66,7 +54,7 @@ const createTripEditFormTemplate = (event) => {
   } = event;
 
   const type = event.type ? event.type.toLowerCase() : ``;
-  const typeMarkup = event.type ? eventTypeToMarkup[type] : ``;
+  const typeMarkup = event.type ? getEventTypeMarkup(type) : ``;
 
   const typeListMarkup = createTypeListMarkup(event);
 

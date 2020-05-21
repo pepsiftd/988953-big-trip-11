@@ -1,17 +1,16 @@
 import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
+import {eventTypes} from '@/mock/offers';
 
-const EventTypes = {
-  'taxi': `Taxi to `,
-  'bus': `Bus to `,
-  'train': `Train to `,
-  'ship': `Ship to `,
-  'transport': `Transport to `,
-  'drive': `Drive to `,
-  'flight': `Flight to `,
-  'check-in': `Check-in in `,
-  'sightseeing': `Sightseeing in`,
-  'restaurant': `Restaurant in`,
+const getEventTypeMarkup = (type) => {
+  let markup = type.charAt(0).toUpperCase() + type.slice(1);
+  if (eventTypes.transfer.includes(type)) {
+    markup += ` to `;
+  } else {
+    markup += ` in `;
+  }
+
+  return markup;
 };
 
 const addLeadingZero = (time) => {
@@ -44,7 +43,7 @@ const getDuration = (startDate, endDate) => {
 const createEventTemplate = (event) => {
   const {destination, dateStart, dateEnd, price, offers} = event;
   const type = event.type.toLowerCase();
-  const typeMarkup = EventTypes[type];
+  const typeMarkup = getEventTypeMarkup(type);
   const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
