@@ -1,4 +1,4 @@
-import AbstractComponent from '@/components/abstract-component';
+import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
 
@@ -141,10 +141,18 @@ const createTripEditFormTemplate = (event) => {
   );
 };
 
-export default class EventEdit extends AbstractComponent {
+export default class EventEdit extends AbstractSmartComponent {
   constructor(event) {
     super();
     this._event = event;
+
+    this._submitHandler = null;
+    this._favoriteClickHandler = null;
+  }
+
+  recoverListeners() {
+    this.setSubmitHandler(this._submitHandler);
+    this.setFavoriteClickHandler(this._favoriteClickHandler);
   }
 
   getTemplate() {
@@ -152,10 +160,12 @@ export default class EventEdit extends AbstractComponent {
   }
 
   setSubmitHandler(handler) {
+    this._submitHandler = handler;
     this.getElement().addEventListener(`submit`, handler);
   }
 
   setFavoriteClickHandler(handler) {
+    this._favoriteClickHandler = handler;
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, handler);
   }
