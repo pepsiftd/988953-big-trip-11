@@ -136,11 +136,15 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._submitHandler = null;
     this._favoriteClickHandler = null;
+    this._eventTypeChangeHandler = null;
+    this._destinationChangeHandler = null;
   }
 
   recoverListeners() {
     this.setSubmitHandler(this._submitHandler);
     this.setFavoriteClickHandler(this._favoriteClickHandler);
+    this.setEventTypeChangeHandler(this._eventTypeChangeHandler);
+    this.setDestinationChangeHandler(this._destinationChangeHandler);
   }
 
   getTemplate() {
@@ -156,5 +160,20 @@ export default class EventEdit extends AbstractSmartComponent {
     this._favoriteClickHandler = handler;
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, handler);
+  }
+
+  setEventTypeChangeHandler(handler) {
+    this._eventTypeChangeHandler = handler;
+    const eventTypeGroups = this.getElement().querySelectorAll(`.event__type-group`);
+
+    eventTypeGroups.forEach((group) => {
+      group.addEventListener(`change`, handler);
+    });
+  }
+
+  setDestinationChangeHandler(handler) {
+    this._destinationChangeHandler = handler;
+    this.getElement().querySelector(`.event__field-group--destination input`)
+      .addEventListener(`change`, handler);
   }
 }

@@ -27,6 +27,18 @@ export default class EventController {
       }));
     };
 
+    const eventTypeChangeHandler = (evt) => {
+      this._onDataChange(this, event, Object.assign({}, event, {
+        type: evt.target.value,
+      }));
+    };
+
+    const destinationChangeHandler = () => {
+      this._onDataChange(this, event, Object.assign({}, event, {
+        type: evt.target.value,
+      }));
+    };
+
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;
 
@@ -36,6 +48,8 @@ export default class EventController {
     this._eventComponent.setRollupButtonClickHandler(rollupButtonClickHandler);
     this._editEventComponent.setSubmitHandler(editFormSubmitHandler);
     this._editEventComponent.setFavoriteClickHandler(favoriteClickHandler);
+    this._editEventComponent.setEventTypeChangeHandler(eventTypeChangeHandler);
+    this._editEventComponent.setDestinationChangeHandler(destinationChangeHandler);
 
     if (oldEventComponent && oldEditEventComponent) {
       replace(this._eventComponent, oldEventComponent);
