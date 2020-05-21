@@ -33,7 +33,7 @@ export default class EventController {
       }));
     };
 
-    const destinationChangeHandler = () => {
+    const destinationChangeHandler = (evt) => {
       this._onDataChange(this, event, Object.assign({}, event, {
         type: evt.target.value,
       }));

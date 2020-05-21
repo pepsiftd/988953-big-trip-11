@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber, getRandomBoolean} from '@/utils/common';
+import {getRandomIntegerNumber} from '@/utils/common';
 
 const MAX_OFFERS = 5;
 
