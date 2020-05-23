@@ -17,6 +17,7 @@ export default class TripController {
     this._daysListComponent = new DaysListComponent();
 
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
   }
 
   _onDataChange(eventController, oldData, newData) {
@@ -30,6 +31,12 @@ export default class TripController {
         newData,
         this._events.slice(index + 1));
     eventController.render(this._events[index], this._offersData, this._destinations);
+  }
+
+  _onViewChange() {
+    this._eventControllers.forEach((it) => {
+      it.setDefaultView();
+    });
   }
 
   render(events, offersData, destinations) {
@@ -65,7 +72,7 @@ export default class TripController {
 
     tripEventsListElements.forEach((it, i) => {
       eventsByDays[i].forEach((event) => {
-        const eventController = new EventController(it, this._onDataChange);
+        const eventController = new EventController(it, this._onDataChange, this._onViewChange);
         this._eventControllers.push(eventController);
         eventController.render(event, this._offersData, this._destinations);
       });

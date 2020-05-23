@@ -2,23 +2,47 @@ import EventComponent from '@/components/trip-event';
 import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render} from '@/utils/render';
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+}
+
 export default class EventController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
+    this._mode = Mode.DEFAULT;
     this._eventComponent = null;
     this._editEventComponent = null;
 
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
+  }
+
+  replaceDefaultWithEdit() {
+    this._onViewChange();
+    replace(this._editEventComponent, this._eventComponent);
+    this._mode = Mode.EDIT;
+  }
+
+  replaceEditWithDefault() {
+    replace(this._eventComponent, this._editEventComponent);
+    this._mode = Mode.DEFAULT;
+  }
+
+  setDefaultView() {
+    if (this._mode === Mode.EDIT) {
+      this.replaceEditWithDefault();
+    }
   }
 
   render(event, offersData, destinations) {
     const rollupButtonClickHandler = () => {
-      replace(this._editEventComponent, this._eventComponent);
+      this.replaceDefaultWithEdit();
     };
 
     const editFormSubmitHandler = (evt) => {
       evt.preventDefault();
-      replace(this._eventComponent, this._editEventComponent);
+      this.replaceEditWithDefault();
     };
 
     const favoriteClickHandler = () => {
@@ -41,7 +65,6 @@ export default class EventController {
         photos: destinations.find((it) => it.name === evt.target.value).photos,
       }));
     };
-    console.log(destinations);
 
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;
