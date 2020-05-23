@@ -47,7 +47,7 @@ eventTypes.activity.forEach((type) => {
   activityOffersMap.set(type, getRandomOffers());
 });
 
-export const generateOffers = (type) => {
+export const generateOffers = () => {
   return {
     transfer: transferOffersMap,
     activity: activityOffersMap,

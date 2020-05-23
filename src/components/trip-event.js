@@ -1,6 +1,5 @@
 import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
-import {eventTypes} from '@/mock/offers';
 
 const getEventTypeMarkup = (offersData, type) => {
   let markup = type.charAt(0).toUpperCase() + type.slice(1);

@@ -5,7 +5,7 @@ import {RenderPosition, replace, render} from '@/utils/render';
 const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
-}
+};
 
 export default class EventController {
   constructor(container, onDataChange, onViewChange) {
