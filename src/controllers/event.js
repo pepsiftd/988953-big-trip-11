@@ -30,14 +30,18 @@ export default class EventController {
     const eventTypeChangeHandler = (evt) => {
       this._onDataChange(this, event, Object.assign({}, event, {
         type: evt.target.value,
+        offers: offersData.transfer.get(evt.target.value) ? offersData.transfer.get(evt.target.value) : offersData.activity.get(evt.target.value),
       }));
     };
 
     const destinationChangeHandler = (evt) => {
       this._onDataChange(this, event, Object.assign({}, event, {
-        type: evt.target.value,
+        destination: evt.target.value,
+        description: destinations.find((it) => it.name === evt.target.value).description,
+        photos: destinations.find((it) => it.name === evt.target.value).photos,
       }));
     };
+    console.log(destinations);
 
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;

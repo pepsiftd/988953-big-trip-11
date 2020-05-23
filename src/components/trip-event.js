@@ -3,7 +3,6 @@ import {createOffersTemplate} from '@/components/offers';
 import {eventTypes} from '@/mock/offers';
 
 const getEventTypeMarkup = (offersData, type) => {
-  console.log(offersData);
   let markup = type.charAt(0).toUpperCase() + type.slice(1);
   if (offersData.transfer.has(type)) {
     markup += ` to `;

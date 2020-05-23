@@ -3,7 +3,6 @@ import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
 
 const getEventTypeMarkup = (offersData, type) => {
-  console.log(offersData);
   let markup = type.charAt(0).toUpperCase() + type.slice(1);
   if (offersData.transfer.has(type)) {
     markup += ` to `;
