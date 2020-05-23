@@ -48,5 +48,8 @@ eventTypes.activity.forEach((type) => {
 });
 
 export const generateOffers = (type) => {
-  return transferOffersMap.get(type) ? transferOffersMap.get(type) : activityOffersMap.get(type);
+  return {
+    transfer: transferOffersMap,
+    activity: activityOffersMap,
+  };
 };

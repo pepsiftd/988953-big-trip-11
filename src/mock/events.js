@@ -1,6 +1,4 @@
-import {destinations} from '@/mock/destinations';
 import {getRandomArrayItem, getRandomIntegerNumber, getRandomBoolean} from '@/utils/common';
-import {generateOffers, eventTypes} from '@/mock/offers';
 
 const MS_IN_DAY = 86400000;
 
@@ -22,23 +20,29 @@ const getRandomEndDate = (startDate) => {
   return endDate;
 };
 
-const selectRandomOffers = (offers) => {
-  return offers.map((it) => {
+const selectRandomOffers = (offers, type) => {
+  const selectedOffers = offers.transfer.get(type) ? offers.transfer.get(type) : offers.activity.get(type);
+  return selectedOffers.map((it) => {
     return Object.assign({}, it, {
       selected: getRandomBoolean()
     });
   });
 };
 
-const generateEvent = () => {
+const getRandomType = (allOffers) => {
+  const offerType = getRandomArrayItem(Object.entries(allOffers));
+  return getRandomArrayItem(Array.from(offerType[1]))[0];
+};
+
+const generateEvent = (destinations, allOffers) => {
   const isFavorite = getRandomBoolean();
-  const type = getRandomArrayItem(eventTypes[getRandomArrayItem([`transfer`, `activity`])]);
+  const type = getRandomType(allOffers);
   const destination = getRandomArrayItem(destinations);
   const dateStart = getRandomStartDate();
   const dateEnd = getRandomEndDate(dateStart);
   const price = getRandomIntegerNumber(10, 250);
 
-  const offers = selectRandomOffers(generateOffers(type));
+  const offers = selectRandomOffers(allOffers, type);
 
   return {
     type,
@@ -53,10 +57,10 @@ const generateEvent = () => {
   };
 };
 
-const generateEvents = (amount) => {
+const generateEvents = (amount, destinations, offers) => {
   return new Array(amount)
     .fill(``)
-    .map(generateEvent);
+    .map(() => generateEvent(destinations, offers));
 };
 
 export {generateEvent, generateEvents};

@@ -31,7 +31,7 @@ const getPhotosList = (count) => {
   return photosArray;
 };
 
-const generateDestinations = () => {
+export const generateDestinations = () => {
   return destinationNames.map((it) => {
     return {
       name: it,

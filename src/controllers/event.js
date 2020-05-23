@@ -11,7 +11,7 @@ export default class EventController {
     this._onDataChange = onDataChange;
   }
 
-  render(event) {
+  render(event, offersData, destinations) {
     const rollupButtonClickHandler = () => {
       replace(this._editEventComponent, this._eventComponent);
     };
@@ -42,8 +42,8 @@ export default class EventController {
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;
 
-    this._eventComponent = new EventComponent(event);
-    this._editEventComponent = new EditEventComponent(event);
+    this._eventComponent = new EventComponent(event, offersData);
+    this._editEventComponent = new EditEventComponent(event, offersData, destinations);
 
     this._eventComponent.setRollupButtonClickHandler(rollupButtonClickHandler);
     this._editEventComponent.setSubmitHandler(editFormSubmitHandler);

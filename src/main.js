@@ -4,13 +4,18 @@ import TripTabsComponent from '@/components/trip-tabs';
 import FiltersComponent from '@/components/trip-filters';
 
 import {generateEvents} from '@/mock/events';
+import {generateDestinations} from '@/mock/destinations';
+import {generateOffers} from '@/mock/offers';
+
 import {RenderPosition, render} from '@/utils/render';
 import TripController from '@/controllers/trip-controller';
 
 const EVENTS_AMOUNT = 20;
 
 // generate mock
-const events = generateEvents(EVENTS_AMOUNT);
+const destinations = generateDestinations();
+const offers = generateOffers();
+const events = generateEvents(EVENTS_AMOUNT, destinations, offers);
 
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -30,4 +35,4 @@ render(tripControlsElement, new FiltersComponent(), RenderPosition.BEFOREEND);
 const tripEventsElement = document.querySelector(`.trip-events`);
 
 const tripController = new TripController(tripEventsElement);
-tripController.render(events);
+tripController.render(events, offers, destinations);

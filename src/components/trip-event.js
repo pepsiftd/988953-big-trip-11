@@ -2,9 +2,10 @@ import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
 import {eventTypes} from '@/mock/offers';
 
-const getEventTypeMarkup = (type) => {
+const getEventTypeMarkup = (offersData, type) => {
+  console.log(offersData);
   let markup = type.charAt(0).toUpperCase() + type.slice(1);
-  if (eventTypes.transfer.includes(type)) {
+  if (offersData.transfer.has(type)) {
     markup += ` to `;
   } else {
     markup += ` in `;
@@ -40,10 +41,10 @@ const getDuration = (startDate, endDate) => {
   return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
 };
 
-const createEventTemplate = (event) => {
+const createEventTemplate = (event, offersData) => {
   const {destination, dateStart, dateEnd, price, offers} = event;
   const type = event.type.toLowerCase();
-  const typeMarkup = getEventTypeMarkup(type);
+  const typeMarkup = getEventTypeMarkup(offersData, type);
   const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
@@ -84,13 +85,14 @@ const createEventTemplate = (event) => {
 };
 
 export default class Event extends AbstractComponent {
-  constructor(event) {
+  constructor(event, offersData) {
     super();
     this._event = event;
+    this._offersData = offersData;
   }
 
   getTemplate() {
-    return createEventTemplate(this._event);
+    return createEventTemplate(this._event, this._offersData);
   }
 
   setRollupButtonClickHandler(handler) {

@@ -1,12 +1,11 @@
 import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
-import {destinations} from '@/mock/destinations';
-import {eventTypes} from '@/mock/offers';
 
-const getEventTypeMarkup = (type) => {
+const getEventTypeMarkup = (offersData, type) => {
+  console.log(offersData);
   let markup = type.charAt(0).toUpperCase() + type.slice(1);
-  if (eventTypes.transfer.includes(type)) {
+  if (offersData.transfer.has(type)) {
     markup += ` to `;
   } else {
     markup += ` in `;
@@ -15,9 +14,7 @@ const getEventTypeMarkup = (type) => {
   return markup;
 };
 
-const destinationNames = destinations.map((it) => it.name);
-
-const getDestinationsListMarkup = () => {
+const getDestinationsListMarkup = (destinationNames) => {
   return destinationNames
     .map((it) => {
       return `<option value="${it}"></option>`;
@@ -44,7 +41,7 @@ const getFormattedDate = (date) => {
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
-const createTripEditFormTemplate = (event) => {
+const createTripEditFormTemplate = (event, offersData, destinations) => {
   const {
     destination = ``,
     dateStart = new Date(),
@@ -54,14 +51,16 @@ const createTripEditFormTemplate = (event) => {
   } = event;
 
   const type = event.type ? event.type.toLowerCase() : ``;
-  const typeMarkup = event.type ? getEventTypeMarkup(type) : ``;
+  const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
 
   const typeListMarkup = createTypeListMarkup(event);
 
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
 
-  const destinationsList = getDestinationsListMarkup();
+
+  const destinationNames = destinations.map((it) => it.name);
+  const destinationsList = getDestinationsListMarkup(destinationNames);
   const favoriteCheckedMarkup = isFavorite ? `checked` : ``;
 
   const eventDetailsMarkup = destination && (event.description || Boolean(event.offers)) ? createEventDetailsMarkup(event) : ``;
@@ -130,9 +129,11 @@ const createTripEditFormTemplate = (event) => {
 };
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event) {
+  constructor(event, offersData, destinations) {
     super();
     this._event = event;
+    this._offersData = offersData;
+    this._destinations = destinations;
 
     this._submitHandler = null;
     this._favoriteClickHandler = null;
@@ -148,7 +149,7 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this._event);
+    return createTripEditFormTemplate(this._event, this._offersData, this._destinations);
   }
 
   setSubmitHandler(handler) {

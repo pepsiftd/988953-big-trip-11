@@ -10,6 +10,8 @@ export default class TripController {
     this._container = container;
 
     this._events = [];
+    this._offersData = [];
+    this._destinations = [];
     this._eventControllers = [];
     this._sortComponent = new SortComponent();
     this._daysListComponent = new DaysListComponent();
@@ -27,11 +29,13 @@ export default class TripController {
     this._events = [].concat(this._events.slice(0, index),
         newData,
         this._events.slice(index + 1));
-    eventController.render(this._events[index]);
+    eventController.render(this._events[index], this._offersData, this._destinations);
   }
 
-  render(events) {
+  render(events, offersData, destinations) {
     this._events = events;
+    this._offersData = offersData;
+    this._destinations = destinations;
 
     // sorting line
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
@@ -63,7 +67,7 @@ export default class TripController {
       eventsByDays[i].forEach((event) => {
         const eventController = new EventController(it, this._onDataChange);
         this._eventControllers.push(eventController);
-        eventController.render(event);
+        eventController.render(event, this._offersData, this._destinations);
       });
     });
   }
