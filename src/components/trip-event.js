@@ -1,18 +1,6 @@
 import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
-
-const EventTypes = {
-  'taxi': `Taxi to `,
-  'bus': `Bus to `,
-  'train': `Train to `,
-  'ship': `Ship to `,
-  'transport': `Transport to `,
-  'drive': `Drive to `,
-  'flight': `Flight to `,
-  'check-in': `Check-in in `,
-  'sightseeing': `Sightseeing in`,
-  'restaurant': `Restaurant in`,
-};
+import {getEventTypeMarkup} from '@/utils/common';
 
 const addLeadingZero = (time) => {
   return (`00` + time).slice(-2);
@@ -41,10 +29,10 @@ const getDuration = (startDate, endDate) => {
   return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
 };
 
-const createEventTemplate = (event) => {
+const createEventTemplate = (event, offersData) => {
   const {destination, dateStart, dateEnd, price, offers} = event;
   const type = event.type.toLowerCase();
-  const typeMarkup = EventTypes[type];
+  const typeMarkup = getEventTypeMarkup(offersData, type);
   const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
   const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
   const duration = getDuration(dateStart, dateEnd);
@@ -85,13 +73,14 @@ const createEventTemplate = (event) => {
 };
 
 export default class Event extends AbstractComponent {
-  constructor(event) {
+  constructor(event, offersData) {
     super();
     this._event = event;
+    this._offersData = offersData;
   }
 
   getTemplate() {
-    return createEventTemplate(this._event);
+    return createEventTemplate(this._event, this._offersData);
   }
 
   setRollupButtonClickHandler(handler) {

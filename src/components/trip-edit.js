@@ -1,36 +1,10 @@
-import AbstractComponent from '@/components/abstract-component';
+import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
+import {getEventTypeMarkup} from '@/utils/common';
 
-const eventTypeToMarkup = {
-  'taxi': `Taxi to`,
-  'bus': `Bus to`,
-  'train': `Train to`,
-  'ship': `Ship to`,
-  'transport': `Transport to`,
-  'drive': `Drive to`,
-  'flight': `Flight to`,
-  'check-in': `Check-in in`,
-  'sightseeing': `Sightseeing in`,
-  'restaurant': `Restaurant in`,
-};
-
-const destinations = [
-  `Amsterdam`,
-  `London`,
-  `Barcelona`,
-  `Machu-Pikchu`,
-  `Rome`,
-  `Pataya`,
-  `Sidney`,
-  `Melbourne`,
-  `St.Petersburg`,
-  `Vilnius`,
-  `Budapest`
-];
-
-const getDestinationsListMarkup = () => {
-  return destinations
+const getDestinationsListMarkup = (destinationNames) => {
+  return destinationNames
     .map((it) => {
       return `<option value="${it}"></option>`;
     }).join(`\n`);
@@ -56,23 +30,27 @@ const getFormattedDate = (date) => {
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
-const createTripEditFormTemplate = (event) => {
+const createTripEditFormTemplate = (event, offersData, destinations) => {
   const {
     destination = ``,
     dateStart = new Date(),
     dateEnd = new Date(),
-    price = ``
+    price = ``,
+    isFavorite,
   } = event;
 
   const type = event.type ? event.type.toLowerCase() : ``;
-  const typeMarkup = event.type ? eventTypeToMarkup[type] : ``;
+  const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
 
-  const typeListMarkup = createTypeListMarkup(event);
+  const typeListMarkup = createTypeListMarkup(event, offersData);
 
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
 
-  const destinationsList = getDestinationsListMarkup();
+
+  const destinationNames = destinations.map((it) => it.name);
+  const destinationsList = getDestinationsListMarkup(destinationNames);
+  const favoriteCheckedMarkup = isFavorite ? `checked` : ``;
 
   const eventDetailsMarkup = destination && (event.description || Boolean(event.offers)) ? createEventDetailsMarkup(event) : ``;
 
@@ -121,23 +99,71 @@ const createTripEditFormTemplate = (event) => {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favoriteCheckedMarkup}>
+        <label class="event__favorite-btn" for="event-favorite-1">
+          <span class="visually-hidden">Add to favorite</span>
+          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+          </svg>
+        </label>
+
+        <button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>
       </header>
       ${eventDetailsMarkup}
     </form>`
   );
 };
 
-export default class EventEdit extends AbstractComponent {
-  constructor(event) {
+export default class EventEdit extends AbstractSmartComponent {
+  constructor(event, offersData, destinations) {
     super();
     this._event = event;
+    this._offersData = offersData;
+    this._destinations = destinations;
+
+    this._submitHandler = null;
+    this._favoriteClickHandler = null;
+    this._eventTypeChangeHandler = null;
+    this._destinationChangeHandler = null;
+  }
+
+  recoverListeners() {
+    this.setSubmitHandler(this._submitHandler);
+    this.setFavoriteClickHandler(this._favoriteClickHandler);
+    this.setEventTypeChangeHandler(this._eventTypeChangeHandler);
+    this.setDestinationChangeHandler(this._destinationChangeHandler);
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this._event);
+    return createTripEditFormTemplate(this._event, this._offersData, this._destinations);
   }
 
   setSubmitHandler(handler) {
+    this._submitHandler = handler;
     this.getElement().addEventListener(`submit`, handler);
+  }
+
+  setFavoriteClickHandler(handler) {
+    this._favoriteClickHandler = handler;
+    this.getElement().querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, handler);
+  }
+
+  setEventTypeChangeHandler(handler) {
+    this._eventTypeChangeHandler = handler;
+    const eventTypeGroups = this.getElement().querySelectorAll(`.event__type-group`);
+
+    eventTypeGroups.forEach((group) => {
+      group.addEventListener(`change`, handler);
+    });
+  }
+
+  setDestinationChangeHandler(handler) {
+    this._destinationChangeHandler = handler;
+    this.getElement().querySelector(`.event__field-group--destination input`)
+      .addEventListener(`change`, handler);
   }
 }

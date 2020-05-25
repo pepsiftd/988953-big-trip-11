@@ -1,22 +1,3 @@
-const eventTypes = {
-  transfer:
-  [
-    `taxi`,
-    `bus`,
-    `train`,
-    `ship`,
-    `transport`,
-    `drive`,
-    `flight`,
-  ],
-  activity:
-  [
-    `check-in`,
-    `sightseeing`,
-    `restaurant`
-  ]
-};
-
 const createTypeItemMarkup = (type, eventNumber, isChecked) => {
   const n = eventNumber;
   return (
@@ -27,18 +8,18 @@ const createTypeItemMarkup = (type, eventNumber, isChecked) => {
   );
 };
 
-const createTransferListMarkup = (selectedType) => {
-  return eventTypes.transfer.map((type) => createTypeItemMarkup(type, 1, type === selectedType)).join(`\n`);
+const createTypesListMarkup = (selectedType, typesList) => {
+  return typesList.map((type) => createTypeItemMarkup(type, 1, type === selectedType)).join(`\n`);
 };
 
-const createActivityListMarkup = (selectedType) => {
-  return eventTypes.activity.map((type) => createTypeItemMarkup(type, 1, type === selectedType)).join(`\n`);
-};
-
-export const createTypeListMarkup = (event) => {
+export const createTypeListMarkup = (event, offers) => {
   const selectedType = event.type;
-  const transferList = createTransferListMarkup(selectedType);
-  const activityList = createActivityListMarkup(selectedType);
+  const eventTypes = {
+    TRANSFER: Array.from(offers.TRANSFER.keys()),
+    ACTIVITY: Array.from(offers.ACTIVITY.keys()),
+  };
+  const transferList = createTypesListMarkup(selectedType, eventTypes.TRANSFER);
+  const activityList = createTypesListMarkup(selectedType, eventTypes.ACTIVITY);
 
   return (
     `<div class="event__type-list">

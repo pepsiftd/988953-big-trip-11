@@ -1,20 +1,49 @@
 import SortComponent from '@/components/trip-sort';
-import EditEventComponent from '@/components/trip-edit';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
-import EventComponent from '@/components/trip-event';
+import EventController from '@/controllers/event';
 import {splitEventsByDays} from '@/components/sort';
-import {RenderPosition, replace, render} from '@/utils/render';
+import {RenderPosition, render} from '@/utils/render';
 
 export default class TripController {
   constructor(container) {
     this._container = container;
 
+    this._events = [];
+    this._offersData = [];
+    this._destinations = [];
+    this._eventControllers = [];
     this._sortComponent = new SortComponent();
     this._daysListComponent = new DaysListComponent();
+
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
   }
 
-  render(events) {
+  _onDataChange(eventController, oldData, newData) {
+    const index = this._events.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+
+    this._events = [].concat(this._events.slice(0, index),
+        newData,
+        this._events.slice(index + 1));
+    eventController.render(this._events[index], this._offersData, this._destinations);
+  }
+
+  _onViewChange() {
+    this._eventControllers.forEach((it) => {
+      it.setDefaultView();
+    });
+  }
+
+  render(events, offersData, destinations) {
+    this._events = events;
+    this._offersData = offersData;
+    this._destinations = destinations;
+
     // sorting line
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     // days and events container
@@ -38,30 +67,14 @@ export default class TripController {
       render(tripDaysListElement, new DayComponent(day, counter + 1), RenderPosition.BEFOREEND);
     });
 
-    const renderEvent = (eventListElement, event) => {
-      const rollupButtonClickHandler = () => {
-        replace(editEventComponent, eventComponent);
-      };
-
-      const editFormSubmitHandler = () => {
-        replace(eventComponent, editEventComponent);
-      };
-
-      const eventComponent = new EventComponent(event);
-      const editEventComponent = new EditEventComponent(event);
-
-      eventComponent.setRollupButtonClickHandler(rollupButtonClickHandler);
-      editEventComponent.setSubmitHandler(editFormSubmitHandler);
-
-      render(eventListElement, eventComponent, RenderPosition.BEFOREEND);
-    };
-
     // render events inside of days
     const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
 
     tripEventsListElements.forEach((it, i) => {
       eventsByDays[i].forEach((event) => {
-        renderEvent(it, event);
+        const eventController = new EventController(it, this._onDataChange, this._onViewChange);
+        this._eventControllers.push(eventController);
+        eventController.render(event, this._offersData, this._destinations);
       });
     });
   }
