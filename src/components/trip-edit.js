@@ -1,17 +1,7 @@
 import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
-
-const getEventTypeMarkup = (offersData, type) => {
-  let markup = type.charAt(0).toUpperCase() + type.slice(1);
-  if (offersData.transfer.has(type)) {
-    markup += ` to `;
-  } else {
-    markup += ` in `;
-  }
-
-  return markup;
-};
+import {getEventTypeMarkup} from '@/utils/common';
 
 const getDestinationsListMarkup = (destinationNames) => {
   return destinationNames

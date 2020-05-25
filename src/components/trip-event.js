@@ -1,16 +1,6 @@
 import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
-
-const getEventTypeMarkup = (offersData, type) => {
-  let markup = type.charAt(0).toUpperCase() + type.slice(1);
-  if (offersData.transfer.has(type)) {
-    markup += ` to `;
-  } else {
-    markup += ` in `;
-  }
-
-  return markup;
-};
+import {getEventTypeMarkup} from '@/utils/common';
 
 const addLeadingZero = (time) => {
   return (`00` + time).slice(-2);
