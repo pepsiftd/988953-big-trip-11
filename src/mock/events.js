@@ -21,7 +21,7 @@ const getRandomEndDate = (startDate) => {
 };
 
 const selectRandomOffers = (offers, type) => {
-  const selectedOffers = offers.transfer.get(type) ? offers.transfer.get(type) : offers.activity.get(type);
+  const selectedOffers = offers.TRANSFER.get(type) ? offers.TRANSFER.get(type) : offers.ACTIVITY.get(type);
   return selectedOffers.map((it) => {
     return Object.assign({}, it, {
       selected: getRandomBoolean()

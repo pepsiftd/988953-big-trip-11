@@ -42,7 +42,7 @@ const createTripEditFormTemplate = (event, offersData, destinations) => {
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
 
-  const typeListMarkup = createTypeListMarkup(event);
+  const typeListMarkup = createTypeListMarkup(event, offersData);
 
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;

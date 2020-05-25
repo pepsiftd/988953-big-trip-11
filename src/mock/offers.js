@@ -3,7 +3,7 @@ import {getRandomIntegerNumber} from '@/utils/common';
 const MAX_OFFERS = 5;
 
 export const eventTypes = {
-  transfer:
+  TRANSFER:
   [
     `taxi`,
     `bus`,
@@ -13,7 +13,7 @@ export const eventTypes = {
     `drive`,
     `flight`,
   ],
-  activity:
+  ACTIVITY:
   [
     `check-in`,
     `sightseeing`,
@@ -39,17 +39,17 @@ const getRandomOffers = () => {
 const activityOffersMap = new Map();
 const transferOffersMap = new Map();
 
-eventTypes.transfer.forEach((type) => {
+eventTypes.TRANSFER.forEach((type) => {
   transferOffersMap.set(type, getRandomOffers());
 });
 
-eventTypes.activity.forEach((type) => {
+eventTypes.ACTIVITY.forEach((type) => {
   activityOffersMap.set(type, getRandomOffers());
 });
 
 export const generateOffers = () => {
   return {
-    transfer: transferOffersMap,
-    activity: activityOffersMap,
+    TRANSFER: transferOffersMap,
+    ACTIVITY: activityOffersMap,
   };
 };

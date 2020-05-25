@@ -60,7 +60,7 @@ export default class EventController {
     this._editEventComponent.setEventTypeChangeHandler((evt) => {
       this._onDataChange(this, event, Object.assign({}, event, {
         type: evt.target.value,
-        offers: offersData.transfer.get(evt.target.value) ? offersData.transfer.get(evt.target.value) : offersData.activity.get(evt.target.value),
+        offers: offersData.TRANSFER.get(evt.target.value) ? offersData.TRANSFER.get(evt.target.value) : offersData.ACTIVITY.get(evt.target.value),
       }));
     });
 
