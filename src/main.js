@@ -3,6 +3,8 @@ import PriceInfoComponent from '@/components/price-info';
 import TripTabsComponent from '@/components/trip-tabs';
 import FiltersComponent from '@/components/trip-filters';
 
+import EventsModel from '@/models/events';
+
 import {generateEvents} from '@/mock/events';
 import {generateDestinations} from '@/mock/destinations';
 import {generateOffers} from '@/mock/offers';
@@ -16,6 +18,9 @@ const EVENTS_AMOUNT = 20;
 const destinations = generateDestinations();
 const offers = generateOffers();
 const events = generateEvents(EVENTS_AMOUNT, destinations, offers);
+
+const eventsModel = new EventsModel();
+eventsModel.setEvents(events);
 
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -34,5 +39,5 @@ render(tripControlsElement, new FiltersComponent(), RenderPosition.BEFOREEND);
 
 const tripEventsElement = document.querySelector(`.trip-events`);
 
-const tripController = new TripController(tripEventsElement);
-tripController.render(events, offers, destinations);
+const tripController = new TripController(tripEventsElement, eventsModel);
+tripController.render(offers, destinations);

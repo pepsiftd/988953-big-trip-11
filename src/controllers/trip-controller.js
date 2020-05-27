@@ -6,10 +6,10 @@ import {splitEventsByDays} from '@/components/sort';
 import {RenderPosition, render} from '@/utils/render';
 
 export default class TripController {
-  constructor(container) {
+  constructor(container, eventsModel) {
     this._container = container;
+    this._eventsModel = eventsModel;
 
-    this._events = [];
     this._offersData = [];
     this._destinations = [];
     this._eventControllers = [];
@@ -21,16 +21,13 @@ export default class TripController {
   }
 
   _onDataChange(eventController, oldData, newData) {
-    const index = this._events.findIndex((it) => it === oldData);
+    const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
 
-    if (index === -1) {
+    if(!isSuccess) {
       return;
     }
 
-    this._events = [].concat(this._events.slice(0, index),
-        newData,
-        this._events.slice(index + 1));
-    eventController.render(this._events[index], this._offersData, this._destinations);
+    eventController.render(newData, this._offersData, this._destinations);
   }
 
   _onViewChange() {
@@ -39,8 +36,8 @@ export default class TripController {
     });
   }
 
-  render(events, offersData, destinations) {
-    this._events = events;
+  render(offersData, destinations) {
+    const events = this._eventsModel.getEvents();
     this._offersData = offersData;
     this._destinations = destinations;
 

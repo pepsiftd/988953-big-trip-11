@@ -35,6 +35,7 @@ const getRandomType = (allOffers) => {
 };
 
 const generateEvent = (destinations, allOffers) => {
+  const id = String(Math.random());
   const isFavorite = getRandomBoolean();
   const type = getRandomType(allOffers);
   const destination = getRandomArrayItem(destinations);
@@ -45,6 +46,7 @@ const generateEvent = (destinations, allOffers) => {
   const offers = selectRandomOffers(allOffers, type);
 
   return {
+    id,
     type,
     isFavorite,
     destination: destination.name,
