@@ -1,7 +1,7 @@
 import TripInfoComponent from '@/components/trip-info';
 import PriceInfoComponent from '@/components/price-info';
 import TripTabsComponent from '@/components/trip-tabs';
-import FiltersComponent from '@/components/trip-filters';
+import FiltersController from '@/controllers/filters';
 
 import EventsModel from '@/models/events';
 
@@ -33,7 +33,9 @@ const tripInfoElement = tripMainElement.querySelector(`.trip-info`);
 render(tripInfoElement, new PriceInfoComponent(events), RenderPosition.BEFOREEND);
 
 render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
-render(tripControlsElement, new FiltersComponent(), RenderPosition.BEFOREEND);
+
+const filtersController = new FiltersController(tripControlsElement, eventsModel);
+filtersController.render();
 
 // main
 
