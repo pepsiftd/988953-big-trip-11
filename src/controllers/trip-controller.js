@@ -2,7 +2,7 @@ import SortComponent from '@/components/trip-sort';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
 import EventController from '@/controllers/event';
-import {splitEventsByDays} from '@/components/sort';
+import {splitEventsByDays, sortByStartDate} from '@/components/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
 
 export default class TripController {
@@ -57,12 +57,15 @@ export default class TripController {
 
   _renderEvents(isSortedByDays) {
     const events = this._eventsModel.getEvents();
+    const eventsAll = this._eventsModel.getEventsAll();
+
     if (isSortedByDays) {
       // days and events container
       render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
 
       // days and events
       const [eventsByDays, dates] = splitEventsByDays(events);
+      const tripStartDate = new Date(sortByStartDate(eventsAll)[0].dateStart.toISOString().slice(0, 10));
 
       // render days column
       const tripDaysListElement = this._container.querySelector(`.trip-days`);
@@ -74,7 +77,7 @@ export default class TripController {
           return Math.floor((end - start) / MS_IN_DAY);
         };
 
-        const counter = getDifferenceInDays(arr[0], day);
+        const counter = getDifferenceInDays(tripStartDate, day);
 
         render(tripDaysListElement, new DayComponent(day, counter + 1), RenderPosition.BEFOREEND);
       });
