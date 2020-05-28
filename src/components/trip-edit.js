@@ -98,7 +98,7 @@ const createTripEditFormTemplate = (event, offersData, destinations) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">Delete</button>
 
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favoriteCheckedMarkup}>
         <label class="event__favorite-btn" for="event-favorite-1">
@@ -144,6 +144,11 @@ export default class EventEdit extends AbstractSmartComponent {
   setSubmitHandler(handler) {
     this._submitHandler = handler;
     this.getElement().addEventListener(`submit`, handler);
+  }
+
+  setDeleteClickHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`)
+      .addEventListener(`click`, handler);
   }
 
   setFavoriteClickHandler(handler) {

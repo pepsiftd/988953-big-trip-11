@@ -7,6 +7,8 @@ const Mode = {
   EDIT: `edit`,
 };
 
+export const EmptyEvent = {};
+
 export default class EventController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
@@ -49,6 +51,10 @@ export default class EventController {
     this._editEventComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       this.replaceEditWithDefault();
+    });
+
+    this._editEventComponent.setDeleteClickHandler(() => {
+      this._onDataChange(this, event, null);
     });
 
     this._editEventComponent.setFavoriteClickHandler(() => {

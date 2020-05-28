@@ -33,6 +33,26 @@ export default class EventsModel {
     this._callHandlers(this._dataChangeHandlers);
   }
 
+  addEvent(event) {
+    this._tasks = [].concat(event, this._events);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
+  removeEvent(id) {
+    const index = this._events.findIndex((it) => it.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._events = [].concat(this._events.slice(0, index),
+        this._events.slice(index + 1));
+
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
   updateEvent(id, newEventData) {
     const index = this._events.findIndex((it) => it.id === id);
 
@@ -45,7 +65,7 @@ export default class EventsModel {
         this._events.slice(index + 1));
 
     this._callHandlers(this._dataChangeHandlers);
-    console.log(this._events);
+    console.log(id);
 
     return true;
   }

@@ -1,7 +1,7 @@
 import SortComponent from '@/components/trip-sort';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
-import EventController from '@/controllers/event';
+import EventController, {EmptyEvent} from '@/controllers/event';
 import {splitEventsByDays, sortByStartDate} from '@/components/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
 
@@ -24,13 +24,27 @@ export default class TripController {
   }
 
   _onDataChange(eventController, oldData, newData) {
-    const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
+    if (oldData === EmptyEvent) {
+      this.creatingEvent = null;
+      if (newData === null) {
+        eventController.destroy();
+      } else {
+        this._eventsModel.addEvent(newData);
+        eventController.render(newData, this._offersData, this._destinations);
+        this._eventControllers = [].concat(eventController, this._eventControllers);
+      }
+    } else if (newData === null) {
+      this._eventsModel.removeEvent(oldData.id);
+      this._updateEvents();
+    } else {
+      const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
 
-    if (!isSuccess) {
-      return;
+      if (!isSuccess) {
+        return;
+      }
+
+      eventController.render(newData, this._offersData, this._destinations);
     }
-
-    eventController.render(newData, this._offersData, this._destinations);
   }
 
   _onViewChange() {
