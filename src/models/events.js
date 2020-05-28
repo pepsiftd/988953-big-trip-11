@@ -1,14 +1,36 @@
+import {getEventsByFilter} from '@/utils/filter';
+import {FilterType} from '@/const';
+
 export default class EventsModel {
   constructor() {
     this._events = [];
+
+    this._activeFilterType = FilterType.EVERYTHING;
+    this._filterChangeHandlers = [];
+    this._dataChangeHandlers = [];
+  }
+
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
   }
 
   getEvents() {
+    return getEventsByFilter(this._events, this._activeFilterType);
+  }
+
+  getEventsAll() {
     return this._events;
   }
 
+  setActiveFilter(filterType) {
+    this._activeFilterType = filterType;
+
+    this._callHandlers(this._filterChangeHandlers);
+  }
+
   setEvents(events) {
-    this._events = events;
+    this._events = Array.from(events);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updateEvent(id, newEventData) {
@@ -22,6 +44,17 @@ export default class EventsModel {
         newEventData,
         this._events.slice(index + 1));
 
+    this._callHandlers(this._dataChangeHandlers);
+    console.log(this._events);
+
     return true;
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 }
