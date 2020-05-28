@@ -1,6 +1,6 @@
 import EventComponent from '@/components/trip-event';
 import EditEventComponent from '@/components/trip-edit';
-import {RenderPosition, replace, render} from '@/utils/render';
+import {RenderPosition, replace, render, remove} from '@/utils/render';
 
 const Mode = {
   DEFAULT: `default`,
@@ -78,5 +78,10 @@ export default class EventController {
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
     }
+  }
+
+  destroy() {
+    remove(this._eventComponent);
+    remove(this._editEventComponent);
   }
 }

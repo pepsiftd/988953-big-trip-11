@@ -3,7 +3,7 @@ import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
 import EventController from '@/controllers/event';
 import {splitEventsByDays} from '@/components/sort';
-import {RenderPosition, render} from '@/utils/render';
+import {RenderPosition, render, remove} from '@/utils/render';
 
 export default class TripController {
   constructor(container, eventsModel) {
@@ -18,12 +18,15 @@ export default class TripController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._eventsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   _onDataChange(eventController, oldData, newData) {
     const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
 
-    if(!isSuccess) {
+    if (!isSuccess) {
       return;
     }
 
@@ -36,43 +39,66 @@ export default class TripController {
     });
   }
 
+  _onFilterChange() {
+    this._updateEvents();
+  }
+
   render(offersData, destinations) {
-    const events = this._eventsModel.getEvents();
     this._offersData = offersData;
     this._destinations = destinations;
 
     // sorting line
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
-    // days and events container
-    render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
 
-    // days and events
-    const [eventsByDays, dates] = splitEventsByDays(events);
+    const sortingType = `event`;
+    const isSortedByDays = sortingType === `event`;
+    this._renderEvents(isSortedByDays);
+  }
 
-    // render days column
-    const tripDaysListElement = this._container.querySelector(`.trip-days`);
+  _renderEvents(isSortedByDays) {
+    const events = this._eventsModel.getEvents();
+    if (isSortedByDays) {
+      // days and events container
+      render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
 
-    dates.forEach((day, i, arr) => {
-      const getDifferenceInDays = (start, end) => {
-        const MS_IN_DAY = 86400000;
+      // days and events
+      const [eventsByDays, dates] = splitEventsByDays(events);
 
-        return Math.floor((end - start) / MS_IN_DAY);
-      };
+      // render days column
+      const tripDaysListElement = this._container.querySelector(`.trip-days`);
 
-      const counter = getDifferenceInDays(arr[0], day);
+      dates.forEach((day, i, arr) => {
+        const getDifferenceInDays = (start, end) => {
+          const MS_IN_DAY = 86400000;
 
-      render(tripDaysListElement, new DayComponent(day, counter + 1), RenderPosition.BEFOREEND);
-    });
+          return Math.floor((end - start) / MS_IN_DAY);
+        };
 
-    // render events inside of days
-    const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
+        const counter = getDifferenceInDays(arr[0], day);
 
-    tripEventsListElements.forEach((it, i) => {
-      eventsByDays[i].forEach((event) => {
-        const eventController = new EventController(it, this._onDataChange, this._onViewChange);
-        this._eventControllers.push(eventController);
-        eventController.render(event, this._offersData, this._destinations);
+        render(tripDaysListElement, new DayComponent(day, counter + 1), RenderPosition.BEFOREEND);
       });
-    });
+
+      // render events inside of days
+      const tripEventsListElements = tripDaysListElement.querySelectorAll(`.trip-events__list`);
+
+      tripEventsListElements.forEach((it, i) => {
+        eventsByDays[i].forEach((event) => {
+          const eventController = new EventController(it, this._onDataChange, this._onViewChange);
+          this._eventControllers.push(eventController);
+          eventController.render(event, this._offersData, this._destinations);
+        });
+      });
+    }
+  }
+
+  _updateEvents() {
+    this._clearEvents();
+    this._renderEvents(true);
+  }
+
+  _clearEvents() {
+    this._eventControllers.forEach((controller) => controller.destroy());
+    remove(this._daysListComponent);
   }
 }
