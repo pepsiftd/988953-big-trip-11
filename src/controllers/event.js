@@ -2,17 +2,30 @@ import EventComponent from '@/components/trip-event';
 import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render, remove} from '@/utils/render';
 
-const Mode = {
+export const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
+  ADDING: `adding`,
 };
 
-export const EmptyEvent = {};
+export const EmptyEvent = {
+  isNewEvent: true,
+  id: `0`,
+  type: undefined,
+  isFavorite: false,
+  destination: undefined,
+  dateStart: new Date(),
+  dateEnd: new Date(),
+  price: undefined,
+  offers: undefined,
+  description: undefined,
+  photos: undefined,
+};
 
 export default class EventController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, mode) {
     this._container = container;
-    this._mode = Mode.DEFAULT;
+    this._mode = mode ? mode : Mode.DEFAULT;
     this._eventComponent = null;
     this._editEventComponent = null;
 
@@ -81,6 +94,9 @@ export default class EventController {
     if (oldEventComponent && oldEditEventComponent) {
       replace(this._eventComponent, oldEventComponent);
       replace(this._editEventComponent, oldEditEventComponent);
+    } else if (this._mode === Mode.ADDING) {
+      const sortingElement = this._container.querySelector(`.trip-sort`);
+      render(sortingElement, this._editEventComponent, RenderPosition.AFTER);
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
     }

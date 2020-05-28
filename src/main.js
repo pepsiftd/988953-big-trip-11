@@ -2,6 +2,7 @@ import TripInfoComponent from '@/components/trip-info';
 import PriceInfoComponent from '@/components/price-info';
 import TripTabsComponent from '@/components/trip-tabs';
 import FiltersController from '@/controllers/filters';
+import {EventController, EmptyEvent} from '@/controllers/event';
 
 import EventsModel from '@/models/events';
 
@@ -36,6 +37,11 @@ render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
 
 const filtersController = new FiltersController(tripControlsElement, eventsModel);
 filtersController.render();
+
+//   new event button
+tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
+  tripController.createEvent();
+});
 
 // main
 

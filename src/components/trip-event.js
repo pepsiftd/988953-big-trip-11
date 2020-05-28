@@ -30,12 +30,19 @@ const getDuration = (startDate, endDate) => {
 };
 
 const createEventTemplate = (event, offersData) => {
-  const {destination, dateStart, dateEnd, price, offers} = event;
-  const type = event.type.toLowerCase();
-  const typeMarkup = getEventTypeMarkup(offersData, type);
-  const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
-  const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
-  const duration = getDuration(dateStart, dateEnd);
+  const {
+    destination = ``,
+    dateStart,
+    dateEnd,
+    price,
+    offers = [],
+  } = event;
+
+  const type = event.type ? event.type.toLowerCase() : ``;
+  const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
+  const startTime = dateStart ? `${getHours(dateStart)}:${getMinutes(dateStart)}` : ``;
+  const endTime = dateEnd ? `${getHours(dateEnd)}:${getMinutes(dateEnd)}` : ``;
+  const duration = dateStart && dateEnd ? getDuration(dateStart, dateEnd) : ``;
 
   const selectedOffers = createOffersTemplate(offers);
 

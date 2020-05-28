@@ -1,7 +1,7 @@
 import SortComponent from '@/components/trip-sort';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
-import EventController, {EmptyEvent} from '@/controllers/event';
+import EventController, {EmptyEvent, Mode as EventMode} from '@/controllers/event';
 import {splitEventsByDays, sortByStartDate} from '@/components/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
 
@@ -55,6 +55,15 @@ export default class TripController {
 
   _onFilterChange() {
     this._updateEvents();
+  }
+
+  createEvent() {
+    if (this._creatingEvent) {
+      return;
+    }
+
+    this._creatingEvent = new EventController(this._container, this._onDataChange, this._onViewChange, EventMode.ADDING);
+    this._creatingEvent.render(EmptyEvent, this._offersData, this._destinations);
   }
 
   render(offersData, destinations) {

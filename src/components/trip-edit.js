@@ -10,6 +10,20 @@ const getDestinationsListMarkup = (destinationNames) => {
     }).join(`\n`);
 };
 
+const getFavoriteButtonMarkup = (isNew, isFavorite) => {
+  const favoriteCheckedMarkup = isFavorite ? `checked` : ``;
+
+  return isNew ? `` : (
+    `<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favoriteCheckedMarkup}>
+    <label class="event__favorite-btn" for="event-favorite-1">
+      <span class="visually-hidden">Add to favorite</span>
+      <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+        <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+      </svg>
+    </label>`
+  );
+};
+
 const addLeadingZero = (string) => {
   return (`00` + string).slice(-2);
 };
@@ -32,6 +46,7 @@ const getFormattedDate = (date) => {
 
 const createTripEditFormTemplate = (event, offersData, destinations) => {
   const {
+    isNewEvent = false,
     destination = ``,
     dateStart = new Date(),
     dateEnd = new Date(),
@@ -50,7 +65,13 @@ const createTripEditFormTemplate = (event, offersData, destinations) => {
 
   const destinationNames = destinations.map((it) => it.name);
   const destinationsList = getDestinationsListMarkup(destinationNames);
-  const favoriteCheckedMarkup = isFavorite ? `checked` : ``;
+
+  const resetButtonMarkup = `<button class="event__reset-btn" type="reset">${isNewEvent ? `Cancel` : `Delete`}</button>`
+  const favoriteButtonMarkup = getFavoriteButtonMarkup(isNewEvent, isFavorite);
+  const rollupButtonMarkup = isNewEvent ? `` : (
+    `<button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>`);
 
   const eventDetailsMarkup = destination && (event.description || Boolean(event.offers)) ? createEventDetailsMarkup(event) : ``;
 
@@ -98,19 +119,11 @@ const createTripEditFormTemplate = (event, offersData, destinations) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
+        ${resetButtonMarkup}
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${favoriteCheckedMarkup}>
-        <label class="event__favorite-btn" for="event-favorite-1">
-          <span class="visually-hidden">Add to favorite</span>
-          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-          </svg>
-        </label>
+        ${favoriteButtonMarkup}
 
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        ${rollupButtonMarkup}
       </header>
       ${eventDetailsMarkup}
     </form>`
@@ -153,8 +166,10 @@ export default class EventEdit extends AbstractSmartComponent {
 
   setFavoriteClickHandler(handler) {
     this._favoriteClickHandler = handler;
-    this.getElement().querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, handler);
+    const favoriteButton = this.getElement().querySelector(`.event__favorite-btn`);
+    if (favoriteButton) {
+      favoriteButton.addEventListener(`click`, handler);
+    }
   }
 
   setEventTypeChangeHandler(handler) {
