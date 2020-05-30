@@ -28,6 +28,7 @@ export default class EventController {
     this._mode = mode ? mode : Mode.DEFAULT;
     this._eventComponent = null;
     this._editEventComponent = null;
+    this._escPressHandler = this._escPressHandler.bind(this);
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -37,11 +38,25 @@ export default class EventController {
     this._onViewChange();
     replace(this._editEventComponent, this._eventComponent);
     this._mode = Mode.EDIT;
+    document.addEventListener(`keydown`, this._escPressHandler);
   }
 
   replaceEditWithDefault() {
     replace(this._eventComponent, this._editEventComponent);
     this._mode = Mode.DEFAULT;
+    document.removeEventListener(`keydown`, this._escPressHandler);
+  }
+
+  _escPressHandler() {
+    if (this._mode === Mode.ADDING) {
+      remove(this._editEventComponent);
+      enableNewEventButton();
+      document.removeEventListener(`keydown`, this._escPressHandler);
+      return;
+    }
+
+    this._editEventComponent.reset();
+    this.replaceEditWithDefault();
   }
 
   setDefaultView() {
@@ -86,6 +101,7 @@ export default class EventController {
     } else if (this._mode === Mode.ADDING) {
       const sortingElement = this._container.querySelector(`.trip-sort`);
       render(sortingElement, this._editEventComponent, RenderPosition.AFTER);
+      document.addEventListener(`keydown`, this._escPressHandler);
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
     }

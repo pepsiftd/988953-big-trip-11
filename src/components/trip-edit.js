@@ -145,6 +145,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._isNewEvent = isNewEvent;
 
     this._submitHandler = null;
+    this._deleteClickHandler = null;
     this._flatpickrStart = null;
     this._flatpickrEnd = null;
 
@@ -214,13 +215,13 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   reset() {
-    this._isFavorite = event.isFavorite;
-    this._eventType = event.type;
-    this._offers = event.offers;
-    this._destination = event.destination ? encode(event.destination) : ``;
-    this._startTime = event.dateStart;
-    this._endTime = event.dateEnd;
-    this._price = event.price ? encode(event.price) : ``;
+    this._isFavorite = this._event.isFavorite;
+    this._eventType = this._event.type;
+    this._offers = this._event.offers;
+    this._destination = this._event.destination ? encode(this._event.destination) : ``;
+    this._startTime = this._event.dateStart;
+    this._endTime = this._event.dateEnd;
+    this._price = this._event.price ? encode(String(this._event.price)) : ``;
 
     this.rerender();
   }
