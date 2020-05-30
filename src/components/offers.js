@@ -11,8 +11,7 @@ const createOfferMarkup = (offer) => {
 };
 
 export const createOffersTemplate = (offers) => {
-  const selectedOffers = offers.filter((it) => it.selected);
-  const offersToShow = selectedOffers.slice(0, MAX_OFFERS_AMOUNT);
+  const offersToShow = offers.slice(0, MAX_OFFERS_AMOUNT);
   const offersMarkup = offersToShow
     .map((offer) => {
       return createOfferMarkup(offer);
