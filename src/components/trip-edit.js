@@ -3,6 +3,9 @@ import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
 import {getEventTypeMarkup, getAvailableOffersByType, getOfferById} from '@/utils/common';
 import {encode} from 'he';
+import flatpickr from 'flatpickr';
+
+import "flatpickr/dist/flatpickr.min.css";
 
 const getDestinationsListMarkup = (destinationNames) => {
   return destinationNames
@@ -142,6 +145,8 @@ export default class EventEdit extends AbstractSmartComponent {
     this._isNewEvent = isNewEvent;
 
     this._submitHandler = null;
+    this._flatpickrStart = null;
+    this._flatpickrEnd = null;
 
     this._isFavorite = event.isFavorite;
     this._eventType = event.type;
@@ -151,6 +156,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._endTime = event.dateEnd;
     this._price = event.price ? encode(String(event.price)) : ``;
 
+    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -158,6 +164,11 @@ export default class EventEdit extends AbstractSmartComponent {
     this.setSubmitHandler(this._submitHandler);
     this.setDeleteClickHandler(this._deleteClickHandler);
     this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+    this._applyFlatpickr();
   }
 
   getTemplate() {
@@ -212,6 +223,34 @@ export default class EventEdit extends AbstractSmartComponent {
     this._price = event.price ? encode(event.price) : ``;
 
     this.rerender();
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickrStart || this._flatpickrEnd) {
+      this._flatpickrStart.destroy();
+      this._flatpickrStart = null;
+      this._flatpickrEnd.destroy();
+      this._flatpickrEnd = null;
+    }
+
+    const dateStartElement = this.getElement().querySelector(`[name=event-start-time]`);
+    const dateEndElement = this.getElement().querySelector(`[name=event-end-time]`);
+
+    this._flatpickrStart = flatpickr(dateStartElement, {
+      altInput: true,
+      allowInput: true,
+      enableTime: true,
+      dateFormat: `d/m/y H:i`,
+      defaultDate: this._event.dateStart || `today`,
+    });
+
+    this._flatpickrEnd = flatpickr(dateEndElement, {
+      altInput: true,
+      allowInput: true,
+      enableTime: true,
+      dateFormat: `d/m/y H:i`,
+      defaultDate: this._event.dateEnd || `today`,
+    });
   }
 
   _subscribeOnEvents() {

@@ -17,5 +17,13 @@ module.exports = {
       '@': path.resolve('./src')
     },
     extensions: ['*', '.js', '.json']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   }
 };
