@@ -2,6 +2,7 @@ import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
 import {getEventTypeMarkup, getAvailableOffersByType, getOfferById} from '@/utils/common';
+import {encode} from 'he';
 
 const getDestinationsListMarkup = (destinationNames) => {
   return destinationNames
@@ -94,7 +95,7 @@ const createTripEditFormTemplate = (offersData, destinations, options = {}, isNe
           <label class="event__label  event__type-output" for="event-destination-1">
             ${typeMarkup}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1" required>
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${destinationsList}
           </datalist>
@@ -104,12 +105,12 @@ const createTripEditFormTemplate = (offersData, destinations, options = {}, isNe
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime}" required>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime}" required>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -117,7 +118,7 @@ const createTripEditFormTemplate = (offersData, destinations, options = {}, isNe
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" pattern="[0-9]{1,}" name="event-price" value="${price}" required>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -145,10 +146,10 @@ export default class EventEdit extends AbstractSmartComponent {
     this._isFavorite = event.isFavorite;
     this._eventType = event.type;
     this._offers = event.offers;
-    this._destination = event.destination ? event.destination : ``;
+    this._destination = event.destination ? encode(event.destination) : ``;
     this._startTime = event.dateStart;
     this._endTime = event.dateEnd;
-    this._price = event.price ? event.price : ``;
+    this._price = event.price ? encode(String(event.price)) : ``;
 
     this._subscribeOnEvents();
   }
@@ -180,6 +181,21 @@ export default class EventEdit extends AbstractSmartComponent {
     this.getElement().addEventListener(`submit`, handler);
   }
 
+  validateForm() {
+    const destinationInput = this.getElement().querySelector(`.event__input--destination`);
+
+    if (!this._destinations.map((it) => it.name).some((name) => name === destinationInput.value)) {
+      destinationInput.setCustomValidity(`Unknown destination. Please choose from list.`);
+      return false;
+    }
+
+    if (!this._eventType || !this._startTime || !this._endTime || !this._price) {
+      return false;
+    }
+
+    return true;
+  }
+
   setDeleteClickHandler(handler) {
     this._deleteClickHandler = handler;
     this.getElement().querySelector(`.event__reset-btn`)
@@ -190,10 +206,10 @@ export default class EventEdit extends AbstractSmartComponent {
     this._isFavorite = event.isFavorite;
     this._eventType = event.type;
     this._offers = event.offers;
-    this._destination = event.destination ? event.destination : ``;
+    this._destination = event.destination ? encode(event.destination) : ``;
     this._startTime = event.dateStart;
     this._endTime = event.dateEnd;
-    this._price = event.price ? event.price : ``;
+    this._price = event.price ? encode(event.price) : ``;
 
     this.rerender();
   }
@@ -216,7 +232,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     const destinationInput = element.querySelector(`.event__input--destination`);
     destinationInput.addEventListener(`change`, () => {
-      this._destination = destinationInput.value;
+      this._destination = encode(destinationInput.value);
       this.rerender();
     });
 
@@ -234,7 +250,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     const priceInput = element.querySelector(`.event__input--price`);
     priceInput.addEventListener(`change`, () => {
-      this._price = priceInput.value;
+      this._price = encode(priceInput.value);
       this.rerender();
     });
 

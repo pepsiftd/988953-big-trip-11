@@ -67,7 +67,10 @@ export default class EventController {
 
     this._editEventComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      this.replaceEditWithDefault();
+      const isValid = this._editEventComponent.validateForm();
+      if (isValid) {
+        this.replaceEditWithDefault();
+      }
     });
 
     this._editEventComponent.setDeleteClickHandler(() => {
