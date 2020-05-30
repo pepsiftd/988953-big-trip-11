@@ -4,6 +4,7 @@ import DayComponent from '@/components/trip-day';
 import EventController, {EmptyEvent, Mode as EventMode} from '@/controllers/event';
 import {splitEventsByDays, sortByStartDate} from '@/components/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
+import {enableNewEventButton} from '@/utils/common';
 
 export default class TripController {
   constructor(container, eventsModel) {
@@ -24,18 +25,25 @@ export default class TripController {
   }
 
   _onDataChange(eventController, oldData, newData) {
+    // если изменение данных при создании нового
     if (oldData === EmptyEvent) {
-      this.creatingEvent = null;
+      this._creatingEvent = null;
+      // если при создании нажали Cancel
       if (newData === null) {
         eventController.destroy();
+      // если при создании нажали Save
       } else {
         this._eventsModel.addEvent(newData);
         eventController.render(newData, this._offersData, this._destinations);
         this._eventControllers = [].concat(eventController, this._eventControllers);
+        enableNewEventButton();
       }
+    // если изменение данных в существующем событии
+    // если нажали Delete при редактировании существующего
     } else if (newData === null) {
       this._eventsModel.removeEvent(oldData.id);
       this._updateEvents();
+    // при редактировании существующего
     } else {
       const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
 

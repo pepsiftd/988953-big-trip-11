@@ -1,6 +1,7 @@
 import EventComponent from '@/components/trip-event';
 import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render, remove} from '@/utils/render';
+import {enableNewEventButton} from '@/utils/common';
 
 export const Mode = {
   DEFAULT: `default`,
@@ -50,7 +51,11 @@ export default class EventController {
     }
   }
 
-  render(event, offersData, destinations) {
+  render(event, offersData, destinations, eventMode) {
+    if (eventMode) {
+      this._mode = eventMode;
+    }
+
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;
 
@@ -68,27 +73,9 @@ export default class EventController {
 
     this._editEventComponent.setDeleteClickHandler(() => {
       this._onDataChange(this, event, null);
-    });
-
-    this._editEventComponent.setFavoriteClickHandler(() => {
-      this._onDataChange(this, event, Object.assign({}, event, {
-        isFavorite: !event.isFavorite
-      }));
-    });
-
-    this._editEventComponent.setEventTypeChangeHandler((evt) => {
-      this._onDataChange(this, event, Object.assign({}, event, {
-        type: evt.target.value,
-        offers: offersData.TRANSFER.get(evt.target.value) ? offersData.TRANSFER.get(evt.target.value) : offersData.ACTIVITY.get(evt.target.value),
-      }));
-    });
-
-    this._editEventComponent.setDestinationChangeHandler((evt) => {
-      this._onDataChange(this, event, Object.assign({}, event, {
-        destination: evt.target.value,
-        description: destinations.find((it) => it.name === evt.target.value).description,
-        photos: destinations.find((it) => it.name === evt.target.value).photos,
-      }));
+      if (this._mode === Mode.ADDING) {
+        enableNewEventButton();
+      }
     });
 
     if (oldEventComponent && oldEditEventComponent) {

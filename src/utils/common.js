@@ -17,3 +17,7 @@ export const getRandomIntegerNumber = (min, max) => {
 export const getRandomBoolean = () => {
   return Math.random() > 0.5;
 };
+
+export const enableNewEventButton = () => {
+  document.querySelector(`.trip-main__event-add-btn`).disabled = false;
+};

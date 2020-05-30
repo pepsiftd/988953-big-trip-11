@@ -44,18 +44,21 @@ const getFormattedDate = (date) => {
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
-const createTripEditFormTemplate = (event, offersData, destinations) => {
+const createTripEditFormTemplate = (event, offersData, destinations, options = {}) => {
   const {
     isNewEvent = false,
     destination = ``,
     dateStart = new Date(),
     dateEnd = new Date(),
     price = ``,
-    isFavorite,
   } = event;
 
-  const type = event.type ? event.type.toLowerCase() : ``;
-  const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
+  const {
+    isFavorite,
+  } = options;
+
+  const type = options.type ? options.type.toLowerCase() : ``;
+  const typeMarkup = options.type ? getEventTypeMarkup(offersData, type) : ``;
 
   const typeListMarkup = createTypeListMarkup(event, offersData);
 
@@ -115,7 +118,7 @@ const createTripEditFormTemplate = (event, offersData, destinations) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -138,20 +141,28 @@ export default class EventEdit extends AbstractSmartComponent {
     this._destinations = destinations;
 
     this._submitHandler = null;
-    this._favoriteClickHandler = null;
-    this._eventTypeChangeHandler = null;
-    this._destinationChangeHandler = null;
+
+    this._isFavorite = event.isFavorite;
+    this._eventType = event.type;
+
+    this._subscribeOnEvents();
   }
 
   recoverListeners() {
     this.setSubmitHandler(this._submitHandler);
-    this.setFavoriteClickHandler(this._favoriteClickHandler);
-    this.setEventTypeChangeHandler(this._eventTypeChangeHandler);
-    this.setDestinationChangeHandler(this._destinationChangeHandler);
+    this.setDeleteClickHandler(this._deleteClickHandler);
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this._event, this._offersData, this._destinations);
+    return createTripEditFormTemplate(
+      this._event,
+      this._offersData,
+      this._destinations,
+      {
+        type: this._eventType,
+        isFavorite: this._isFavorite,
+      });
   }
 
   setSubmitHandler(handler) {
@@ -160,30 +171,63 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   setDeleteClickHandler(handler) {
+    this._deleteClickHandler = handler;
     this.getElement().querySelector(`.event__reset-btn`)
       .addEventListener(`click`, handler);
   }
 
-  setFavoriteClickHandler(handler) {
-    this._favoriteClickHandler = handler;
-    const favoriteButton = this.getElement().querySelector(`.event__favorite-btn`);
-    if (favoriteButton) {
-      favoriteButton.addEventListener(`click`, handler);
-    }
+  reset() {
+    this._isFavorite = this._event.isFavorite;
+
+    this.rerender();
   }
 
-  setEventTypeChangeHandler(handler) {
-    this._eventTypeChangeHandler = handler;
-    const eventTypeGroups = this.getElement().querySelectorAll(`.event__type-group`);
+  _subscribeOnEvents() {
+    const element = this.getElement();
 
-    eventTypeGroups.forEach((group) => {
-      group.addEventListener(`change`, handler);
+    const favoriteButton = element.querySelector(`.event__favorite-btn`);
+    if (favoriteButton) {
+      favoriteButton.addEventListener(`click`, () => {
+        this._isFavorite = !this._isFavorite;
+        this.rerender();
+      });
+    }
+
+    element.querySelector(`.event__type-list`).addEventListener(`change`, (evt) => {
+      this._eventType = evt.target.value;
+      this.rerender();
     });
   }
 
-  setDestinationChangeHandler(handler) {
-    this._destinationChangeHandler = handler;
-    this.getElement().querySelector(`.event__field-group--destination input`)
-      .addEventListener(`change`, handler);
+  // setFavoriteClickHandler(handler) {
+  //   this._favoriteClickHandler = handler;
+  //   const favoriteButton = this.getElement().querySelector(`.event__favorite-btn`);
+  //   if (favoriteButton) {
+  //     favoriteButton.addEventListener(`click`, handler);
+  //   }
+  // }
+
+  // setEventTypeChangeHandler(handler) {
+  //   this._eventTypeChangeHandler = handler;
+  //   const eventTypeGroups = this.getElement().querySelectorAll(`.event__type-group`);
+
+  //   eventTypeGroups.forEach((group) => {
+  //     group.addEventListener(`change`, handler);
+  //   });
+  // }
+
+  // setDestinationChangeHandler(handler) {
+  //   this._destinationChangeHandler = handler;
+  //   this.getElement().querySelector(`.event__field-group--destination input`)
+  //     .addEventListener(`change`, handler);
+  // }
+
+  validateForm() {
+    const destinationInput = this.getElement().querySelector(`.event__input--destination`);
+    const priceInput = this.getElement().querySelector(`.event__field-group--price`);
+
+    if (!this._destinations.some((destination) => destination === destinationInput.value)) {
+      destinationInput.setCustomValidity(`Выберите пункт назначения из списка возможных`);
+    }
   }
 }

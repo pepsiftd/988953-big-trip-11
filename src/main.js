@@ -39,8 +39,10 @@ const filtersController = new FiltersController(tripControlsElement, eventsModel
 filtersController.render();
 
 //   new event button
-tripMainElement.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
+const newEventButton = tripMainElement.querySelector(`.trip-main__event-add-btn`);
+newEventButton.addEventListener(`click`, () => {
   tripController.createEvent();
+  newEventButton.disabled = true;
 });
 
 // main
