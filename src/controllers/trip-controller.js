@@ -36,8 +36,9 @@ export default class TripController {
         this._eventsModel.addEvent(newData);
         eventController.render(newData, this._offersData, this._destinations);
         this._eventControllers = [].concat(eventController, this._eventControllers);
-        enableNewEventButton();
       }
+
+      enableNewEventButton();
     // если изменение данных в существующем событии
     // если нажали Delete при редактировании существующего
     } else if (newData === null) {
@@ -69,6 +70,10 @@ export default class TripController {
     if (this._creatingEvent) {
       return;
     }
+
+    this._eventControllers.forEach((it) => {
+      it.setDefaultView();
+    });
 
     this._creatingEvent = new EventController(this._container, this._onDataChange, this._onViewChange, EventMode.ADDING);
     this._creatingEvent.render(EmptyEvent, this._offersData, this._destinations);

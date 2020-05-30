@@ -3,3 +3,7 @@ export const FilterType = {
   FUTURE: `future`,
   PAST: `past`,
 };
+
+export const Key = {
+  ESC: `Escape`,
+}

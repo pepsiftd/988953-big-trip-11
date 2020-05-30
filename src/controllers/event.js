@@ -2,6 +2,7 @@ import EventComponent from '@/components/trip-event';
 import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render, remove} from '@/utils/render';
 import {enableNewEventButton} from '@/utils/common';
+import {Key} from '@/const';
 
 export const Mode = {
   DEFAULT: `default`,
@@ -47,16 +48,17 @@ export default class EventController {
     document.removeEventListener(`keydown`, this._escPressHandler);
   }
 
-  _escPressHandler() {
-    if (this._mode === Mode.ADDING) {
-      remove(this._editEventComponent);
-      enableNewEventButton();
-      document.removeEventListener(`keydown`, this._escPressHandler);
-      return;
-    }
+  _escPressHandler(evt) {
+    if (evt.key === Key.ESC) {
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyEvent, null);
+        document.removeEventListener(`keydown`, this._escPressHandler);
+        return;
+      }
 
-    this._editEventComponent.reset();
-    this.replaceEditWithDefault();
+      this._editEventComponent.reset();
+      this.replaceEditWithDefault();
+    }
   }
 
   setDefaultView() {
