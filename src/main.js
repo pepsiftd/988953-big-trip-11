@@ -2,7 +2,6 @@ import TripInfoComponent from '@/components/trip-info';
 import PriceInfoComponent from '@/components/price-info';
 import TripTabsComponent from '@/components/trip-tabs';
 import FiltersController from '@/controllers/filters';
-import {EventController, EmptyEvent} from '@/controllers/event';
 
 import EventsModel from '@/models/events';
 

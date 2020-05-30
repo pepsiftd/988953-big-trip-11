@@ -101,7 +101,7 @@ export default class TripController {
       // render days column
       const tripDaysListElement = this._container.querySelector(`.trip-days`);
 
-      dates.forEach((day, i, arr) => {
+      dates.forEach((day) => {
         const getDifferenceInDays = (start, end) => {
           const MS_IN_DAY = 86400000;
 

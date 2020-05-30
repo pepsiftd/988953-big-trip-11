@@ -10,7 +10,6 @@ export const Mode = {
 };
 
 export const EmptyEvent = {
-  isNewEvent: true,
   id: `0`,
   type: undefined,
   isFavorite: false,
@@ -60,7 +59,7 @@ export default class EventController {
     const oldEditEventComponent = this._editEventComponent;
 
     this._eventComponent = new EventComponent(event, offersData);
-    this._editEventComponent = new EditEventComponent(event, offersData, destinations);
+    this._editEventComponent = new EditEventComponent(event, offersData, destinations, this._mode === Mode.ADDING);
 
     this._eventComponent.setRollupButtonClickHandler(() => {
       this.replaceDefaultWithEdit();

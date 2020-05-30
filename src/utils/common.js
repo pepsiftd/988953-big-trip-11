@@ -4,6 +4,18 @@ export const getEventTypeMarkup = (offersData, type) => {
   return capitalizedType + (offersData.TRANSFER.has(type) ? ` to` : ` in`);
 };
 
+export const getAvailableOffersByType = (offersData, type) => {
+  if (!type) {
+    return [];
+  }
+
+  return offersData.TRANSFER.get(type) ? offersData.TRANSFER.get(type) : offersData.ACTIVITY.get(type);
+};
+
+export const getOfferById = (id, offers) => {
+  return offers.find((offer) => id.includes(offer.id));
+};
+
 export const getRandomArrayItem = (array) => {
   const randomIndex = getRandomIntegerNumber(0, array.length - 1);
 

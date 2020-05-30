@@ -12,8 +12,7 @@ const createTypesListMarkup = (selectedType, typesList) => {
   return typesList.map((type) => createTypeItemMarkup(type, 1, type === selectedType)).join(`\n`);
 };
 
-export const createTypeListMarkup = (event, offers) => {
-  const selectedType = event.type;
+export const createTypeListMarkup = (selectedType, offers) => {
   const eventTypes = {
     TRANSFER: Array.from(offers.TRANSFER.keys()),
     ACTIVITY: Array.from(offers.ACTIVITY.keys()),

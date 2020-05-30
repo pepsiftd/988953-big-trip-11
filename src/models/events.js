@@ -65,7 +65,6 @@ export default class EventsModel {
         this._events.slice(index + 1));
 
     this._callHandlers(this._dataChangeHandlers);
-    console.log(id);
 
     return true;
   }

@@ -1,7 +1,7 @@
 import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
-import {getEventTypeMarkup} from '@/utils/common';
+import {getEventTypeMarkup, getAvailableOffersByType, getOfferById} from '@/utils/common';
 
 const getDestinationsListMarkup = (destinationNames) => {
   return destinationNames
@@ -44,23 +44,20 @@ const getFormattedDate = (date) => {
   return `${year}/${month}/${day}`; // 18/03/19 format
 };
 
-const createTripEditFormTemplate = (event, offersData, destinations, options = {}) => {
-  const {
-    isNewEvent = false,
-    destination = ``,
-    dateStart = new Date(),
-    dateEnd = new Date(),
-    price = ``,
-  } = event;
-
+const createTripEditFormTemplate = (offersData, destinations, options = {}, isNewEvent = false) => {
   const {
     isFavorite,
+    offers = [],
+    destination,
+    dateStart,
+    dateEnd,
+    price,
   } = options;
 
   const type = options.type ? options.type.toLowerCase() : ``;
-  const typeMarkup = options.type ? getEventTypeMarkup(offersData, type) : ``;
+  const typeMarkup = type ? getEventTypeMarkup(offersData, type) : ``;
 
-  const typeListMarkup = createTypeListMarkup(event, offersData);
+  const typeListMarkup = createTypeListMarkup(type, offersData);
 
   const startTime = `${getFormattedDate(dateStart)} ${getHours(dateStart)}:${getMinutes(dateStart)}`; // 18/03/19 00:00 format
   const endTime = `${getFormattedDate(dateEnd)} ${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
@@ -69,14 +66,16 @@ const createTripEditFormTemplate = (event, offersData, destinations, options = {
   const destinationNames = destinations.map((it) => it.name);
   const destinationsList = getDestinationsListMarkup(destinationNames);
 
-  const resetButtonMarkup = `<button class="event__reset-btn" type="reset">${isNewEvent ? `Cancel` : `Delete`}</button>`
+  const resetButtonMarkup = `<button class="event__reset-btn" type="reset">${isNewEvent ? `Cancel` : `Delete`}</button>`;
   const favoriteButtonMarkup = getFavoriteButtonMarkup(isNewEvent, isFavorite);
   const rollupButtonMarkup = isNewEvent ? `` : (
     `<button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>`);
 
-  const eventDetailsMarkup = destination && (event.description || Boolean(event.offers)) ? createEventDetailsMarkup(event) : ``;
+  const availableOffers = getAvailableOffersByType(offersData, type);
+  const destinationObject = destinations.find((it) => it.name === destination);
+  const eventDetailsMarkup = destination || availableOffers.length > 0 ? createEventDetailsMarkup(offers, availableOffers, destinationObject) : ``;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -95,7 +94,7 @@ const createTripEditFormTemplate = (event, offersData, destinations, options = {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${typeMarkup}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination}" list="destination-list-1" required>
           <datalist id="destination-list-1">
             ${destinationsList}
           </datalist>
@@ -118,7 +117,7 @@ const createTripEditFormTemplate = (event, offersData, destinations, options = {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -134,16 +133,22 @@ const createTripEditFormTemplate = (event, offersData, destinations, options = {
 };
 
 export default class EventEdit extends AbstractSmartComponent {
-  constructor(event, offersData, destinations) {
+  constructor(event, offersData, destinations, isNewEvent) {
     super();
     this._event = event;
     this._offersData = offersData;
     this._destinations = destinations;
+    this._isNewEvent = isNewEvent;
 
     this._submitHandler = null;
 
     this._isFavorite = event.isFavorite;
     this._eventType = event.type;
+    this._offers = event.offers;
+    this._destination = event.destination ? event.destination : ``;
+    this._startTime = event.dateStart;
+    this._endTime = event.dateEnd;
+    this._price = event.price ? event.price : ``;
 
     this._subscribeOnEvents();
   }
@@ -156,13 +161,18 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getTemplate() {
     return createTripEditFormTemplate(
-      this._event,
-      this._offersData,
-      this._destinations,
-      {
-        type: this._eventType,
-        isFavorite: this._isFavorite,
-      });
+        this._offersData,
+        this._destinations,
+        {
+          type: this._eventType,
+          isFavorite: this._isFavorite,
+          offers: this._offers,
+          destination: this._destination,
+          dateStart: this._startTime,
+          dateEnd: this._endTime,
+          price: this._price,
+        },
+        this._isNewEvent);
   }
 
   setSubmitHandler(handler) {
@@ -177,7 +187,13 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   reset() {
-    this._isFavorite = this._event.isFavorite;
+    this._isFavorite = event.isFavorite;
+    this._eventType = event.type;
+    this._offers = event.offers;
+    this._destination = event.destination ? event.destination : ``;
+    this._startTime = event.dateStart;
+    this._endTime = event.dateEnd;
+    this._price = event.price ? event.price : ``;
 
     this.rerender();
   }
@@ -197,37 +213,48 @@ export default class EventEdit extends AbstractSmartComponent {
       this._eventType = evt.target.value;
       this.rerender();
     });
-  }
 
-  // setFavoriteClickHandler(handler) {
-  //   this._favoriteClickHandler = handler;
-  //   const favoriteButton = this.getElement().querySelector(`.event__favorite-btn`);
-  //   if (favoriteButton) {
-  //     favoriteButton.addEventListener(`click`, handler);
-  //   }
-  // }
+    const destinationInput = element.querySelector(`.event__input--destination`);
+    destinationInput.addEventListener(`change`, () => {
+      this._destination = destinationInput.value;
+      this.rerender();
+    });
 
-  // setEventTypeChangeHandler(handler) {
-  //   this._eventTypeChangeHandler = handler;
-  //   const eventTypeGroups = this.getElement().querySelectorAll(`.event__type-group`);
+    const startTimeInput = element.querySelector(`[name=event-start-time]`);
+    startTimeInput.addEventListener(`change`, () => {
+      this._startTime = new Date(startTimeInput.value);
+      this.rerender();
+    });
 
-  //   eventTypeGroups.forEach((group) => {
-  //     group.addEventListener(`change`, handler);
-  //   });
-  // }
+    const endTimeInput = element.querySelector(`[name=event-end-time]`);
+    endTimeInput.addEventListener(`change`, () => {
+      this._endTime = new Date(endTimeInput.value);
+      this.rerender();
+    });
 
-  // setDestinationChangeHandler(handler) {
-  //   this._destinationChangeHandler = handler;
-  //   this.getElement().querySelector(`.event__field-group--destination input`)
-  //     .addEventListener(`change`, handler);
-  // }
+    const priceInput = element.querySelector(`.event__input--price`);
+    priceInput.addEventListener(`change`, () => {
+      this._price = priceInput.value;
+      this.rerender();
+    });
 
-  validateForm() {
-    const destinationInput = this.getElement().querySelector(`.event__input--destination`);
-    const priceInput = this.getElement().querySelector(`.event__field-group--price`);
+    const offersSelectElement = element.querySelector(`.event__available-offers`);
+    if (offersSelectElement) {
+      offersSelectElement.addEventListener(`change`, () => {
+        const getSelectedOffers = () => {
+          const checkedOfferInputs = offersSelectElement.querySelectorAll(`.event__offer-checkbox:checked`);
+          const checkedOfferIds = [];
+          checkedOfferInputs.forEach((input) => {
+            checkedOfferIds.push(input.id);
+          });
 
-    if (!this._destinations.some((destination) => destination === destinationInput.value)) {
-      destinationInput.setCustomValidity(`Выберите пункт назначения из списка возможных`);
+          return checkedOfferIds.map((checkboxId) => {
+            return getOfferById(checkboxId, getAvailableOffersByType(this._offersData, this._eventType));
+          });
+        };
+
+        this._offers = getSelectedOffers();
+      });
     }
   }
 }
