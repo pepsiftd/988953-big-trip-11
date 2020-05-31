@@ -1,10 +1,6 @@
 import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
-import {getEventTypeMarkup} from '@/utils/common';
-
-const addLeadingZero = (time) => {
-  return (`00` + time).slice(-2);
-};
+import {addLeadingZero, getDuration, getEventTypeMarkup} from '@/utils/common';
 
 const getHours = (date) => {
   return addLeadingZero(date.getHours());
@@ -12,21 +8,6 @@ const getHours = (date) => {
 
 const getMinutes = (date) => {
   return addLeadingZero(date.getMinutes());
-};
-
-const getDuration = (startDate, endDate) => {
-  const MS_IN_DAY = 86400000;
-  const MS_IN_HOUR = 3600000;
-  const MS_IN_MINUTE = 60000;
-  let ms = endDate - startDate;
-
-  const days = Math.floor(ms / MS_IN_DAY);
-  ms -= days * MS_IN_DAY;
-  const hours = Math.floor(ms / MS_IN_HOUR);
-  ms -= hours * MS_IN_HOUR;
-  const minutes = Math.floor(ms / MS_IN_MINUTE);
-
-  return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
 };
 
 const createEventTemplate = (event, offersData) => {

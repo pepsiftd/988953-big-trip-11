@@ -1,4 +1,4 @@
-import {sortByStartDate} from '@/components/sort';
+import {sortByStartDate} from '@/utils/sort';
 import AbstractComponent from '@/components/abstract-component';
 
 const getTripTitle = (sortedEvents = []) => {

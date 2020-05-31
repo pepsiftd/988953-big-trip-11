@@ -1,14 +1,14 @@
 import AbstractComponent from '@/components/abstract-component';
 
 const createDayTemplate = (day, counter) => {
-  const shortDay = day.toString().slice(4, 10);
-  const ISODay = day.toISOString(). slice(0, 10);
+  const dayCounterMarkup = counter ? `<span class="day__counter">${counter}</span>` : ``;
+  const dayDateMarkup = day ? `<time class="day__date" datetime="${day.toISOString(). slice(0, 10)}">${day.toString().slice(4, 10)}</time>` : ``;
 
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${counter}</span>
-        <time class="day__date" datetime="${ISODay}">${shortDay}</time>
+        ${dayCounterMarkup}
+        ${dayDateMarkup}
       </div>
 
       <ul class="trip-events__list">

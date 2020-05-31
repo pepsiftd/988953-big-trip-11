@@ -1,8 +1,9 @@
-import SortComponent from '@/components/trip-sort';
+import SortComponent, {SortType} from '@/components/trip-sort';
+import {sortByTime, sortByPrice} from '@/utils/sort';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
 import EventController, {EmptyEvent, Mode as EventMode} from '@/controllers/event';
-import {splitEventsByDays, sortByStartDate} from '@/components/sort';
+import {splitEventsByDays, sortByStartDate} from '@/utils/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
 import {enableNewEventButton} from '@/utils/common';
 
@@ -14,14 +15,17 @@ export default class TripController {
     this._offersData = [];
     this._destinations = [];
     this._eventControllers = [];
-    this._sortComponent = new SortComponent();
+    this._activeSortType = SortType.EVENT;
+    this._sortComponent = new SortComponent(this._activeSortType);
     this._daysListComponent = new DaysListComponent();
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._onSortingChange = this._onSortingChange.bind(this);
 
     this._eventsModel.setFilterChangeHandler(this._onFilterChange);
+    this._sortComponent.setSortTypeChangeHandler(this._onSortingChange);
   }
 
   _onDataChange(eventController, oldData, newData) {
@@ -36,7 +40,6 @@ export default class TripController {
         this._eventsModel.addEvent(newData);
         this._updateEvents();
         this._eventControllers = [].concat(eventController, this._eventControllers);
-        console.log(eventController);
       }
 
       enableNewEventButton();
@@ -67,6 +70,11 @@ export default class TripController {
     this._updateEvents();
   }
 
+  _onSortingChange(sortType) {
+    this._activeSortType = sortType;
+    this._updateEvents();
+  }
+
   createEvent() {
     if (this._creatingEvent) {
       return;
@@ -86,26 +94,24 @@ export default class TripController {
 
     // sorting line
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
-
-    const sortingType = `event`;
-    const isSortedByDays = sortingType === `event`;
-    this._renderEvents(isSortedByDays);
+    this._renderEvents();
   }
 
-  _renderEvents(isSortedByDays) {
+  _renderEvents() {
+    const isSortedByDays = this._activeSortType === SortType.EVENT;
+
     const events = this._eventsModel.getEvents();
     const eventsAll = this._eventsModel.getEventsAll();
 
-    if (isSortedByDays) {
-      // days and events container
-      render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
+    // days and events container
+    render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
 
+    const tripDaysListElement = this._container.querySelector(`.trip-days`);
+
+    if (isSortedByDays) {
       // days and events
       const [eventsByDays, dates] = splitEventsByDays(events);
       const tripStartDate = new Date(sortByStartDate(eventsAll)[0].dateStart.toISOString().slice(0, 10));
-
-      // render days column
-      const tripDaysListElement = this._container.querySelector(`.trip-days`);
 
       dates.forEach((day) => {
         const getDifferenceInDays = (start, end) => {
@@ -129,12 +135,31 @@ export default class TripController {
           eventController.render(event, this._offersData, this._destinations);
         });
       });
+    } else {
+      let sortedEvents;
+      switch(this._activeSortType) {
+        case SortType.TIME:
+          sortedEvents = sortByTime(events);
+          break;
+        case SortType.PRICE:
+          sortedEvents = sortByPrice(events);
+          break;
+      }
+
+      render(tripDaysListElement, new DayComponent(), RenderPosition.BEFOREEND);
+
+      const tripEventsListElement = tripDaysListElement.querySelector(`.trip-events__list`);
+      sortedEvents.forEach((event) => {
+        const eventController = new EventController(tripEventsListElement, this._onDataChange, this._onViewChange);
+        this._eventControllers.push(eventController);
+        eventController.render(event, this._offersData, this._destinations);
+      });
     }
   }
 
   _updateEvents() {
     this._clearEvents();
-    this._renderEvents(true);
+    this._renderEvents();
   }
 
   _clearEvents() {
