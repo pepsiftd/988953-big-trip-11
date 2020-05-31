@@ -34,8 +34,9 @@ export default class TripController {
       // если при создании нажали Save
       } else {
         this._eventsModel.addEvent(newData);
-        eventController.render(newData, this._offersData, this._destinations);
+        this._updateEvents();
         this._eventControllers = [].concat(eventController, this._eventControllers);
+        console.log(eventController);
       }
 
       enableNewEventButton();

@@ -34,7 +34,7 @@ export default class EventsModel {
   }
 
   addEvent(event) {
-    this._tasks = [].concat(event, this._events);
+    this._events = [].concat(event, this._events);
     this._callHandlers(this._dataChangeHandlers);
   }
 

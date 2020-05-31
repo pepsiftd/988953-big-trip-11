@@ -188,6 +188,18 @@ export default class EventEdit extends AbstractSmartComponent {
         this._isNewEvent);
   }
 
+  getData() {
+    return {
+      type: this._eventType,
+      isFavorite: this._isFavorite,
+      offers: this._offers,
+      destination: this._destination,
+      dateStart: this._startTime,
+      dateEnd: this._endTime,
+      price: this._price,
+    };
+  }
+
   setSubmitHandler(handler) {
     this._submitHandler = handler;
     this.getElement().addEventListener(`submit`, handler);

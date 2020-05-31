@@ -86,7 +86,15 @@ export default class EventController {
       evt.preventDefault();
       const isValid = this._editEventComponent.validateForm();
       if (isValid) {
-        this.replaceEditWithDefault();
+
+        if (this._mode !== Mode.ADDING){
+          this.replaceEditWithDefault();
+        } else {
+          this._mode = Mode.DEFAULT;
+          this.destroy();
+        }
+
+        this._onDataChange(this, event, this._editEventComponent.getData());
       }
     });
 
