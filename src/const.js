@@ -6,4 +6,4 @@ export const FilterType = {
 
 export const Key = {
   ESC: `Escape`,
-}
+};

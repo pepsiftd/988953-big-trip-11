@@ -1,5 +1,5 @@
 import FiltersComponent from '@/components/trip-filters';
-import {render, replace, remove, RenderPosition} from '@/utils/render';
+import {render, replace, RenderPosition} from '@/utils/render';
 import {FilterType} from '@/const';
 
 const FILTER_ID_PREFIX = `filter-`;

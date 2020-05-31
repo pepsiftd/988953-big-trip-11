@@ -2,8 +2,7 @@ import AbstractComponent from '@/components/abstract-component';
 
 const getTotalCost = (events) => {
   return events.reduce((total, event) => {
-    const offersCost = event.offers[0] ? event.offers.filter((it) => it.selected).reduce(((offersTotal, offer) => offersTotal + offer.price), 0) : 0;
-
+    const offersCost = event.offers.length > 0 ? event.offers.reduce(((offersTotal, offer) => offersTotal + offer.price), 0) : 0;
     return total + event.price + offersCost;
   }, 0);
 };

@@ -149,13 +149,14 @@ export default class EventEdit extends AbstractSmartComponent {
     this._flatpickrStart = null;
     this._flatpickrEnd = null;
 
+    this._id = event.id;
     this._isFavorite = event.isFavorite;
     this._eventType = event.type;
     this._offers = event.offers;
     this._destination = event.destination ? encode(event.destination) : ``;
     this._startTime = event.dateStart;
     this._endTime = event.dateEnd;
-    this._price = event.price ? encode(String(event.price)) : ``;
+    this._price = event.price ? parseInt(encode(String(event.price)), 10) : ``;
 
     this._applyFlatpickr();
     this._subscribeOnEvents();
@@ -190,6 +191,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getData() {
     return {
+      id: this._id,
       type: this._eventType,
       isFavorite: this._isFavorite,
       offers: this._offers,
@@ -233,7 +235,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._destination = this._event.destination ? encode(this._event.destination) : ``;
     this._startTime = this._event.dateStart;
     this._endTime = this._event.dateEnd;
-    this._price = this._event.price ? encode(String(this._event.price)) : ``;
+    this._price = this._event.price ? parseInt(encode(String(this._event.price)), 10) : ``;
 
     this.rerender();
   }
@@ -290,19 +292,19 @@ export default class EventEdit extends AbstractSmartComponent {
 
     const startTimeInput = element.querySelector(`[name=event-start-time]`);
     startTimeInput.addEventListener(`change`, () => {
-      this._startTime = new Date(startTimeInput.value);
+      this._startTime = new Date(Date.parse(startTimeInput.value));
       this.rerender();
     });
 
     const endTimeInput = element.querySelector(`[name=event-end-time]`);
     endTimeInput.addEventListener(`change`, () => {
-      this._endTime = new Date(endTimeInput.value);
+      this._endTime = new Date(Date.parse(endTimeInput.value));
       this.rerender();
     });
 
     const priceInput = element.querySelector(`.event__input--price`);
     priceInput.addEventListener(`change`, () => {
-      this._price = encode(priceInput.value);
+      this._price = parseInt(encode(priceInput.value), 10);
       this.rerender();
     });
 

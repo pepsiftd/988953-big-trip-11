@@ -137,7 +137,7 @@ export default class TripController {
       });
     } else {
       let sortedEvents;
-      switch(this._activeSortType) {
+      switch (this._activeSortType) {
         case SortType.TIME:
           sortedEvents = sortByTime(events);
           break;
