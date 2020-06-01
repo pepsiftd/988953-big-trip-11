@@ -67,11 +67,7 @@ export default class EventController {
     }
   }
 
-  render(event, offersData, destinations, eventMode) {
-    if (eventMode) {
-      this._mode = eventMode;
-    }
-
+  render(event, offersData, destinations, isFirst) {
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;
 
@@ -110,8 +106,14 @@ export default class EventController {
       replace(this._eventComponent, oldEventComponent);
       replace(this._editEventComponent, oldEditEventComponent);
     } else if (this._mode === Mode.ADDING) {
-      const sortingElement = this._container.querySelector(`.trip-sort`);
-      render(sortingElement, this._editEventComponent, RenderPosition.AFTER);
+
+      if (isFirst) {
+        render(this._container, this._editEventComponent, RenderPosition.BEFOREEND);
+      } else {
+        const sortingElement = this._container.querySelector(`.trip-sort`);
+        render(sortingElement, this._editEventComponent, RenderPosition.AFTER);
+      }
+
       document.addEventListener(`keydown`, this._escPressHandler);
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);

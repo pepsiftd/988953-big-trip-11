@@ -2,6 +2,7 @@ import SortComponent, {SortType} from '@/components/trip-sort';
 import {sortByTime, sortByPrice} from '@/utils/sort';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
+import NoEventsComponent from '@/components/no-events';
 import EventController, {EmptyEvent, Mode as EventMode} from '@/controllers/event';
 import {splitEventsByDays, sortByStartDate} from '@/utils/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
@@ -18,6 +19,7 @@ export default class TripController {
     this._activeSortType = SortType.EVENT;
     this._sortComponent = new SortComponent(this._activeSortType);
     this._daysListComponent = new DaysListComponent();
+    this._noEventsComponent = new NoEventsComponent();
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -79,33 +81,47 @@ export default class TripController {
     if (this._creatingEvent) {
       return;
     }
+    remove(this._noEventsComponent);
 
     this._eventControllers.forEach((it) => {
       it.setDefaultView();
     });
 
     this._creatingEvent = new EventController(this._container, this._onDataChange, this._onViewChange, EventMode.ADDING);
-    this._creatingEvent.render(EmptyEvent, this._offersData, this._destinations);
+    const isFirst = this._eventsModel.getEventsAll().length === 0;
+    this._creatingEvent.render(EmptyEvent, this._offersData, this._destinations, isFirst);
   }
 
   render(offersData, destinations) {
     this._offersData = offersData;
     this._destinations = destinations;
+    const isNoEvents = this._eventsModel.getEventsAll().length === 0;
 
-    if (this._eventsModel.getEventsAll().length === 0) {
-      return;
-    }
-
-    // sorting line
-    render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     this._renderEvents();
   }
 
   _renderEvents() {
+    const isNoEvents = this._eventsModel.getEventsAll().length === 0;
+
+    if (isNoEvents) {
+      remove(this._sortComponent);
+      if (!this._creatingEvent) {
+        render(this._container, this._noEventsComponent, RenderPosition.BEFOREEND);
+      }
+      return;
+    } else {
+        // sorting line
+      render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
+    }
+
     const isSortedByDays = this._activeSortType === SortType.EVENT;
 
     const events = this._eventsModel.getEvents();
     const eventsAll = this._eventsModel.getEventsAll();
+
+    if (eventsAll.length === 0) {
+      return;
+    }
 
     // days and events container
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
