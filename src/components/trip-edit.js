@@ -54,6 +54,7 @@ const createTripEditFormTemplate = (offersData, destinations, options = {}, isNe
   const destinationNames = destinations.map((it) => it.name);
   const destinationsList = getDestinationsListMarkup(destinationNames);
 
+  const eventTypeIconMarkup = `${type ? `<img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">` : ``}`;
   const resetButtonMarkup = `<button class="event__reset-btn" type="reset">${isNewEvent ? `Cancel` : `Delete`}</button>`;
   const favoriteButtonMarkup = getFavoriteButtonMarkup(isNewEvent, isFavorite);
   const rollupButtonMarkup = isNewEvent ? `` : (
@@ -71,7 +72,7 @@ const createTripEditFormTemplate = (offersData, destinations, options = {}, isNe
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            ${type ? `<img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">` : ``}
+            ${eventTypeIconMarkup}
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 

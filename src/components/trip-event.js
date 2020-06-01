@@ -18,6 +18,7 @@ const createEventTemplate = (event, offersData) => {
 
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
+  const eventTypeIconMarkup = `${type ? `<img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">` : ``}`;
   const startTime = dateStart ? getFormattedTime(dateStart) : ``;
   const endTime = dateEnd ? getFormattedTime(dateEnd) : ``;
   const duration = dateStart && dateEnd ? getDuration(dateStart, dateEnd) : ``;
@@ -28,7 +29,7 @@ const createEventTemplate = (event, offersData) => {
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+          ${eventTypeIconMarkup}
         </div>
         <h3 class="event__title">${typeMarkup} ${destination}</h3>
 
