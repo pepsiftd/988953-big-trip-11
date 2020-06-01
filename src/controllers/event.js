@@ -102,6 +102,12 @@ export default class EventController {
       }
     });
 
+    if (this._mode !== Mode.ADDING) {
+      this._editEventComponent.setFavoriteClickHandler(() => {
+        this._onDataChange(this, event, Object.assign({}, event, {isFavorite: !event.isFavorite}));
+      });
+    }
+
     if (oldEventComponent && oldEditEventComponent) {
       replace(this._eventComponent, oldEventComponent);
       replace(this._editEventComponent, oldEditEventComponent);

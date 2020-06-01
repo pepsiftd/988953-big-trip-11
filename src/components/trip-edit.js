@@ -226,6 +226,12 @@ export default class EventEdit extends AbstractSmartComponent {
       .addEventListener(`click`, handler);
   }
 
+  setFavoriteClickHandler(handler) {
+    this._favoriteClickHandler = handler;
+    this.getElement().querySelector(`.event__favorite-checkbox`)
+      .addEventListener(`change`, handler);
+  }
+
   reset() {
     this._isFavorite = this._event.isFavorite;
     this._eventType = this._event.type;
@@ -282,6 +288,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     element.querySelector(`.event__type-list`).addEventListener(`change`, (evt) => {
       this._eventType = evt.target.value;
+      this._offers = [];
       this.rerender();
     });
 
