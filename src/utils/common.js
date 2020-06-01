@@ -1,14 +1,14 @@
-export const getDuration = (startDate, endDate) => {
-  const MS_IN_DAY = 86400000;
-  const MS_IN_HOUR = 3600000;
-  const MS_IN_MINUTE = 60000;
-  let ms = endDate - startDate;
+import moment from 'moment';
 
-  const days = Math.floor(ms / MS_IN_DAY);
-  ms -= days * MS_IN_DAY;
-  const hours = Math.floor(ms / MS_IN_HOUR);
-  ms -= hours * MS_IN_HOUR;
-  const minutes = Math.floor(ms / MS_IN_MINUTE);
+export const parseDate = (dateString) => {
+  return new Date(`20${dateString}`);
+};
+
+export const getDuration = (startDate, endDate) => {
+  const duration = moment.duration(endDate - startDate);
+  const days = duration.days();
+  const hours = duration.hours();
+  const minutes = duration.minutes();
 
   return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
 };

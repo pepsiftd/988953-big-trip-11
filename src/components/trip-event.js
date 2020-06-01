@@ -1,13 +1,10 @@
 import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
-import {addLeadingZero, getDuration, getEventTypeMarkup} from '@/utils/common';
+import {getDuration, getEventTypeMarkup} from '@/utils/common';
+import moment from 'moment';
 
-const getHours = (date) => {
-  return addLeadingZero(date.getHours());
-};
-
-const getMinutes = (date) => {
-  return addLeadingZero(date.getMinutes());
+const getFormattedTime = (date) => {
+  return moment(date).format(`HH:MM`);
 };
 
 const createEventTemplate = (event, offersData) => {
@@ -21,8 +18,8 @@ const createEventTemplate = (event, offersData) => {
 
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
-  const startTime = dateStart ? `${getHours(dateStart)}:${getMinutes(dateStart)}` : ``;
-  const endTime = dateEnd ? `${getHours(dateEnd)}:${getMinutes(dateEnd)}` : ``;
+  const startTime = dateStart ? getFormattedTime(dateStart) : ``;
+  const endTime = dateEnd ? getFormattedTime(dateEnd) : ``;
   const duration = dateStart && dateEnd ? getDuration(dateStart, dateEnd) : ``;
 
   const selectedOffers = createOffersTemplate(offers);

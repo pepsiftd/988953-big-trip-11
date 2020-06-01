@@ -11,14 +11,14 @@ export const Mode = {
 };
 
 export const EmptyEvent = {
-  id: `0`,
+  id: Math.random(),
   type: undefined,
   isFavorite: false,
   destination: undefined,
   dateStart: new Date(),
   dateEnd: new Date(),
   price: undefined,
-  offers: undefined,
+  offers: [],
   description: undefined,
   photos: undefined,
 };
@@ -86,6 +86,7 @@ export default class EventController {
       evt.preventDefault();
       const isValid = this._editEventComponent.validateForm();
       if (isValid) {
+        this._editEventComponent.parseForm();
 
         if (this._mode !== Mode.ADDING) {
           this.replaceEditWithDefault();
