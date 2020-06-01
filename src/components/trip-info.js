@@ -41,19 +41,28 @@ const getTripTitle = (sortedEvents = []) => {
   return titleMarkup;
 };
 
-const createTripInfoTemplate = (events) => {
+const getTripTitleAndDates = (events) => {
   const sortedEvents = sortByStartDate(events.slice());
-  const tripStartDate = sortedEvents[0].dateStart.toString().slice(4, 10);
-  const tripEndDate = sortedEvents[sortedEvents.length - 1].dateEnd.toString().slice(4, 10);
-  const endDate = tripStartDate.slice(0, 3) === tripEndDate.slice(0, 3) ? tripEndDate.slice(4) : tripEndDate;
+
   const infoTitle = getTripTitle(sortedEvents);
+  const tripStartDate = sortedEvents[0] ? sortedEvents[0].dateStart.toString().slice(4, 10) : ``;
+  const tripEndDate = sortedEvents[sortedEvents.length - 1] ? sortedEvents[sortedEvents.length - 1].dateEnd.toString().slice(4, 10) : ``;
+  const endDate = tripStartDate.slice(0, 3) === tripEndDate.slice(0, 3) ? tripEndDate.slice(4) : tripEndDate;
+
+  return (
+    `<h1 class="trip-info__title">${infoTitle}</h1>
+
+    <p class="trip-info__dates">${tripStartDate}&nbsp;&mdash;&nbsp;${endDate}</p>`
+  );
+};
+
+const createTripInfoTemplate = (events) => {
+  const tripTitleAndDates = events.length !== 0 ? getTripTitleAndDates(events) : ``;
 
   return (
     `<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
-        <h1 class="trip-info__title">${infoTitle}</h1>
-
-        <p class="trip-info__dates">${tripStartDate}&nbsp;&mdash;&nbsp;${endDate}</p>
+        ${tripTitleAndDates}
       </div>
     </section>`
   );

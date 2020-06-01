@@ -92,6 +92,10 @@ export default class TripController {
     this._offersData = offersData;
     this._destinations = destinations;
 
+    if (this._eventsModel.getEventsAll().length === 0) {
+      return;
+    }
+
     // sorting line
     render(this._container, this._sortComponent, RenderPosition.BEFOREEND);
     this._renderEvents();

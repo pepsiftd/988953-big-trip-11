@@ -12,7 +12,7 @@ import {RenderPosition, render} from '@/utils/render';
 import TripController from '@/controllers/trip-controller';
 import {FilterType} from '@/const';
 
-const EVENTS_AMOUNT = 20;
+const EVENTS_AMOUNT = 0;
 
 // generate mock
 const destinations = generateDestinations();
