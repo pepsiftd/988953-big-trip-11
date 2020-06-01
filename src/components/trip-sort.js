@@ -61,6 +61,11 @@ export default class Sorting extends AbstractSmartComponent {
     return createTripSortTemplate(this._activeSortType);
   }
 
+  setSortType(type) {
+    this._activeSortType = type;
+    this.rerender();
+  }
+
   recoverListeners() {
     this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
   }
