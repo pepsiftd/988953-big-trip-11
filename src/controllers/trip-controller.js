@@ -11,9 +11,10 @@ import {enableNewEventButton} from '@/utils/common';
 import {HIDDEN_CLASS} from '@/const';
 
 export default class TripController {
-  constructor(container, eventsModel) {
+  constructor(container, eventsModel, api) {
     this._container = container;
     this._eventsModel = eventsModel;
+    this._api = api;
 
     this._offersData = [];
     this._destinations = [];
@@ -55,13 +56,17 @@ export default class TripController {
       this._updateEvents();
     // при редактировании существующего
     } else {
-      const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
+      this._api.updateEvent(oldData.id, newData)
+        .then((eventModel) => {
 
-      if (!isSuccess) {
-        return;
-      }
+          const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
 
-      eventController.render(newData, this._offersData, this._destinations);
+          if (!isSuccess) {
+            return;
+          }
+
+          eventController.render(newData, this._offersData, this._destinations);
+        });
     }
   }
 
@@ -106,9 +111,10 @@ export default class TripController {
     remove(this._noEventsComponent);
   }
 
-  render(offersData, destinations) {
-    this._offersData = offersData;
-    this._destinations = destinations;
+  render() {
+    console.log(this._eventsModel);
+    this._offersData = this._eventsModel.getOffers();
+    this._destinations = this._eventsModel.getDestinations();
 
     this._renderEvents();
   }

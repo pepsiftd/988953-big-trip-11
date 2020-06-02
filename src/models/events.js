@@ -1,5 +1,5 @@
 import {getEventsByFilter} from '@/utils/filter';
-import {FilterType} from '@/const';
+import {FilterType, eventTypes} from '@/const';
 
 export default class EventsModel {
   constructor() {
@@ -31,6 +31,40 @@ export default class EventsModel {
   setEvents(events) {
     this._events = Array.from(events);
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  _adaptOffers(offers) {
+    const activityOffersMap = new Map();
+    const transferOffersMap = new Map();
+
+    eventTypes.TRANSFER.forEach((type) => {
+      transferOffersMap.set(type, offers.find((it) => it.type === type).offers);
+    });
+
+    eventTypes.ACTIVITY.forEach((type) => {
+      activityOffersMap.set(type, offers.find((it) => it.type === type).offers);
+    });
+
+    return {
+      TRANSFER: transferOffersMap,
+      ACTIVITY: activityOffersMap,
+    };
+  }
+
+  setOffers(offers) {
+    this._offers = this._adaptOffers(offers);
+  }
+
+  getOffers() {
+    return this._offers;
+  }
+
+  setDestinations(destinations) {
+    this._destinations = Array.from(destinations);
+  }
+
+  getDestinations() {
+    return this._destinations;
   }
 
   addEvent(event) {

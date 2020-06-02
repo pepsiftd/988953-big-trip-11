@@ -14,3 +14,22 @@ export const TabName = {
   TABLE: `table`,
   STATS: `stats`,
 };
+
+export const eventTypes = {
+  TRANSFER:
+  [
+    `taxi`,
+    `bus`,
+    `train`,
+    `ship`,
+    `transport`,
+    `drive`,
+    `flight`,
+  ],
+  ACTIVITY:
+  [
+    `check-in`,
+    `sightseeing`,
+    `restaurant`
+  ]
+};
