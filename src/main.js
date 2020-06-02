@@ -52,7 +52,7 @@ const tripController = new TripController(tripEventsElement, eventsModel);
 tripController.render(offers, destinations);
 
 const mainContainer = document.querySelector(`.page-main .page-body__container`);
-const statsComponent = new StatsComponent;
+const statsComponent = new StatsComponent(eventsModel);
 render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
 
 tripTabsComponent.setChangeTabHandler((activeTab) => {
