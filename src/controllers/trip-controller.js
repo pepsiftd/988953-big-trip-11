@@ -92,7 +92,6 @@ export default class TripController {
     if (this._creatingEvent) {
       return;
     }
-    remove(this._noEventsComponent);
 
     this._eventControllers.forEach((it) => {
       it.setDefaultView();
@@ -104,6 +103,7 @@ export default class TripController {
     const isFirst = this._eventsModel.getEventsAll().length === 0;
 
     this._creatingEvent.render(EmptyEvent, this._offersData, this._destinations, isFirst);
+    remove(this._noEventsComponent);
   }
 
   render(offersData, destinations) {

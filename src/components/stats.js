@@ -2,6 +2,17 @@ import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {HIDDEN_CLASS} from '@/const';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import moment from 'moment';
+
+const TRANSFER_TYPES = [
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+];
 
 const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
@@ -12,27 +23,34 @@ const getChartsData = (events) => {
 
   const eventsByTypes = [];
   types.forEach((type) => {
-    eventsByTypes.push(events.filter((event) => event.type === type));
+    eventsByTypes.push({type, events: events.filter((event) => event.type === type)});
   });
 
   const getMoneyByType = (eventsByType) => {
-    return eventsByType.reduce((total, event) => {
-      const offersCost = event.offers.length > 0 ? event.offers.reduce(((offersTotal, offer) => offersTotal + offer.price), 0) : 0;
-      return total + event.price + offersCost;
-    }, 0);
+    return eventsByType.reduce((total, event) => total + event.price, 0);
+  };
+
+  const getTransferCountsByType = () => {
+    const transfers = eventsByTypes.filter((it) => TRANSFER_TYPES.includes(it.type));
+    return {
+      types: transfers.map((it) => it.type),
+      counts: transfers.map((it) => it.events.length),
+    };
   };
 
   const getTimeByType = (eventsByType) => {
-    return eventsByType.reduce((total, event) => {
-      return total + event.dateEnd - event.dateStart;
-    }, 0);
+    const commonDurationInHours = eventsByType.reduce((total, event) => {
+      return total + moment.duration(event.dateEnd - event.dateStart).asHours();
+    }, moment.duration(0).asHours());
+
+    return Math.floor(commonDurationInHours);
   };
 
   return {
     types,
-    money: eventsByTypes.map(getMoneyByType),
-    count: eventsByTypes.map((type) => type.length),
-    time: eventsByTypes.map(getTimeByType),
+    money: eventsByTypes.map((it) => getMoneyByType(it.events)),
+    transport: getTransferCountsByType(),
+    time: eventsByTypes.map((it) => getTimeByType(it.events)),
   };
 };
 
@@ -59,212 +77,215 @@ const createStatsTemplate = () => {
   );
 };
 
-const renderMoneyChart = (moneyCtx, events) => {
-  moneyCtx.height = BAR_HEIGHT * 6;
+const renderMoneyChart = (moneyCtx, chartsData) => {
+  const barsAmount = chartsData.types.length;
+  moneyCtx.height = BAR_HEIGHT * barsAmount;
 
   return new Chart(moneyCtx, {
-      plugins: [ChartDataLabels],
-      type: `horizontalBar`,
-      data: {
-          labels: [`FLY`, `STAY`, `DRIVE`, `LOOK`, `RIDE`],
-          datasets: [{
-              data: [400, 300, 200, 160 , 100],
-              backgroundColor: `#ffffff`,
-              hoverBackgroundColor: `#ffffff`,
-              anchor: `start`
-          }]
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: chartsData.types,
+      datasets: [{
+        data: chartsData.money,
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `€ ${val}`
+        }
       },
-      options: {
-          plugins: {
-              datalabels: {
-                  font: {
-                      size: 13
-                  },
-                  color: `#000000`,
-                  anchor: 'end',
-                  align: 'start',
-                  formatter: (val) => `€ ${val}`
-              }
+      title: {
+        display: true,
+        text: `MONEY`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
           },
-          title: {
-              display: true,
-              text: `MONEY`,
-              fontColor: `#000000`,
-              fontSize: 23,
-              position: `left`
+          gridLines: {
+            display: false,
+            drawBorder: false
           },
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      fontColor: `#000000`,
-                      padding: 5,
-                      fontSize: 13,
-                  },
-                  gridLines: {
-                      display: false,
-                      drawBorder: false
-                  },
-                  barThickness: 44,
-              }],
-              xAxes: [{
-                  ticks: {
-                      display: false,
-                      beginAtZero: true,
-                  },
-                  gridLines: {
-                      display: false,
-                      drawBorder: false
-                  },
-                  minBarLength: 50
-              }],
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
           },
-          legend: {
-              display: false
+          gridLines: {
+            display: false,
+            drawBorder: false
           },
-          tooltips: {
-              enabled: false,
-          }
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
       }
+    }
   });
-}
+};
 
-const renderTransportChart = (transportCtx, events) => {
-  transportCtx.height = BAR_HEIGHT * 3;
+const renderTransportChart = (transportCtx, chartsData) => {
+  const barsAmount = chartsData.transport.types.length;
+  transportCtx.height = BAR_HEIGHT * barsAmount;
 
   return new Chart(transportCtx, {
-      plugins: [ChartDataLabels],
-      type: `horizontalBar`,
-      data: {
-          labels: [`FLY`, `DRIVE`,  `RIDE`],
-          datasets: [{
-              data: [4, 2, 1],
-              backgroundColor: `#ffffff`,
-              hoverBackgroundColor: `#ffffff`,
-              anchor: `start`
-          }]
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: chartsData.transport.types,
+      datasets: [{
+        data: chartsData.transport.counts,
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `${val}x`
+        }
       },
-      options: {
-          plugins: {
-              datalabels: {
-                  font: {
-                      size: 13
-                  },
-                  color: `#000000`,
-                  anchor: 'end',
-                  align: 'start',
-                  formatter: (val) => `${val}x`
-              }
+      title: {
+        display: true,
+        text: `TRANSPORT`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
           },
-          title: {
-              display: true,
-              text: `TRANSPORT`,
-              fontColor: `#000000`,
-              fontSize: 23,
-              position: `left`
+          gridLines: {
+            display: false,
+            drawBorder: false
           },
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      fontColor: `#000000`,
-                      padding: 5,
-                      fontSize: 13,
-                  },
-                  gridLines: {
-                      display: false,
-                      drawBorder: false
-                  },
-                  barThickness: 44,
-              }],
-              xAxes: [{
-                  ticks: {
-                      display: false,
-                      beginAtZero: true,
-                  },
-                  gridLines: {
-                      display: false,
-                      drawBorder: false
-                  },
-                  minBarLength: 50
-              }],
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
           },
-          legend: {
-              display: false
+          gridLines: {
+            display: false,
+            drawBorder: false
           },
-          tooltips: {
-              enabled: false,
-          }
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
       }
+    }
   });
-}
+};
 
-const renderTimeSpentChart = (timeSpentCtx, events) => {
-  timeSpentCtx.height = BAR_HEIGHT * 3;
+const renderTimeSpentChart = (timeSpentCtx, chartsData) => {
+  const barsAmount = chartsData.types.length;
+  timeSpentCtx.height = BAR_HEIGHT * barsAmount;
 
   return new Chart(timeSpentCtx, {
-      plugins: [ChartDataLabels],
-      type: `horizontalBar`,
-      data: {
-          labels: [`HOTEL`, `TO AIRPORT`,  `TO GENEVA`],
-          datasets: [{
-              data: [72, 2, 1],
-              backgroundColor: `#ffffff`,
-              hoverBackgroundColor: `#ffffff`,
-              anchor: `start`
-          }]
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: chartsData.types,
+      datasets: [{
+        data: chartsData.time,
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `${val}H`
+        }
       },
-      options: {
-          plugins: {
-              datalabels: {
-                  font: {
-                      size: 13
-                  },
-                  color: `#000000`,
-                  anchor: 'end',
-                  align: 'start',
-                  formatter: (val) => `${val}H`
-              }
+      title: {
+        display: true,
+        text: `TIME SPENT`,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
           },
-          title: {
-              display: true,
-              text: `TIME SPENT`,
-              fontColor: `#000000`,
-              fontSize: 23,
-              position: `left`
+          gridLines: {
+            display: false,
+            drawBorder: false
           },
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      fontColor: `#000000`,
-                      padding: 5,
-                      fontSize: 13,
-                  },
-                  gridLines: {
-                      display: false,
-                      drawBorder: false
-                  },
-                  barThickness: 44,
-              }],
-              xAxes: [{
-                  ticks: {
-                      display: false,
-                      beginAtZero: true,
-                  },
-                  gridLines: {
-                      display: false,
-                      drawBorder: false
-                  },
-                  minBarLength: 50
-              }],
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
           },
-          legend: {
-              display: false
+          gridLines: {
+            display: false,
+            drawBorder: false
           },
-          tooltips: {
-              enabled: false,
-          }
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
       }
+    }
   });
-}
+};
 
 export default class Stats extends AbstractSmartComponent {
   constructor(eventsModel) {
@@ -327,7 +348,6 @@ export default class Stats extends AbstractSmartComponent {
     this._resetCharts();
 
     const chartsData = getChartsData(this._eventsModel.getEventsAll());
-    console.log(chartsData);
 
     this._moneyChart = renderMoneyChart(moneyCtx, chartsData);
     this._transportChart = renderTransportChart(transportCtx, chartsData);

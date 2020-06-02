@@ -35,7 +35,7 @@ export default class Tabs extends AbstractSmartComponent {
       this._changeTabHandler = handler;
 
       const selectedTabName = evt.target.dataset.name;
-      console.log(selectedTabName);
+
       if (this._activeTab !== selectedTabName) {
         this._activeTab = selectedTabName;
         this.rerender();

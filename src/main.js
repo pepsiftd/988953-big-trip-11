@@ -56,7 +56,6 @@ const statsComponent = new StatsComponent(eventsModel);
 render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
 
 tripTabsComponent.setChangeTabHandler((activeTab) => {
-  console.log(activeTab);
   switch (activeTab) {
     case TabName.TABLE:
       tripController.show();
@@ -64,7 +63,7 @@ tripTabsComponent.setChangeTabHandler((activeTab) => {
       break;
     case TabName.STATS:
       tripController.hide();
-      statsComponent.show()
+      statsComponent.show();
       break;
   }
 });
