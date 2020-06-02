@@ -8,6 +8,7 @@ import EventController, {EmptyEvent, Mode as EventMode} from '@/controllers/even
 import {splitEventsByDays, sortByStartDate} from '@/utils/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
 import {enableNewEventButton} from '@/utils/common';
+import {HIDDEN_CLASS} from '@/const';
 
 export default class TripController {
   constructor(container, eventsModel) {
@@ -62,6 +63,14 @@ export default class TripController {
 
       eventController.render(newData, this._offersData, this._destinations);
     }
+  }
+
+  show() {
+    this._container.classList.remove(HIDDEN_CLASS);
+  }
+
+  hide() {
+    this._container.classList.add(HIDDEN_CLASS);
   }
 
   _onViewChange() {

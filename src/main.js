@@ -1,6 +1,7 @@
 import TripInfoController from '@/controllers/trip-info';
 import TripTabsComponent from '@/components/trip-tabs';
 import FiltersController from '@/controllers/filters';
+import StatsComponent from '@/components/stats';
 
 import EventsModel from '@/models/events';
 
@@ -10,7 +11,7 @@ import {generateOffers} from '@/mock/offers';
 
 import {RenderPosition, render} from '@/utils/render';
 import TripController from '@/controllers/trip-controller';
-import {FilterType} from '@/const';
+import {FilterType, TabName} from '@/const';
 
 const EVENTS_AMOUNT = 5;
 
@@ -29,7 +30,8 @@ const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
 const tripInfoController = new TripInfoController(tripMainElement, eventsModel);
 tripInfoController.render();
 
-render(tripControlsElement, new TripTabsComponent(), RenderPosition.BEFOREEND);
+const tripTabsComponent = new TripTabsComponent();
+render(tripControlsElement, tripTabsComponent, RenderPosition.BEFOREEND);
 
 const filtersController = new FiltersController(tripControlsElement, eventsModel);
 filtersController.render();
@@ -48,3 +50,21 @@ const tripEventsElement = document.querySelector(`.trip-events`);
 
 const tripController = new TripController(tripEventsElement, eventsModel);
 tripController.render(offers, destinations);
+
+const mainContainer = document.querySelector(`.page-main .page-body__container`);
+const statsComponent = new StatsComponent;
+render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
+
+tripTabsComponent.setChangeTabHandler((activeTab) => {
+  console.log(activeTab);
+  switch (activeTab) {
+    case TabName.TABLE:
+      tripController.show();
+      statsComponent.hide();
+      break;
+    case TabName.STATS:
+      tripController.hide();
+      statsComponent.show()
+      break;
+  }
+});

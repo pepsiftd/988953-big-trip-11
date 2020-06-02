@@ -7,3 +7,10 @@ export const FilterType = {
 export const Key = {
   ESC: `Escape`,
 };
+
+export const HIDDEN_CLASS = `visually-hidden`;
+
+export const TabName = {
+  TABLE: `table`,
+  STATS: `stats`,
+};
