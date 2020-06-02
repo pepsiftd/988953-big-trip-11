@@ -4,8 +4,8 @@ const createPhotoMarkup = (photosArray) => {
   }).join(`\n`);
 };
 
-export const createDestinationMarkup = (event) => {
-  const {description, photos = []} = event;
+export const createDestinationMarkup = (destination) => {
+  const {description, photos = []} = destination;
 
   const photosMarkup = createPhotoMarkup(photos);
 

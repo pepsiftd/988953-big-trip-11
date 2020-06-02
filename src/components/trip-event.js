@@ -1,41 +1,27 @@
 import AbstractComponent from '@/components/abstract-component';
 import {createOffersTemplate} from '@/components/offers';
-import {getEventTypeMarkup} from '@/utils/common';
+import {getDuration, getEventTypeMarkup} from '@/utils/common';
+import moment from 'moment';
 
-const addLeadingZero = (time) => {
-  return (`00` + time).slice(-2);
-};
-
-const getHours = (date) => {
-  return addLeadingZero(date.getHours());
-};
-
-const getMinutes = (date) => {
-  return addLeadingZero(date.getMinutes());
-};
-
-const getDuration = (startDate, endDate) => {
-  const MS_IN_DAY = 86400000;
-  const MS_IN_HOUR = 3600000;
-  const MS_IN_MINUTE = 60000;
-  let ms = endDate - startDate;
-
-  const days = Math.floor(ms / MS_IN_DAY);
-  ms -= days * MS_IN_DAY;
-  const hours = Math.floor(ms / MS_IN_HOUR);
-  ms -= hours * MS_IN_HOUR;
-  const minutes = Math.floor(ms / MS_IN_MINUTE);
-
-  return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
+const getFormattedTime = (date) => {
+  return moment(date).format(`HH:MM`);
 };
 
 const createEventTemplate = (event, offersData) => {
-  const {destination, dateStart, dateEnd, price, offers} = event;
-  const type = event.type.toLowerCase();
-  const typeMarkup = getEventTypeMarkup(offersData, type);
-  const startTime = `${getHours(dateStart)}:${getMinutes(dateStart)}`;
-  const endTime = `${getHours(dateEnd)}:${getMinutes(dateEnd)}`;
-  const duration = getDuration(dateStart, dateEnd);
+  const {
+    destination = ``,
+    dateStart,
+    dateEnd,
+    price,
+    offers = [],
+  } = event;
+
+  const type = event.type ? event.type.toLowerCase() : ``;
+  const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;
+  const eventTypeIconMarkup = `${type ? `<img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">` : ``}`;
+  const startTime = dateStart ? getFormattedTime(dateStart) : ``;
+  const endTime = dateEnd ? getFormattedTime(dateEnd) : ``;
+  const duration = dateStart && dateEnd ? getDuration(dateStart, dateEnd) : ``;
 
   const selectedOffers = createOffersTemplate(offers);
 
@@ -43,7 +29,7 @@ const createEventTemplate = (event, offersData) => {
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+          ${eventTypeIconMarkup}
         </div>
         <h3 class="event__title">${typeMarkup} ${destination}</h3>
 

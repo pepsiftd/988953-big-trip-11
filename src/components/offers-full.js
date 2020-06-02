@@ -1,6 +1,6 @@
-const createOfferSelectorMarkup = (offer) => {
-  const {id, title, price, selected} = offer;
-  const isCheckedMarkup = selected ? `checked` : ``;
+const createOfferSelectorMarkup = (offer, selectedOffers) => {
+  const {id, title, price} = offer;
+  const isCheckedMarkup = selectedOffers.some((it) => it === offer) ? `checked` : ``;
 
   return (
     `<div class="event__offer-selector">
@@ -14,12 +14,8 @@ const createOfferSelectorMarkup = (offer) => {
   );
 };
 
-export const createOfferSelectorsMarkup = (offers = []) => {
-  if (offers.length < 1) {
-    return ``;
-  }
-
-  const offersMarkup = offers.map((offer) => createOfferSelectorMarkup(offer)).join(`\n`);
+export const createOfferSelectorsMarkup = (selectedOffers, availableOffers) => {
+  const offersMarkup = availableOffers.map((offer) => createOfferSelectorMarkup(offer, selectedOffers)).join(`\n`);
 
   return (
     `<section class="event__section  event__section--offers">

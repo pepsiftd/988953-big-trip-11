@@ -24,4 +24,16 @@ const sortByStartDate = (events = []) => {
   });
 };
 
-export {splitEventsByDays, sortByStartDate};
+const sortByTime = (events = []) => {
+  return events.slice().sort((a, b) => {
+    return (b.dateEnd - b.dateStart) - (a.dateEnd - a.dateStart);
+  });
+};
+
+const sortByPrice = (events = []) => {
+  return events.slice().sort((a, b) => {
+    return b.price - a.price;
+  });
+};
+
+export {splitEventsByDays, sortByStartDate, sortByTime, sortByPrice};

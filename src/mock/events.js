@@ -3,10 +3,11 @@ import {getRandomArrayItem, getRandomIntegerNumber, getRandomBoolean} from '@/ut
 const MS_IN_DAY = 86400000;
 
 const getRandomStartDate = () => {
-  const MAX_DAYS_FROM_NOW = 20;
+  const MAX_DAYS_FROM_NOW = 10;
   const date = new Date();
   const difference = getRandomIntegerNumber(0, MAX_DAYS_FROM_NOW * MS_IN_DAY);
-  date.setTime(date.getTime() + difference);
+  const getSign = Math.random() > 0.5 ? 1 : -1;
+  date.setTime(date.getTime() + difference * getSign);
 
   return date;
 };
@@ -22,11 +23,7 @@ const getRandomEndDate = (startDate) => {
 
 const selectRandomOffers = (offers, type) => {
   const selectedOffers = offers.TRANSFER.get(type) ? offers.TRANSFER.get(type) : offers.ACTIVITY.get(type);
-  return selectedOffers.map((it) => {
-    return Object.assign({}, it, {
-      selected: getRandomBoolean()
-    });
-  });
+  return selectedOffers.filter(getRandomBoolean);
 };
 
 const getRandomType = (allOffers) => {
@@ -35,6 +32,7 @@ const getRandomType = (allOffers) => {
 };
 
 const generateEvent = (destinations, allOffers) => {
+  const id = String(Math.random());
   const isFavorite = getRandomBoolean();
   const type = getRandomType(allOffers);
   const destination = getRandomArrayItem(destinations);
@@ -45,6 +43,7 @@ const generateEvent = (destinations, allOffers) => {
   const offers = selectRandomOffers(allOffers, type);
 
   return {
+    id,
     type,
     isFavorite,
     destination: destination.name,
