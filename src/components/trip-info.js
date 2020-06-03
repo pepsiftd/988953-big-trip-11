@@ -7,7 +7,7 @@ const getTripTitle = (sortedEvents = []) => {
   }
 
   const destinations = sortedEvents.map((it) => it.destination.name);
-  let spots = [];
+  const spots = [];
   let moves = -1;
   let spot = ``;
 
