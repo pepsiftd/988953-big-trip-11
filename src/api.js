@@ -9,6 +9,13 @@ const URL = {
   DESTINATIONS: `destinations`,
 };
 
+const Method = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
+
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -39,11 +46,20 @@ export default class API {
     const headers = new Headers();
     headers.append(`Content-Type`, `application/json`);
 
-    return this._load(`${URL.EVENTS}/${id}`, `PUT`, JSON.stringify(data.toRAW()), headers)
-      .then(Event.parseEvent);
+    return this._load(`${URL.EVENTS}/${id}`,
+      Method.PUT,
+      JSON.stringify(data.toRAW()),
+      headers).then(Event.parseEvent);
   }
 
-  _load(sub, method = `GET`, body = null, headers = new Headers()) {
+  createEvent(event) {
+    return this._load(URL.EVENTS,
+      Method.POST,
+      JSON.stringify(event.toRAW()),
+      new Headers({"Content-Type": `application/json`})
+    ).then(Event.parseEvent);
+
+  _load(sub, method = Method.GET, body = null, headers = new Headers()) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(SERVER_URL + sub, {

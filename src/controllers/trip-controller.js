@@ -43,9 +43,13 @@ export default class TripController {
         this._updateEvents();
       // если при создании нажали Save
       } else {
-        this._eventsModel.addEvent(newData);
-        this._updateEvents();
-        this._eventControllers = [].concat(eventController, this._eventControllers);
+        this._api.createEvent(newData)
+          .then((eventModel) => {
+            eventModel.append(`id`, this._eventsModel.getEventsAll().length);
+            this._eventsModel.addEvent(newData);
+            this._updateEvents();
+            this._eventControllers = [].concat(eventController, this._eventControllers);
+          });
       }
 
       enableNewEventButton();

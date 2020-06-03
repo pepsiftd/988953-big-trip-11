@@ -104,7 +104,7 @@ export default class EventController {
 
     if (this._mode !== Mode.ADDING) {
       this._editEventComponent.setFavoriteClickHandler(() => {
-        this._onDataChange(this, event, EventModel.clone(Object.assign({}, event, {isFavorite: !event.isFavorite})));
+        this._onDataChange(this, event, EventModel.create(Object.assign({}, event, {isFavorite: !event.isFavorite})));
       });
     }
 

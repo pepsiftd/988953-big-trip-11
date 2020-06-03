@@ -232,7 +232,10 @@ export default class EventEdit extends AbstractSmartComponent {
   setFavoriteClickHandler(handler) {
     this._favoriteClickHandler = handler;
     this.getElement().querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, handler);
+      .addEventListener(`change`, () => {
+        this._isFavorite = !this._isFavorite;
+        handler();
+      });
   }
 
   reset() {

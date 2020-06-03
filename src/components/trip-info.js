@@ -6,7 +6,7 @@ const getTripTitle = (sortedEvents = []) => {
     return ``;
   }
 
-  const destinations = sortedEvents.map((it) => it.destination);
+  const destinations = sortedEvents.map((it) => it.destination.name);
   let spots = [];
   let moves = -1;
   let spot = ``;
@@ -42,7 +42,7 @@ const getTripTitle = (sortedEvents = []) => {
 };
 
 const getTripTitleAndDates = (events) => {
-  const sortedEvents = sortByStartDate(events.slice());
+  const sortedEvents = sortByStartDate(events);
 
   const infoTitle = getTripTitle(sortedEvents);
   const tripStartDate = sortedEvents[0] ? sortedEvents[0].dateStart.toString().slice(4, 10) : ``;
