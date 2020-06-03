@@ -55,8 +55,12 @@ export default class TripController {
     // если изменение данных в существующем событии
     // если нажали Delete при редактировании существующего
     } else if (newData === null) {
-      this._eventsModel.removeEvent(oldData.id);
-      this._updateEvents();
+      this._api.deleteEvent(oldData.id)
+        .then(() => {
+          this._eventsModel.removeEvent(oldData.id);
+          this._updateEvents();
+        });
+
     // при редактировании существующего
     } else {
 

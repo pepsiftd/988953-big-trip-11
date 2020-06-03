@@ -31,15 +31,18 @@ export default class API {
 
   getEvents() {
     return this._load(URL.EVENTS)
+      .then((response) => response.json())
       .then(Event.parseEvents);
   }
 
   getOffers() {
-    return this._load(URL.OFFERS);
+    return this._load(URL.OFFERS)
+      .then((response) => response.json());
   }
 
   getDestinations() {
-    return this._load(URL.DESTINATIONS);
+    return this._load(URL.DESTINATIONS)
+      .then((response) => response.json());
   }
 
   updateEvent(id, data) {
@@ -49,16 +52,21 @@ export default class API {
     return this._load(`${URL.EVENTS}/${id}`,
         Method.PUT,
         JSON.stringify(data.toRAW()),
-        headers).then(Event.parseEvent);
+        headers).then((response) => response.json())
+      .then(Event.parseEvent);
   }
 
   createEvent(event) {
-    console.log(event);
     return this._load(URL.EVENTS,
         Method.POST,
         JSON.stringify(event.toRAW()),
         new Headers({"Content-Type": `application/json`})
-    ).then(Event.parseEvent);
+    ).then((response) => response.json())
+    .then(Event.parseEvent);
+  }
+
+  deleteEvent(id) {
+    return this._load(`${URL.EVENTS}/${id}`, Method.DELETE);
   }
 
   _load(sub, method = Method.GET, body = null, headers = new Headers()) {
@@ -68,7 +76,6 @@ export default class API {
       headers,
       method,
       body,
-    }).then(checkStatus)
-    .then((response) => response.json());
+    }).then(checkStatus);
   }
 }
