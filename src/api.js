@@ -47,17 +47,19 @@ export default class API {
     headers.append(`Content-Type`, `application/json`);
 
     return this._load(`${URL.EVENTS}/${id}`,
-      Method.PUT,
-      JSON.stringify(data.toRAW()),
-      headers).then(Event.parseEvent);
+        Method.PUT,
+        JSON.stringify(data.toRAW()),
+        headers).then(Event.parseEvent);
   }
 
   createEvent(event) {
+    console.log(event);
     return this._load(URL.EVENTS,
-      Method.POST,
-      JSON.stringify(event.toRAW()),
-      new Headers({"Content-Type": `application/json`})
+        Method.POST,
+        JSON.stringify(event.toRAW()),
+        new Headers({"Content-Type": `application/json`})
     ).then(Event.parseEvent);
+  }
 
   _load(sub, method = Method.GET, body = null, headers = new Headers()) {
     headers.append(`Authorization`, this._authorization);

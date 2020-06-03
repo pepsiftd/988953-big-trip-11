@@ -186,7 +186,6 @@ export default class EventEdit extends AbstractSmartComponent {
 
   getData() {
     const data = {
-      id: this._id,
       type: this._eventType,
       isFavorite: this._isFavorite,
       offers: this._offers,
@@ -194,6 +193,10 @@ export default class EventEdit extends AbstractSmartComponent {
       dateStart: this._startTime,
       dateEnd: this._endTime,
       price: this._price,
+    }
+
+    if (!this._isNewEvent) {
+      data.append(`id`, this._id);
     }
 
     return EventModel.create(data);
@@ -271,7 +274,7 @@ export default class EventEdit extends AbstractSmartComponent {
       dateFormat: `y/m/d H:i`,
       maxDate: this._endTime,
       defaultDate: this._event.dateStart || `today`,
-      onValueUpdate: () => {
+      onChange: () => {
         this._startTime = parseDate(dateStartElement.value);
         this._flatpickrEnd.set(`minDate`, this._startTime);
       },
@@ -282,7 +285,7 @@ export default class EventEdit extends AbstractSmartComponent {
       dateFormat: `y/m/d H:i`,
       minDate: this._startTime,
       defaultDate: this._event.dateEnd || `today`,
-      onValueUpdate: () => {
+      onChange: () => {
         this._endTime = parseDate(dateEndElement.value);
         this._flatpickrStart.set(`maxDate`, this._endTime);
       },
