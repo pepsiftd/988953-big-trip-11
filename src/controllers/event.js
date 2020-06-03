@@ -11,6 +11,16 @@ export const Mode = {
   ADDING: `adding`,
 };
 
+const SaveButtonValue = {
+  DEFAULT: `Save`,
+  IN_PROGRESS: `Saving...`,
+}
+
+const DeleteButtonValue = {
+  DEFAULT: `Delete`,
+  IN_PROGRESS: `Deleting...`,
+}
+
 export const EmptyEvent = {
   id: Math.random(),
   type: undefined,
@@ -68,6 +78,30 @@ export default class EventController {
     }
   }
 
+  toggleSaveSaving() {
+    const saveButton = this._editEventComponent.getElement().querySelector(`.event__save-btn`);
+    switch (saveButton.textContent) {
+      case SaveButtonValue.DEFAULT:
+        saveButton.textContent = SaveButtonValue.IN_PROGRESS;
+        break;
+      case SaveButtonValue.IN_PROGRESS:
+        saveButton.textContent = SaveButtonValue.DEFAULT;
+        break;
+    }
+  }
+
+  toggleDeleteDeleting() {
+    const deleteButton = this._editEventComponent.getElement().querySelector(`.event__reset-btn`);
+    switch (deleteButton.textContent) {
+      case DeleteButtonValue.DEFAULT:
+        deleteButton.textContent = DeleteButtonValue.IN_PROGRESS;
+        break;
+      case DeleteButtonValue.IN_PROGRESS:
+        deleteButton.textContent = DeleteButtonValue.DEFAULT;
+        break;
+    }
+  }
+
   render(event, offersData, destinations, isFirst) {
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;
@@ -85,10 +119,10 @@ export default class EventController {
         this._editEventComponent.parseForm();
 
         if (this._mode !== Mode.ADDING) {
-          this.replaceEditWithDefault();
+          // this.replaceEditWithDefault();
         } else {
           this._mode = Mode.DEFAULT;
-          this.destroy();
+          // this.destroy();
         }
 
         this._onDataChange(this, event, this._editEventComponent.getData());

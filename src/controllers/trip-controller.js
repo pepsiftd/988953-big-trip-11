@@ -43,9 +43,12 @@ export default class TripController {
         this._updateEvents();
       // если при создании нажали Save
       } else {
+        eventController.toggleSaveSaving();
         this._api.createEvent(newData)
           .then((eventModel) => {
-            this._eventsModel.addEvent(newData);
+            eventController.toggleSaveSaving();
+            eventController.destroy();
+            this._eventsModel.addEvent(eventModel);
             this._updateEvents();
             this._eventControllers = [].concat(eventController, this._eventControllers);
           });
@@ -55,18 +58,21 @@ export default class TripController {
     // если изменение данных в существующем событии
     // если нажали Delete при редактировании существующего
     } else if (newData === null) {
+      eventController.toggleDeleteDeleting();
       this._api.deleteEvent(oldData.id)
         .then(() => {
+          eventController.toggleDeleteDeleting();
           this._eventsModel.removeEvent(oldData.id);
           this._updateEvents();
         });
 
     // при редактировании существующего
     } else {
-
+      eventController.toggleSaveSaving();
       this._api.updateEvent(oldData.id, newData)
         .then((eventModel) => {
-
+          eventController.toggleSaveSaving();
+          eventController.setDefaultView();
           const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
 
           if (!isSuccess) {

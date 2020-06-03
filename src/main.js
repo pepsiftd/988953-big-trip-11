@@ -5,10 +5,11 @@ import TripInfoController from '@/controllers/trip-info';
 import TripTabsComponent from '@/components/trip-tabs';
 import FiltersController from '@/controllers/filters';
 import StatsComponent from '@/components/stats';
+import LoadingComponent from '@/components/loading';
 
 import EventsModel from '@/models/events';
 
-import {RenderPosition, render} from '@/utils/render';
+import {RenderPosition, render, remove} from '@/utils/render';
 import TripController from '@/controllers/trip-controller';
 import {FilterType, TabName} from '@/const';
 
@@ -37,6 +38,8 @@ newEventButton.addEventListener(`click`, () => {
 // main
 
 const tripEventsElement = document.querySelector(`.trip-events`);
+const loadingComponent = new LoadingComponent();
+render(tripEventsElement, loadingComponent, RenderPosition.BEFOREEND);
 
 const tripController = new TripController(tripEventsElement, eventsModel, api);
 
@@ -70,6 +73,14 @@ Promise.all([
   console.log(eventsModel.getDestinations());
 })
 .then(() => {
+  remove(loadingComponent);
+  filtersController.render();
+  tripController.render();
+  tripInfoController.render();
+  render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
+})
+.catch(() => {
+  remove(loadingComponent);
   filtersController.render();
   tripController.render();
   tripInfoController.render();

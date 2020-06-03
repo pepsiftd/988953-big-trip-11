@@ -196,7 +196,7 @@ export default class EventEdit extends AbstractSmartComponent {
     }
 
     if (!this._isNewEvent) {
-      data.append(`id`, this._id);
+      data.id = this._id;
     }
 
     return EventModel.create(data);
