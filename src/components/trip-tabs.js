@@ -32,9 +32,9 @@ export default class Tabs extends AbstractSmartComponent {
 
   setChangeTabHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      this._changeTabHandler = handler;
-
       const selectedTabName = evt.target.dataset.name;
+
+      this._changeTabHandler = handler;
 
       if (this._activeTab !== selectedTabName) {
         this._activeTab = selectedTabName;

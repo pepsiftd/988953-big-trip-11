@@ -6,7 +6,7 @@ export default class EventModel {
     this.destination = data[`destination`];
     this.dateStart = new Date(data[`date_from`]);
     this.dateEnd = new Date(data[`date_to`]);
-    this.price = parseInt(data[`base_price`]);
+    this.price = parseInt(data[`base_price`], 10);
     this.offers = data[`offers`];
   }
 
@@ -42,9 +42,5 @@ export default class EventModel {
 
   static parseEvents(data) {
     return data.map(EventModel.parseEvent);
-  }
-
-  static clone(data) {
-    return new EventModel(data.toRAW());
   }
 }

@@ -1,5 +1,5 @@
 import {getEventsByFilter} from '@/utils/filter';
-import {FilterType, eventTypes} from '@/const';
+import {FilterType, EventType} from '@/const';
 
 export default class EventsModel {
   constructor() {
@@ -37,11 +37,11 @@ export default class EventsModel {
     const activityOffersMap = new Map();
     const transferOffersMap = new Map();
 
-    eventTypes.TRANSFER.forEach((type) => {
+    EventType.TRANSFER.forEach((type) => {
       transferOffersMap.set(type, offers.find((it) => it.type === type).offers);
     });
 
-    eventTypes.ACTIVITY.forEach((type) => {
+    EventType.ACTIVITY.forEach((type) => {
       activityOffersMap.set(type, offers.find((it) => it.type === type).offers);
     });
 

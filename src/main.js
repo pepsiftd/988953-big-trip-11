@@ -1,5 +1,4 @@
 import API from '@/api';
-import Event from '@/models/event';
 
 import TripInfoController from '@/controllers/trip-info';
 import TripTabsComponent from '@/components/trip-tabs';

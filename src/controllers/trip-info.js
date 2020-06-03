@@ -15,8 +15,9 @@ export default class TripInfoController {
   render() {
     const events = this._eventsModel.getEventsAll();
     const oldTripInfoComponent = this._tripInfoComponent;
-    this._tripInfoComponent = new TripInfoComponent(events);
     const oldPriceInfoComponent = this._priceInfoComponent;
+
+    this._tripInfoComponent = new TripInfoComponent(events);
     this._priceInfoComponent = new PriceInfoComponent(events);
 
     if (oldTripInfoComponent && oldPriceInfoComponent) {

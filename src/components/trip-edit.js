@@ -1,7 +1,7 @@
 import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
-import {getEventTypeMarkup, getAvailableOffersByType, getOfferById, parseDate} from '@/utils/common';
+import {getEventTypeMarkup, getAvailableOffersByType, parseDate} from '@/utils/common';
 import EventModel from '@/models/event';
 import {encode} from 'he';
 import flatpickr from 'flatpickr';
@@ -193,7 +193,7 @@ export default class EventEdit extends AbstractSmartComponent {
       dateStart: this._startTime,
       dateEnd: this._endTime,
       price: this._price,
-    }
+    };
 
     if (!this._isNewEvent) {
       data.id = this._id;
@@ -236,10 +236,10 @@ export default class EventEdit extends AbstractSmartComponent {
     this._favoriteClickHandler = handler;
     const favoriteButton = this.getElement().querySelector(`.event__favorite-checkbox`);
     favoriteButton.addEventListener(`change`, () => {
-        favoriteButton.checked = !favoriteButton.checked;
-        this._isFavorite = !this._isFavorite;
-        handler();
-      });
+      favoriteButton.checked = !favoriteButton.checked;
+      this._isFavorite = !this._isFavorite;
+      handler();
+    });
   }
 
   reset() {

@@ -26,6 +26,7 @@ export default class FiltersController {
 
   render() {
     const oldFilterComponent = this._filtersComponent;
+
     this._filtersComponent = new FiltersComponent();
 
     if (oldFilterComponent) {

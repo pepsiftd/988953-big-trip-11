@@ -157,6 +157,9 @@ export default class TripController {
 
   _renderEvents() {
     const isNoEvents = this._eventsModel.getEventsAll().length === 0;
+    const isSortedByDays = this._activeSortType === SortType.EVENT;
+    const events = this._eventsModel.getEvents();
+    const eventsAll = this._eventsModel.getEventsAll();
 
     if (isNoEvents) {
       this._sortController.destroy();
@@ -167,11 +170,6 @@ export default class TripController {
     } else {
       this._sortController.render();
     }
-
-    const isSortedByDays = this._activeSortType === SortType.EVENT;
-
-    const events = this._eventsModel.getEvents();
-    const eventsAll = this._eventsModel.getEventsAll();
 
     if (eventsAll.length === 0) {
       return;

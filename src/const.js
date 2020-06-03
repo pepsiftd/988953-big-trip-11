@@ -1,21 +1,21 @@
-export const FilterType = {
+const HIDDEN_CLASS = `visually-hidden`;
+
+const FilterType = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,
 };
 
-export const Key = {
+const Key = {
   ESC: `Escape`,
 };
 
-export const HIDDEN_CLASS = `visually-hidden`;
-
-export const TabName = {
+const TabName = {
   TABLE: `table`,
   STATS: `stats`,
 };
 
-export const eventTypes = {
+const EventType = {
   TRANSFER:
   [
     `taxi`,
@@ -33,3 +33,5 @@ export const eventTypes = {
     `restaurant`
   ]
 };
+
+export {FilterType, Key, HIDDEN_CLASS, TabName, EventType};

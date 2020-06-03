@@ -1,6 +1,6 @@
 import {FilterType} from '@/const';
 
-export const getEventsByFilter = (events, filterType) => {
+const getEventsByFilter = (events, filterType) => {
   let filteredEvents = [];
 
   switch (filterType) {
@@ -22,3 +22,5 @@ export const getEventsByFilter = (events, filterType) => {
 
   return filteredEvents;
 };
+
+export {getEventsByFilter};

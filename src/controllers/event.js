@@ -5,7 +5,7 @@ import {enableNewEventButton} from '@/utils/common';
 import {Key} from '@/const';
 import EventModel from '@/models/event';
 
-export const Mode = {
+const Mode = {
   DEFAULT: `default`,
   EDIT: `edit`,
   ADDING: `adding`,
@@ -14,18 +14,18 @@ export const Mode = {
 const SaveButtonValue = {
   DEFAULT: `Save`,
   IN_PROGRESS: `Saving...`,
-}
+};
 
 const DeleteButtonValue = {
   DEFAULT: `Delete`,
   IN_PROGRESS: `Deleting...`,
-}
+};
 
 const IS_NO_CLOSE = true;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
-export const EmptyEvent = {
+const EmptyEvent = {
   id: Math.random(),
   type: undefined,
   isFavorite: false,
@@ -38,7 +38,7 @@ export const EmptyEvent = {
   photos: undefined,
 };
 
-export default class EventController {
+class EventController {
   constructor(container, onDataChange, onViewChange, mode) {
     this._container = container;
     this._mode = mode ? mode : Mode.DEFAULT;
@@ -194,3 +194,6 @@ export default class EventController {
     remove(this._editEventComponent);
   }
 }
+
+export default EventController;
+export {Mode, EmptyEvent};

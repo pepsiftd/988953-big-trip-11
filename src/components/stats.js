@@ -14,6 +14,8 @@ const TRANSFER_TYPES = [
   `flight`,
 ];
 
+const BAR_HEIGHT = 55;
+
 const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
 };
@@ -53,9 +55,6 @@ const getChartsData = (events) => {
     time: eventsByTypes.map((it) => getTimeByType(it.events)),
   };
 };
-
-// Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
-const BAR_HEIGHT = 55;
 
 const createStatsTemplate = () => {
   return (

@@ -73,6 +73,7 @@ export default class Sorting extends AbstractSmartComponent {
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`change`, (evt) => {
       const sortType = evt.target.value.substring(SORT_TYPE_PREFIX.length);
+
       if (sortType === this._activeSortType) {
         return;
       }
@@ -80,6 +81,7 @@ export default class Sorting extends AbstractSmartComponent {
       this._sortTypeChangeHandler = handler;
       this._activeSortType = sortType;
       this.rerender();
+
       handler(sortType);
     });
   }
