@@ -21,6 +21,10 @@ const DeleteButtonValue = {
   IN_PROGRESS: `Deleting...`,
 }
 
+const IS_NO_CLOSE = true;
+
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export const EmptyEvent = {
   id: Math.random(),
   type: undefined,
@@ -118,14 +122,13 @@ export default class EventController {
       if (isValid) {
         this._editEventComponent.parseForm();
 
-        if (this._mode !== Mode.ADDING) {
-          // this.replaceEditWithDefault();
-        } else {
+        if (this._mode === Mode.ADDING) {
           this._mode = Mode.DEFAULT;
-          // this.destroy();
         }
 
         this._onDataChange(this, event, this._editEventComponent.getData());
+      } else {
+        this.shake();
       }
     });
 
@@ -138,7 +141,7 @@ export default class EventController {
 
     if (this._mode !== Mode.ADDING) {
       this._editEventComponent.setFavoriteClickHandler(() => {
-        this._onDataChange(this, event, EventModel.create(Object.assign({}, event, {isFavorite: !event.isFavorite})));
+        this._onDataChange(this, event, EventModel.create(Object.assign({}, event, {isFavorite: !event.isFavorite})), IS_NO_CLOSE);
       });
     }
 
@@ -158,6 +161,32 @@ export default class EventController {
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
     }
+  }
+
+  shake() {
+    this._editEventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._eventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._editEventComponent.getElement().style.animation = ``;
+      this._eventComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  disableForm() {
+    const formElement = this._editEventComponent.getElement();
+    const formElements = Array.from(formElement.elements);
+    formElements.forEach((element) => {
+      element.disabled = true;
+    });
+  }
+
+  enableForm() {
+    const formElement = this._editEventComponent.getElement();
+    const formElements = Array.from(formElement.elements);
+    formElements.forEach((element) => {
+      element.disabled = false;
+    });
   }
 
   destroy() {

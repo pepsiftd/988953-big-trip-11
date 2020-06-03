@@ -33,7 +33,7 @@ export default class TripController {
     this._eventsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
-  _onDataChange(eventController, oldData, newData) {
+  _onDataChange(eventController, oldData, newData, isNoClose) {
     // если изменение данных при создании нового
     if (oldData === EmptyEvent) {
       this._creatingEvent = null;
@@ -44,6 +44,7 @@ export default class TripController {
       // если при создании нажали Save
       } else {
         eventController.toggleSaveSaving();
+        eventController.disableForm();
         this._api.createEvent(newData)
           .then((eventModel) => {
             eventController.toggleSaveSaving();
@@ -51,6 +52,11 @@ export default class TripController {
             this._eventsModel.addEvent(eventModel);
             this._updateEvents();
             this._eventControllers = [].concat(eventController, this._eventControllers);
+          })
+          .catch(() => {
+            eventController.enableForm();
+            eventController.toggleSaveSaving();
+            eventController.shake();
           });
       }
 
@@ -59,20 +65,30 @@ export default class TripController {
     // если нажали Delete при редактировании существующего
     } else if (newData === null) {
       eventController.toggleDeleteDeleting();
+      eventController.disableForm();
       this._api.deleteEvent(oldData.id)
         .then(() => {
           eventController.toggleDeleteDeleting();
           this._eventsModel.removeEvent(oldData.id);
           this._updateEvents();
+        })
+        .catch(() => {
+          eventController.enableForm();
+          eventController.toggleDeleteDeleting();
+          eventController.shake();
         });
 
     // при редактировании существующего
     } else {
       eventController.toggleSaveSaving();
+      eventController.disableForm();
       this._api.updateEvent(oldData.id, newData)
         .then((eventModel) => {
           eventController.toggleSaveSaving();
-          eventController.setDefaultView();
+          if (!isNoClose) {
+            eventController.setDefaultView();
+          }
+
           const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
 
           if (!isSuccess) {
@@ -80,6 +96,11 @@ export default class TripController {
           }
 
           eventController.render(eventModel, this._offersData, this._destinations);
+        })
+        .catch(() => {
+          eventController.enableForm();
+          eventController.toggleSaveSaving();
+          eventController.shake();
         });
     }
   }

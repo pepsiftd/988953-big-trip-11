@@ -214,7 +214,7 @@ export default class EventEdit extends AbstractSmartComponent {
     const priceValue = parseInt(encode(formData.get(`event-price`)), 10);
 
     if (!this._destinations.map((it) => it.name).some((name) => name === destinationValue)) {
-      const destinationInput = this.getElement().querySelector(`.event-destination`);
+      const destinationInput = this.getElement().querySelector(`.event__input--destination`);
       destinationInput.setCustomValidity(`Unknown destination. Please choose from list.`);
       return false;
     }
@@ -234,8 +234,9 @@ export default class EventEdit extends AbstractSmartComponent {
 
   setFavoriteClickHandler(handler) {
     this._favoriteClickHandler = handler;
-    this.getElement().querySelector(`.event__favorite-checkbox`)
-      .addEventListener(`change`, () => {
+    const favoriteButton = this.getElement().querySelector(`.event__favorite-checkbox`);
+    favoriteButton.addEventListener(`change`, () => {
+        favoriteButton.checked = !favoriteButton.checked;
         this._isFavorite = !this._isFavorite;
         handler();
       });
