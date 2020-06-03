@@ -1,7 +1,9 @@
 import moment from 'moment';
 
 export const parseDate = (dateString) => {
-  return new Date(`20${dateString}`);
+  const day = dateString.slice(0, 2);
+  const month = dateString.slice(3, 5);
+  return new Date(`${month}/${day}/20${dateString.slice(6)}`);
 };
 
 export const getDuration = (startDate, endDate) => {
@@ -10,7 +12,7 @@ export const getDuration = (startDate, endDate) => {
   const hours = duration.hours();
   const minutes = duration.minutes();
 
-  return `${days ? days + `D ` : ``}${hours ? hours + `H ` : ``}${minutes}M`;
+  return `${days ? addLeadingZero(days) + `D ` : ``}${hours ? addLeadingZero(hours) + `H ` : ``}${addLeadingZero(minutes)}M`;
 };
 
 export const addLeadingZero = (time) => {
@@ -51,4 +53,8 @@ export const getRandomBoolean = () => {
 
 export const enableNewEventButton = () => {
   document.querySelector(`.trip-main__event-add-btn`).disabled = false;
+};
+
+export const disableNewEventButton = () => {
+  document.querySelector(`.trip-main__event-add-btn`).disabled = true;
 };

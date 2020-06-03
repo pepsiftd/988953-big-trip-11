@@ -10,6 +10,7 @@ import LoadingComponent from '@/components/loading';
 import EventsModel from '@/models/events';
 
 import {RenderPosition, render, remove} from '@/utils/render';
+import {disableNewEventButton, enableNewEventButton} from '@/utils/common';
 import TripController from '@/controllers/trip-controller';
 import {FilterType, TabName} from '@/const';
 
@@ -31,7 +32,7 @@ const filtersController = new FiltersController(tripControlsElement, eventsModel
 const newEventButton = tripMainElement.querySelector(`.trip-main__event-add-btn`);
 newEventButton.addEventListener(`click`, () => {
   tripController.createEvent();
-  newEventButton.disabled = true;
+  disableNewEventButton();
   filtersController.setFilter(FilterType.EVERYTHING);
 });
 
@@ -68,9 +69,6 @@ Promise.all([
   eventsModel.setEvents(events);
   eventsModel.setOffers(offers);
   eventsModel.setDestinations(destinations);
-  console.log(eventsModel.getEvents());
-  console.log(eventsModel.getOffers());
-  console.log(eventsModel.getDestinations());
 })
 .then(() => {
   remove(loadingComponent);
@@ -78,6 +76,7 @@ Promise.all([
   tripController.render();
   tripInfoController.render();
   render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
+  enableNewEventButton();
 })
 .catch(() => {
   remove(loadingComponent);
@@ -85,4 +84,5 @@ Promise.all([
   tripController.render();
   tripInfoController.render();
   render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
+  enableNewEventButton();
 });

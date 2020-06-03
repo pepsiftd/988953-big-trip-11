@@ -272,23 +272,26 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._flatpickrStart = flatpickr(dateStartElement, {
       enableTime: true,
-      dateFormat: `y/m/d H:i`,
-      maxDate: this._endTime,
+      dateFormat: `d/m/y H:i`,
       defaultDate: this._event.dateStart || `today`,
-      onChange: () => {
-        this._startTime = parseDate(dateStartElement.value);
+      onChange: (selectedDates) => {
+        this._startTime = selectedDates[0];
+
+        if (this._flatpickrEnd.config._minDate < this._startTime) {
+          this._flatpickrEnd.setDate(this._startTime, false, `d/m/y H:i`);
+        }
+
         this._flatpickrEnd.set(`minDate`, this._startTime);
       },
     });
 
     this._flatpickrEnd = flatpickr(dateEndElement, {
       enableTime: true,
-      dateFormat: `y/m/d H:i`,
+      dateFormat: `d/m/y H:i`,
       minDate: this._startTime,
       defaultDate: this._event.dateEnd || `today`,
-      onChange: () => {
-        this._endTime = parseDate(dateEndElement.value);
-        this._flatpickrStart.set(`maxDate`, this._endTime);
+      onChange: (selectedDates) => {
+        this._endTime = selectedDates[0];
       },
     });
   }

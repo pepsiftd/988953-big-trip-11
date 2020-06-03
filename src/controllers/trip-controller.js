@@ -85,9 +85,6 @@ export default class TripController {
       this._api.updateEvent(oldData.id, newData)
         .then((eventModel) => {
           eventController.toggleSaveSaving();
-          if (!isNoClose) {
-            eventController.setDefaultView();
-          }
 
           const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
 
@@ -96,6 +93,11 @@ export default class TripController {
           }
 
           eventController.render(eventModel, this._offersData, this._destinations);
+
+          if (!isNoClose) {
+            eventController.setDefaultView();
+            this._updateEvents();
+          }
         })
         .catch(() => {
           eventController.enableForm();
