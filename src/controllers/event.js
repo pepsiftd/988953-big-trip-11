@@ -3,6 +3,7 @@ import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render, remove} from '@/utils/render';
 import {enableNewEventButton} from '@/utils/common';
 import {Key} from '@/const';
+import EventModel from '@/models/event';
 
 export const Mode = {
   DEFAULT: `default`,
@@ -73,7 +74,6 @@ export default class EventController {
 
     this._eventComponent = new EventComponent(event, offersData);
     this._editEventComponent = new EditEventComponent(event, offersData, destinations, this._mode === Mode.ADDING);
-
     this._eventComponent.setRollupButtonClickHandler(() => {
       this.replaceDefaultWithEdit();
     });
@@ -104,7 +104,7 @@ export default class EventController {
 
     if (this._mode !== Mode.ADDING) {
       this._editEventComponent.setFavoriteClickHandler(() => {
-        this._onDataChange(this, event, Object.assign({}, event, {isFavorite: !event.isFavorite}));
+        this._onDataChange(this, event, EventModel.clone(Object.assign({}, event, {isFavorite: !event.isFavorite})));
       });
     }
 

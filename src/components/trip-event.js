@@ -9,12 +9,12 @@ const getFormattedTime = (date) => {
 
 const createEventTemplate = (event, offersData) => {
   const {
-    destination = ``,
     dateStart,
     dateEnd,
     price,
     offers = [],
   } = event;
+  const destination = event.destination ? event.destination.name : ``;
 
   const type = event.type ? event.type.toLowerCase() : ``;
   const typeMarkup = event.type ? getEventTypeMarkup(offersData, type) : ``;

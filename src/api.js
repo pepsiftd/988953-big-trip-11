@@ -9,6 +9,14 @@ const URL = {
   DESTINATIONS: `destinations`,
 };
 
+const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
 export default class API {
   constructor() {
     this._authorization = AUTHORIZATION;
@@ -28,18 +36,21 @@ export default class API {
   }
 
   updateEvent(id, data) {
-    return this._load(`${URL.EVENTS}/${id}`, `PUT`, data)
-      .then(Event.parseEvents);
+    const headers = new Headers();
+    headers.append(`Content-Type`, `application/json`);
+
+    return this._load(`${URL.EVENTS}/${id}`, `PUT`, JSON.stringify(data.toRAW()), headers)
+      .then(Event.parseEvent);
   }
 
-  _load(sub, method = `GET`, body = null) {
-    const headers = new Headers();
+  _load(sub, method = `GET`, body = null, headers = new Headers()) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(SERVER_URL + sub, {
       headers,
       method,
       body,
-    }).then((response) => response.json());
+    }).then(checkStatus)
+    .then((response) => response.json());
   }
 }

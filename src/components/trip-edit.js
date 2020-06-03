@@ -2,6 +2,7 @@ import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
 import {getEventTypeMarkup, getAvailableOffersByType, getOfferById, parseDate} from '@/utils/common';
+import EventModel from '@/models/event';
 import {encode} from 'he';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
@@ -138,7 +139,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._isFavorite = event.isFavorite;
     this._eventType = event.type;
     this._offers = event.offers;
-    this._destination = event.destination ? encode(event.destination) : ``;
+    this._destination = event.destination ? encode(event.destination.name) : ``;
     this._startTime = event.dateStart;
     this._endTime = event.dateEnd;
     this._price = event.price ? parseInt(encode(String(event.price)), 10) : ``;
@@ -184,16 +185,18 @@ export default class EventEdit extends AbstractSmartComponent {
   }
 
   getData() {
-    return {
+    const data = {
       id: this._id,
       type: this._eventType,
       isFavorite: this._isFavorite,
       offers: this._offers,
-      destination: this._destination,
+      destination: Object.assign({}, this._destinations.find((dest) => dest.name === this._destination)),
       dateStart: this._startTime,
       dateEnd: this._endTime,
       price: this._price,
-    };
+    }
+
+    return EventModel.create(data);
   }
 
   setSubmitHandler(handler) {
@@ -236,7 +239,7 @@ export default class EventEdit extends AbstractSmartComponent {
     this._isFavorite = this._event.isFavorite;
     this._eventType = this._event.type;
     this._offers = this._event.offers;
-    this._destination = this._event.destination ? encode(this._event.destination) : ``;
+    this._destination = this._event.destination ? encode(this._event.destination.name) : ``;
     this._startTime = this._event.dateStart;
     this._endTime = this._event.dateEnd;
     this._price = this._event.price ? parseInt(encode(String(this._event.price)), 10) : ``;
@@ -294,7 +297,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     const destinationInput = element.querySelector(`.event__input--destination`);
     destinationInput.addEventListener(`change`, () => {
-      this._destination = encode(destinationInput.value);
+      this._destination = destinationInput.value ? encode(destinationInput.value) : ``;
       this.rerender();
     });
 
@@ -302,15 +305,16 @@ export default class EventEdit extends AbstractSmartComponent {
     if (offersSelectElement) {
       offersSelectElement.addEventListener(`change`, () => {
         const getSelectedOffers = () => {
-          const checkedOfferInputs = offersSelectElement.querySelectorAll(`.event__offer-checkbox:checked`);
-          const checkedOfferIds = [];
-          checkedOfferInputs.forEach((input) => {
-            checkedOfferIds.push(input.id);
+          const checkedOfferInputs = offersSelectElement.querySelectorAll(`.event__offer-checkbox`);
+          const checkedOfferIndexes = [];
+
+          checkedOfferInputs.forEach((input, index) => {
+            if (input.checked === true) {
+              checkedOfferIndexes.push(index);
+            }
           });
 
-          return checkedOfferIds.map((checkboxId) => {
-            return getOfferById(checkboxId, getAvailableOffersByType(this._offersData, this._eventType));
-          });
+          return checkedOfferIndexes.map((index) => getAvailableOffersByType(this._offersData, this._eventType)[index]);
         };
 
         this._offers = getSelectedOffers();

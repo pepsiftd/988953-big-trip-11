@@ -56,16 +56,17 @@ export default class TripController {
       this._updateEvents();
     // при редактировании существующего
     } else {
+
       this._api.updateEvent(oldData.id, newData)
         .then((eventModel) => {
 
-          const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
+          const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
 
           if (!isSuccess) {
             return;
           }
 
-          eventController.render(newData, this._offersData, this._destinations);
+          eventController.render(eventModel, this._offersData, this._destinations);
         });
     }
   }
@@ -112,7 +113,6 @@ export default class TripController {
   }
 
   render() {
-    console.log(this._eventsModel);
     this._offersData = this._eventsModel.getOffers();
     this._destinations = this._eventsModel.getDestinations();
 
