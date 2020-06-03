@@ -1,13 +1,13 @@
 const createPhotoMarkup = (photosArray) => {
-  return photosArray.map((photoLink) => {
-    return `<img class="event__photo" src="${photoLink}" alt="Event photo">`;
+  return photosArray.map((photo) => {
+    return `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`;
   }).join(`\n`);
 };
 
 export const createDestinationMarkup = (destination) => {
-  const {description, photos = []} = destination;
+  const {description, pictures = []} = destination;
 
-  const photosMarkup = createPhotoMarkup(photos);
+  const photosMarkup = createPhotoMarkup(pictures);
 
   return (
     `<section class="event__section  event__section--destination">

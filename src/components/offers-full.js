@@ -1,6 +1,12 @@
 const createOfferSelectorMarkup = (offer, selectedOffers) => {
-  const {id, title, price} = offer;
-  const isCheckedMarkup = selectedOffers.some((it) => it === offer) ? `checked` : ``;
+  const {title, price} = offer;
+
+  const id = title.split(` `).reduce(function (x, y) {
+    return x.length > y.length ? x : y;
+  });
+  const isCheckedMarkup = selectedOffers.some((it) => {
+    return it.title === offer.title && it.price === offer.price;
+  }) ? `checked` : ``;
 
   return (
     `<div class="event__offer-selector">

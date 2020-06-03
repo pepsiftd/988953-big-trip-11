@@ -51,6 +51,7 @@ tripTabsComponent.setChangeTabHandler((activeTab) => {
       break;
     case TabName.STATS:
       tripController.hide();
+      statsComponent.rerender();
       statsComponent.show();
       break;
   }
