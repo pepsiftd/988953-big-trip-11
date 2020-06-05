@@ -1,4 +1,6 @@
-import API from '@/api';
+import API from '@/api/api';
+import Store from '@/api/store';
+import Provider from '@/api/provider';
 
 import TripInfoController from '@/controllers/trip-info';
 import TripTabsComponent from '@/components/trip-tabs';
@@ -15,6 +17,8 @@ import {FilterType, TabName} from '@/const';
 
 const eventsModel = new EventsModel();
 const api = new API();
+const store = new Store();
+const apiWithProvider = new Provider(api, store);
 
 // header
 const tripMainElement = document.querySelector(`.trip-main`);
@@ -41,7 +45,7 @@ const tripEventsElement = document.querySelector(`.trip-events`);
 const loadingComponent = new LoadingComponent();
 render(tripEventsElement, loadingComponent, RenderPosition.BEFOREEND);
 
-const tripController = new TripController(tripEventsElement, eventsModel, api);
+const tripController = new TripController(tripEventsElement, eventsModel, apiWithProvider);
 
 const mainContainer = document.querySelector(`.page-main .page-body__container`);
 const statsComponent = new StatsComponent(eventsModel);
@@ -61,9 +65,9 @@ tripTabsComponent.setChangeTabHandler((activeTab) => {
 });
 
 Promise.all([
-  api.getEvents(),
-  api.getOffers(),
-  api.getDestinations()
+  apiWithProvider.getEvents(),
+  apiWithProvider.getOffers(),
+  apiWithProvider.getDestinations()
 ]).then(([events, offers, destinations]) => {
   eventsModel.setEvents(events);
   eventsModel.setOffers(offers);
