@@ -15,9 +15,13 @@ import {disableNewEventButton, enableNewEventButton} from '@/utils/common';
 import TripController from '@/controllers/trip-controller';
 import {FilterType, TabName} from '@/const';
 
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
 const eventsModel = new EventsModel();
 const api = new API();
-const store = new Store();
+const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 
 // header
@@ -70,8 +74,11 @@ Promise.all([
   apiWithProvider.getDestinations()
 ]).then(([events, offers, destinations]) => {
   eventsModel.setEvents(events);
+  console.log(eventsModel.getEvents());
   eventsModel.setOffers(offers);
+  console.log(eventsModel.getOffers());
   eventsModel.setDestinations(destinations);
+  console.log(eventsModel.getDestinations());
 })
 .then(() => {
   remove(loadingComponent);
