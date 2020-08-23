@@ -123,6 +123,7 @@ export default class TripController {
 
   _onFilterChange() {
     this._updateEvents();
+    this._sortController.resetSortType();
   }
 
   _onSortingChange(sortType) {

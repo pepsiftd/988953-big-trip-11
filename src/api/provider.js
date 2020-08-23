@@ -94,7 +94,7 @@ export default class Provider {
 
     const localEvent = EventModel.create(event);
 
-    this._store.setEvent(generateId, localEvent.toRAW());
+    this._store.setEvent(generateId(), localEvent.toRAW());
 
     return Promise.resolve(localEvent);
   }
