@@ -1,5 +1,9 @@
 import moment from 'moment';
 
+const generateId = () => {
+  return Math.random();
+};
+
 const parseDate = (dateString) => {
   const day = dateString.slice(0, 2);
   const month = dateString.slice(3, 5);
@@ -65,5 +69,6 @@ export {
   getRandomIntegerNumber,
   getRandomBoolean,
   enableNewEventButton,
-  disableNewEventButton
+  disableNewEventButton,
+  generateId,
 };

@@ -1,4 +1,5 @@
 import EventModel from '@/models/event';
+import {generateId} from '@/utils/common';
 
 const isOnlineCheck = () => {
   return window.navigator.onLine;
@@ -66,28 +67,53 @@ export default class Provider {
 
   updateEvent(id, data) {
     if (isOnlineCheck()) {
-      return this._api.updateEvent(id, data);
+      return this._api.updateEvent(id, data)
+        .then((newEvent) => {
+          this._store.setEvent(id, newEvent.toRAW());
+
+          return newEvent;
+        });
     }
 
-    // TODO: реализовать логику при отсутствии интернета
-    return Promise.reject(`Offline logic not implemented`);
+    const localEvent = EventModel.create(data);
+
+    this._store.setEvent(id, localEvent.toRAW());
+
+    return Promise.resolve(localEvent);
   }
 
   createEvent(event) {
     if (isOnlineCheck()) {
-      return this._api.createEvent(event);
+      return this._api.createEvent(event)
+        .then((newEvent) => {
+          this._store.setEvent(newEvent.id, newEvent);
+
+          return newEvent;
+        });
     }
 
-    // TODO: реализовать логику при отсутствии интернета
-    return Promise.reject(`Offline logic not implemented`);
+    const localEvent = EventModel.create(event);
+
+    this._store.setEvent(generateId, localEvent.toRAW());
+
+    return Promise.resolve(localEvent);
   }
 
   deleteEvent(id) {
     if (isOnlineCheck()) {
-      return this._api.deleteEvent(id);
+      return this._api.deleteEvent(id)
+        .then((response) => {
+          this._store.removeEvent(id);
+
+          return response;
+        });
     }
 
-    // TODO: реализовать логику при отсутствии интернета
-    return Promise.reject(`Offline logic not implemented`);
+    this._store.removeEvent(id);
+
+    return Promise.resolve({
+      status: 200,
+      body: `OK`,
+    });
   }
 }

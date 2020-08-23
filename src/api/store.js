@@ -58,6 +58,13 @@ export default class Store {
     return this._getItems()[Key.OFFERS];
   }
 
+  removeEvent(id) {
+    const storedEvents = this.getEvents();
+    const index = storedEvents.findIndex((event) => event.id === id);
+    const changedEvents = concat(storedEvents.slice(0, index), storedEvents.slice(index + 1));
+    this.setEvents(changedEvents);
+  }
+
   setEvent(id, event) {
     const storedEvents = this.getEvents();
 
@@ -76,9 +83,5 @@ export default class Store {
 
   setDestinations(destinations) {
     this._setItem(Key.DESTINATIONS, destinations);
-  }
-
-  removeItem(key) {
-
   }
 }
