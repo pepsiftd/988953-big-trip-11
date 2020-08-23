@@ -74,11 +74,8 @@ Promise.all([
   apiWithProvider.getDestinations()
 ]).then(([events, offers, destinations]) => {
   eventsModel.setEvents(events);
-  console.log(eventsModel.getEvents());
   eventsModel.setOffers(offers);
-  console.log(eventsModel.getOffers());
   eventsModel.setDestinations(destinations);
-  console.log(eventsModel.getDestinations());
 })
 .then(() => {
   remove(loadingComponent);

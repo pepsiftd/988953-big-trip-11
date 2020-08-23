@@ -60,9 +60,8 @@ export default class Store {
 
   removeEvent(id) {
     const storedEvents = this.getEvents();
-    const index = storedEvents.findIndex((event) => event.id === id);
-    const changedEvents = concat(storedEvents.slice(0, index), storedEvents.slice(index + 1));
-    this.setEvents(changedEvents);
+    delete storedEvents[id];
+    this.setEvents(storedEvents);
   }
 
   setEvent(id, event) {

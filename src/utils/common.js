@@ -37,18 +37,8 @@ const getAvailableOffersByType = (offersData, type) => {
   return offersData.TRANSFER.get(type) ? offersData.TRANSFER.get(type) : offersData.ACTIVITY.get(type);
 };
 
-const getRandomArrayItem = (array) => {
-  const randomIndex = getRandomIntegerNumber(0, array.length - 1);
-
-  return array[randomIndex];
-};
-
 const getRandomIntegerNumber = (min, max) => {
   return min + Math.round(Math.random() * (max - min));
-};
-
-const getRandomBoolean = () => {
-  return Math.random() > 0.5;
 };
 
 const enableNewEventButton = () => {
@@ -65,9 +55,7 @@ export {
   addLeadingZero,
   getEventTypeMarkup,
   getAvailableOffersByType,
-  getRandomArrayItem,
   getRandomIntegerNumber,
-  getRandomBoolean,
   enableNewEventButton,
   disableNewEventButton,
   generateId,

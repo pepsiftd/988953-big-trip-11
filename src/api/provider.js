@@ -86,7 +86,7 @@ export default class Provider {
     if (isOnlineCheck()) {
       return this._api.createEvent(event)
         .then((newEvent) => {
-          this._store.setEvent(newEvent.id, newEvent);
+          this._store.setEvent(newEvent.id, newEvent.toRAW());
 
           return newEvent;
         });
@@ -104,9 +104,9 @@ export default class Provider {
       return this._api.deleteEvent(id)
         .then((response) => {
           this._store.removeEvent(id);
-
           return response;
-        });
+        })
+        .catch(console.log);
     }
 
     this._store.removeEvent(id);
