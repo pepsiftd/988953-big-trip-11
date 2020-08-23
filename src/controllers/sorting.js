@@ -1,7 +1,7 @@
 import SortingComponent from '@/components/trip-sort';
 import {render, remove, RenderPosition} from '@/utils/render';
 
-export default class SortingController {
+export default class Sorting {
   constructor(container, onSortTypeChange, initialSortType) {
     this._container = container;
     this._sortingComponent = null;

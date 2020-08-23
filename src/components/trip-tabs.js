@@ -14,7 +14,7 @@ const createTripTabsTemplate = (activeTabName) => {
   );
 };
 
-export default class Tabs extends AbstractSmartComponent {
+export default class TripTabs extends AbstractSmartComponent {
   constructor() {
     super();
 

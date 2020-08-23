@@ -23,7 +23,7 @@ const createTripFiltersTemplate = () => {
   );
 };
 
-export default class Filters extends AbstractComponent {
+export default class TripFilters extends AbstractComponent {
   getTemplate() {
     return createTripFiltersTemplate();
   }

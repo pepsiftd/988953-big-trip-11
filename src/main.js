@@ -8,7 +8,7 @@ import FiltersController from '@/controllers/filters';
 import StatsComponent from '@/components/stats';
 import LoadingComponent from '@/components/loading';
 
-import EventsModel from '@/models/events';
+import EventsModel from '@/models/events-model';
 
 import {RenderPosition, render, remove} from '@/utils/render';
 import {disableNewEventButton, enableNewEventButton} from '@/utils/common';

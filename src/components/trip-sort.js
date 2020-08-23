@@ -49,7 +49,7 @@ const createTripSortTemplate = (activeSortType) => {
   );
 };
 
-export default class Sorting extends AbstractSmartComponent {
+export default class TripSort extends AbstractSmartComponent {
   constructor(activeSortType) {
     super();
 

@@ -8,7 +8,7 @@ const getFilterNameById = (id) => {
   return id.substring(FILTER_ID_PREFIX.length);
 };
 
-export default class FiltersController {
+export default class Filters {
   constructor(container, eventsModel) {
     this._container = container;
     this._eventsModel = eventsModel;

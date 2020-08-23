@@ -17,7 +17,7 @@ const createDayTemplate = (day, counter) => {
   );
 };
 
-export default class Day extends AbstractComponent {
+export default class TripDay extends AbstractComponent {
   constructor(day, counter) {
     super();
     this._day = day;

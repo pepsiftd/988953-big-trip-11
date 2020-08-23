@@ -2,7 +2,7 @@ import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
 import {getEventTypeMarkup, getAvailableOffersByType, parseDate} from '@/utils/common';
-import EventModel from '@/models/event';
+import EventModel from '@/models/event-model';
 import {encode} from 'he';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
@@ -122,7 +122,7 @@ const createTripEditFormTemplate = (offersData, destinations, options = {}, isNe
   );
 };
 
-export default class EventEdit extends AbstractSmartComponent {
+export default class TripEdit extends AbstractSmartComponent {
   constructor(event, offersData, destinations, isNewEvent) {
     super();
     this._event = event;

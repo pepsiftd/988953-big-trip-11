@@ -2,7 +2,7 @@ import TripInfoComponent from '@/components/trip-info';
 import PriceInfoComponent from '@/components/price-info';
 import {render, replace, RenderPosition} from '@/utils/render';
 
-export default class TripInfoController {
+export default class TripInfo {
   constructor(container, eventsModel) {
     this._container = container;
     this._eventsModel = eventsModel;

@@ -3,7 +3,7 @@ import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render, remove} from '@/utils/render';
 import {enableNewEventButton} from '@/utils/common';
 import {Key, EventType} from '@/const';
-import EventModel from '@/models/event';
+import EventModel from '@/models/event-model';
 
 const Mode = {
   DEFAULT: `default`,
@@ -38,7 +38,7 @@ const EmptyEvent = {
   photos: undefined,
 };
 
-class EventController {
+class Event {
   constructor(container, onDataChange, onViewChange, mode) {
     this._container = container;
     this._mode = mode ? mode : Mode.DEFAULT;
@@ -195,5 +195,5 @@ class EventController {
   }
 }
 
-export default EventController;
+export default Event;
 export {Mode, EmptyEvent};

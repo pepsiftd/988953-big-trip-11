@@ -1,4 +1,4 @@
-import EventModel from '@/models/event';
+import EventModel from '@/models/event-model';
 import {generateId} from '@/utils/common';
 
 const isOnlineCheck = () => {

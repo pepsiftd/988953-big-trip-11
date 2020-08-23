@@ -1,4 +1,4 @@
-import Event from '@/models/event';
+import Event from '@/models/event-model';
 
 const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip/`;
 const AUTHORIZATION = `Basic gz1s4h387jh654a`;
