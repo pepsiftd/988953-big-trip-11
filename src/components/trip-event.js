@@ -4,7 +4,7 @@ import {getDuration, getEventTypeMarkup} from '@/utils/common';
 import moment from 'moment';
 
 const getFormattedTime = (date) => {
-  return moment(date).format(`HH:MM`);
+  return moment(date).format(`HH:mm`);
 };
 
 const createEventTemplate = (event, offersData) => {
@@ -35,9 +35,9 @@ const createEventTemplate = (event, offersData) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${startTime}</time>
+            <time class="event__start-time" datetime=${dateStart.toISOString()}>${startTime}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${endTime}</time>
+            <time class="event__end-time" datetime=${dateEnd.toISOString()}>${endTime}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>

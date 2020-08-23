@@ -1,4 +1,5 @@
 import AbstractSmartComponent from '@/components/abstract-smart-component';
+import {getDuration} from '@/utils/common';
 import {HIDDEN_CLASS} from '@/const';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -41,11 +42,9 @@ const getChartsData = (events) => {
   };
 
   const getTimeByType = (eventsByType) => {
-    const commonDurationInHours = eventsByType.reduce((total, event) => {
-      return total + moment.duration(event.dateEnd - event.dateStart).asHours();
-    }, moment.duration(0).asHours());
-
-    return Math.ceil(commonDurationInHours);
+    return eventsByType.reduce((total, event) => {
+      return total + moment.duration(event.dateEnd - event.dateStart);
+    }, moment.duration(0));
   };
 
   return {
@@ -241,7 +240,7 @@ const renderTimeSpentChart = (timeSpentCtx, chartsData) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${val}H`
+          formatter: (val) => getDuration(val)
         }
       },
       title: {

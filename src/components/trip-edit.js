@@ -31,7 +31,7 @@ const getFavoriteButtonMarkup = (isNew, isFavorite) => {
 };
 
 const getFormattedDateTime = (date) => {
-  return moment(date).format(`YY/MM/DD HH:MM`);
+  return moment(date).format(`YY/MM/DD HH:mm`);
 };
 
 const createTripEditFormTemplate = (offersData, destinations, options = {}, isNewEvent = false) => {
@@ -272,6 +272,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._flatpickrStart = flatpickr(dateStartElement, {
       enableTime: true,
+      minuteIncrement: 1,
       dateFormat: `d/m/y H:i`,
       defaultDate: this._event.dateStart || `today`,
       onChange: (selectedDates) => {
@@ -287,6 +288,7 @@ export default class EventEdit extends AbstractSmartComponent {
 
     this._flatpickrEnd = flatpickr(dateEndElement, {
       enableTime: true,
+      minuteIncrement: 1,
       dateFormat: `d/m/y H:i`,
       minDate: this._startTime,
       defaultDate: this._event.dateEnd || `today`,

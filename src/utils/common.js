@@ -11,12 +11,12 @@ const parseDate = (dateString) => {
 };
 
 const getDuration = (startDate, endDate) => {
-  const duration = moment.duration(endDate - startDate);
+  const duration = endDate ? moment.duration(endDate - startDate) : moment.duration(startDate);
   const days = duration.days();
   const hours = duration.hours();
   const minutes = duration.minutes();
 
-  return `${days ? addLeadingZero(days) + `D ` : ``}${hours ? addLeadingZero(hours) + `H ` : ``}${addLeadingZero(minutes)}M`;
+  return `${days ? addLeadingZero(days) + `D ` : ``}${hours ? addLeadingZero(hours) + `H ` : ``}${minutes !== 0 || !hours && !days ? addLeadingZero(minutes) + `M` : ``}`;
 };
 
 const addLeadingZero = (time) => {
