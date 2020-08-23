@@ -88,7 +88,9 @@ const renderMoneyChart = (moneyCtx, chartsData) => {
         data: chartsData.money,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: 44,
+        minBarLength: 50,
       }]
     },
     options: {
@@ -121,7 +123,6 @@ const renderMoneyChart = (moneyCtx, chartsData) => {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -132,7 +133,6 @@ const renderMoneyChart = (moneyCtx, chartsData) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
         }],
       },
       legend: {
@@ -158,7 +158,9 @@ const renderTransportChart = (transportCtx, chartsData) => {
         data: chartsData.transport.counts,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: 44,
+        minBarLength: 50,
       }]
     },
     options: {
@@ -191,7 +193,6 @@ const renderTransportChart = (transportCtx, chartsData) => {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -202,7 +203,6 @@ const renderTransportChart = (transportCtx, chartsData) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
         }],
       },
       legend: {
@@ -228,7 +228,9 @@ const renderTimeSpentChart = (timeSpentCtx, chartsData) => {
         data: chartsData.time,
         backgroundColor: `#ffffff`,
         hoverBackgroundColor: `#ffffff`,
-        anchor: `start`
+        anchor: `start`,
+        barThickness: 44,
+        minBarLength: 50,
       }]
     },
     options: {
@@ -261,7 +263,6 @@ const renderTimeSpentChart = (timeSpentCtx, chartsData) => {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -272,7 +273,6 @@ const renderTimeSpentChart = (timeSpentCtx, chartsData) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
         }],
       },
       legend: {
