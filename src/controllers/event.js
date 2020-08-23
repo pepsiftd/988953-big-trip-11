@@ -2,7 +2,7 @@ import EventComponent from '@/components/trip-event';
 import EditEventComponent from '@/components/trip-edit';
 import {RenderPosition, replace, render, remove} from '@/utils/render';
 import {enableNewEventButton} from '@/utils/common';
-import {Key} from '@/const';
+import {Key, EventType} from '@/const';
 import EventModel from '@/models/event';
 
 const Mode = {
@@ -27,7 +27,7 @@ const SHAKE_ANIMATION_TIMEOUT = 600;
 
 const EmptyEvent = {
   id: Math.random(),
-  type: undefined,
+  type: EventType.TRANSFER[1],
   isFavorite: false,
   destination: undefined,
   dateStart: new Date(),
