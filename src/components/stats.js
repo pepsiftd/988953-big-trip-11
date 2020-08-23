@@ -45,7 +45,7 @@ const getChartsData = (events) => {
       return total + moment.duration(event.dateEnd - event.dateStart).asHours();
     }, moment.duration(0).asHours());
 
-    return Math.floor(commonDurationInHours);
+    return Math.ceil(commonDurationInHours);
   };
 
   return {
