@@ -106,7 +106,6 @@ export default class Provider {
           this._store.removeEvent(id);
           return response;
         })
-        .catch(console.log);
     }
 
     this._store.removeEvent(id);

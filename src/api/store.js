@@ -30,7 +30,6 @@ export default class Store {
       return JSON.parse(this._storage.getItem(this._storeKey)) || {};
     } catch (err) {
       throw new Error(`Can't read storage: ${err}`);
-      return {};
     }
   }
 
@@ -38,8 +37,8 @@ export default class Store {
     const store = this._getItems();
 
     this._storage.setItem(this._storeKey, JSON.stringify(Object.assign({}, store, {
-          [key]: value
-        })));
+      [key]: value
+    })));
   }
 
   getEvent(id) {
