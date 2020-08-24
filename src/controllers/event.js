@@ -193,6 +193,7 @@ class Event {
   destroy() {
     remove(this._eventComponent);
     remove(this._editEventComponent);
+    document.removeEventListener(`keydown`, this._escPressHandler);
   }
 }
 

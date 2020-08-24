@@ -260,12 +260,7 @@ export default class TripEdit extends AbstractSmartComponent {
   }
 
   _applyFlatpickr() {
-    if (this._flatpickrStart || this._flatpickrEnd) {
-      this._flatpickrStart.destroy();
-      this._flatpickrStart = null;
-      this._flatpickrEnd.destroy();
-      this._flatpickrEnd = null;
-    }
+    this._destroyFlatpickr();
 
     const dateStartElement = this.getElement().querySelector(`[name=event-start-time]`);
     const dateEndElement = this.getElement().querySelector(`[name=event-end-time]`);
@@ -296,6 +291,17 @@ export default class TripEdit extends AbstractSmartComponent {
         this._endTime = selectedDates[0];
       },
     });
+  }
+
+  _destroyFlatpickr() {
+    if (this._flatpickrStart || this._flatpickrEnd) {
+      this._flatpickrStart.onChange = null;
+      this._flatpickrEnd.onChange = null;
+      this._flatpickrStart.destroy();
+      this._flatpickrStart = null;
+      this._flatpickrEnd.destroy();
+      this._flatpickrEnd = null;
+    }
   }
 
   _subscribeOnEvents() {
@@ -332,5 +338,10 @@ export default class TripEdit extends AbstractSmartComponent {
         this._offers = getSelectedOffers();
       });
     }
+  }
+
+  removeElement() {
+    super.removeElement();
+    this._destroyFlatpickr();
   }
 }
