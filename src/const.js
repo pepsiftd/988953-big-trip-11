@@ -1,4 +1,6 @@
 const HIDDEN_CLASS = `visually-hidden`;
+const SHAKE_ANIMATION_TIMEOUT = 600;
+const MS_IN_SECOND = 1000;
 
 const FilterType = {
   EVERYTHING: `everything`,
@@ -34,4 +36,4 @@ const EventType = {
   ]
 };
 
-export {FilterType, Key, HIDDEN_CLASS, TabName, EventType};
+export {FilterType, Key, HIDDEN_CLASS, SHAKE_ANIMATION_TIMEOUT, MS_IN_SECOND, TabName, EventType};

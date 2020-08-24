@@ -2,12 +2,23 @@ import AbstractSmartComponent from '@/components/abstract-smart-component';
 import {createEventDetailsMarkup} from '@/components/event-details';
 import {createTypeListMarkup} from '@/components/event-type-list';
 import {getEventTypeMarkup, getAvailableOffersByType, parseDate} from '@/utils/common';
+import {SHAKE_ANIMATION_TIMEOUT, MS_IN_SECOND} from '@/const';
 import EventModel from '@/models/event-model';
 import {encode} from 'he';
 import flatpickr from 'flatpickr';
 import moment from 'moment';
 
 import "flatpickr/dist/flatpickr.min.css";
+
+const SaveButtonValue = {
+  DEFAULT: `Save`,
+  IN_PROGRESS: `Saving...`,
+};
+
+const DeleteButtonValue = {
+  DEFAULT: `Delete`,
+  IN_PROGRESS: `Deleting...`,
+};
 
 const getDestinationsListMarkup = (destinationNames) => {
   return destinationNames
@@ -196,9 +207,8 @@ export default class TripEdit extends AbstractSmartComponent {
 
     const destinationValue = encode(formData.get(`event-destination`));
     const priceValue = parseInt(encode(formData.get(`event-price`)), 10);
-    const destinationNames = this._destinations.map((it) => it.name);
 
-    if (!destinationNames.some((name) => name === destinationValue)) {
+    if (!this._destinations.some((it) => it.name === destinationValue)) {
       const destinationInput = this.getElement().querySelector(`.event__input--destination`);
       destinationInput.setCustomValidity(`Unknown destination. Please choose from list.`);
       return false;
@@ -209,6 +219,54 @@ export default class TripEdit extends AbstractSmartComponent {
     }
 
     return true;
+  }
+
+  disableForm() {
+    const formElement = this.getElement();
+    const formElements = Array.from(formElement.elements);
+    formElements.forEach((element) => {
+      element.disabled = true;
+    });
+  }
+
+  enableForm() {
+    const formElement = this.getElement();
+    const formElements = Array.from(formElement.elements);
+    formElements.forEach((element) => {
+      element.disabled = false;
+    });
+  }
+
+  shake() {
+    this.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / MS_IN_SECOND}s`;
+
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  toggleSaveSaving() {
+    const saveButton = this.getElement().querySelector(`.event__save-btn`);
+    switch (saveButton.textContent) {
+      case SaveButtonValue.DEFAULT:
+        saveButton.textContent = SaveButtonValue.IN_PROGRESS;
+        break;
+      case SaveButtonValue.IN_PROGRESS:
+        saveButton.textContent = SaveButtonValue.DEFAULT;
+        break;
+    }
+  }
+
+  toggleDeleteDeleting() {
+    const deleteButton = this.getElement().querySelector(`.event__reset-btn`);
+    switch (deleteButton.textContent) {
+      case DeleteButtonValue.DEFAULT:
+        deleteButton.textContent = DeleteButtonValue.IN_PROGRESS;
+        break;
+      case DeleteButtonValue.IN_PROGRESS:
+        deleteButton.textContent = DeleteButtonValue.DEFAULT;
+        break;
+    }
   }
 
   setSubmitHandler(handler) {

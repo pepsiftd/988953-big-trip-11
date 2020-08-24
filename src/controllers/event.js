@@ -11,20 +11,7 @@ const Mode = {
   ADDING: `adding`,
 };
 
-const SaveButtonValue = {
-  DEFAULT: `Save`,
-  IN_PROGRESS: `Saving...`,
-};
-
-const DeleteButtonValue = {
-  DEFAULT: `Delete`,
-  IN_PROGRESS: `Deleting...`,
-};
-
 const IS_NO_CLOSE = true;
-
-const SHAKE_ANIMATION_TIMEOUT = 600;
-const MS_IN_SECOND = 1000;
 
 const EmptyEvent = {
   id: Math.random(),
@@ -84,27 +71,11 @@ class Event {
   }
 
   toggleSaveSaving() {
-    const saveButton = this._editEventComponent.getElement().querySelector(`.event__save-btn`);
-    switch (saveButton.textContent) {
-      case SaveButtonValue.DEFAULT:
-        saveButton.textContent = SaveButtonValue.IN_PROGRESS;
-        break;
-      case SaveButtonValue.IN_PROGRESS:
-        saveButton.textContent = SaveButtonValue.DEFAULT;
-        break;
-    }
+    this._editEventComponent.toggleSaveSaving();
   }
 
   toggleDeleteDeleting() {
-    const deleteButton = this._editEventComponent.getElement().querySelector(`.event__reset-btn`);
-    switch (deleteButton.textContent) {
-      case DeleteButtonValue.DEFAULT:
-        deleteButton.textContent = DeleteButtonValue.IN_PROGRESS;
-        break;
-      case DeleteButtonValue.IN_PROGRESS:
-        deleteButton.textContent = DeleteButtonValue.DEFAULT;
-        break;
-    }
+    this._editEventComponent.toggleDeleteDeleting();
   }
 
   render(event, offersData, destinations, isFirst) {
@@ -165,29 +136,15 @@ class Event {
   }
 
   shake() {
-    this._editEventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / MS_IN_SECOND}s`;
-    this._eventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / MS_IN_SECOND}s`;
-
-    setTimeout(() => {
-      this._editEventComponent.getElement().style.animation = ``;
-      this._eventComponent.getElement().style.animation = ``;
-    }, SHAKE_ANIMATION_TIMEOUT);
+    this._editEventComponent.shake();
   }
 
   disableForm() {
-    const formElement = this._editEventComponent.getElement();
-    const formElements = Array.from(formElement.elements);
-    formElements.forEach((element) => {
-      element.disabled = true;
-    });
+    this._editEventComponent.disableForm();
   }
 
   enableForm() {
-    const formElement = this._editEventComponent.getElement();
-    const formElements = Array.from(formElement.elements);
-    formElements.forEach((element) => {
-      element.disabled = false;
-    });
+    this._editEventComponent.enableForm();
   }
 
   destroy() {
