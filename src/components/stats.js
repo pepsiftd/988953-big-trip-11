@@ -331,15 +331,13 @@ export default class Stats extends AbstractSmartComponent {
     this.getElement().classList.remove(HIDDEN_CLASS);
   }
 
-  recoverListeners() {}
-
-  rerender(events) {
-    this._events = events;
-
+  rerender() {
     super.rerender();
 
     this._renderCharts();
   }
+
+  recoverListeners() {}
 
   _resetCharts() {
     if (this._moneyChart) {

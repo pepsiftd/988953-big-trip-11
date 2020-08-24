@@ -148,17 +148,6 @@ export default class TripEdit extends AbstractSmartComponent {
     this._subscribeOnEvents();
   }
 
-  recoverListeners() {
-    this.setSubmitHandler(this._submitHandler);
-    this.setDeleteClickHandler(this._deleteClickHandler);
-    this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
-    this._applyFlatpickr();
-  }
-
   getTemplate() {
     return createTripEditFormTemplate(
         this._offersData,
@@ -173,15 +162,6 @@ export default class TripEdit extends AbstractSmartComponent {
           price: this._price,
         },
         this._isNewEvent);
-  }
-
-  parseForm() {
-    const formData = new FormData(this.getElement());
-
-    this._startTime = parseDate(formData.get(`event-start-time`));
-    this._endTime = parseDate(formData.get(`event-end-time`));
-    this._price = parseInt(encode(formData.get(`event-price`)), 10);
-    this._isFavorite = formData.get(`event-favorite`) ? formData.get(`event-favorite`) : false;
   }
 
   getData() {
@@ -202,9 +182,13 @@ export default class TripEdit extends AbstractSmartComponent {
     return EventModel.create(data);
   }
 
-  setSubmitHandler(handler) {
-    this._submitHandler = handler;
-    this.getElement().addEventListener(`submit`, handler);
+  parseForm() {
+    const formData = new FormData(this.getElement());
+
+    this._startTime = parseDate(formData.get(`event-start-time`));
+    this._endTime = parseDate(formData.get(`event-end-time`));
+    this._price = parseInt(encode(formData.get(`event-price`)), 10);
+    this._isFavorite = formData.get(`event-favorite`) ? formData.get(`event-favorite`) : false;
   }
 
   validateForm() {
@@ -212,8 +196,9 @@ export default class TripEdit extends AbstractSmartComponent {
 
     const destinationValue = encode(formData.get(`event-destination`));
     const priceValue = parseInt(encode(formData.get(`event-price`)), 10);
+    const destinationNames = this._destinations.map((it) => it.name);
 
-    if (!this._destinations.map((it) => it.name).some((name) => name === destinationValue)) {
+    if (!destinationNames.some((name) => name === destinationValue)) {
       const destinationInput = this.getElement().querySelector(`.event__input--destination`);
       destinationInput.setCustomValidity(`Unknown destination. Please choose from list.`);
       return false;
@@ -224,6 +209,11 @@ export default class TripEdit extends AbstractSmartComponent {
     }
 
     return true;
+  }
+
+  setSubmitHandler(handler) {
+    this._submitHandler = handler;
+    this.getElement().addEventListener(`submit`, handler);
   }
 
   setDeleteClickHandler(handler) {
@@ -254,9 +244,20 @@ export default class TripEdit extends AbstractSmartComponent {
     this.rerender();
   }
 
+  recoverListeners() {
+    this.setSubmitHandler(this._submitHandler);
+    this.setDeleteClickHandler(this._deleteClickHandler);
+    this._subscribeOnEvents();
+  }
+
   rerender() {
     super.rerender();
     this._applyFlatpickr();
+  }
+
+  removeElement() {
+    super.removeElement();
+    this._destroyFlatpickr();
   }
 
   _applyFlatpickr() {
@@ -338,10 +339,5 @@ export default class TripEdit extends AbstractSmartComponent {
         this._offers = getSelectedOffers();
       });
     }
-  }
-
-  removeElement() {
-    super.removeElement();
-    this._destroyFlatpickr();
   }
 }
