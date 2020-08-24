@@ -15,7 +15,29 @@ const TRANSFER_TYPES = [
   `flight`,
 ];
 
+const ChartTitle = {
+  MONEY: `MONEY`,
+  TRANSPORT: `TRANSPORT`,
+  TIME: `TIME SPENT`,
+};
+
 const BAR_HEIGHT = 55;
+const BAR_THICKNESS = 44;
+const MIN_BAR_LENGTH = 50;
+const CHART_TYPE = `horizontalBar`;
+const BAR_BG_COLOR = `#ffffff`;
+const BAR_HOVER_BG_COLOR = `#ffffff`;
+const IN_BAR_TEXT_COLOR = `#000000`;
+const IN_BAR_TEXT_POSITION = `end`;
+const IN_BAR_TEXT_ALIGN = `start`;
+const IN_BAR_FONT_SIZE = 13;
+const TITLE_FONT_COLOR = `#000000`;
+const TITLE_FONT_SIZE = 23;
+const TITLE_POSITION = `left`;
+const Y_LABELS_FONT_COLOR = `#000000`;
+const Y_LABELS_PADDING = 5;
+const Y_LABELS_FONT_SIZE = 13;
+const LABEL_POSITION = `start`;
 
 const getUniqItems = (item, index, array) => {
   return array.indexOf(item) === index;
@@ -81,43 +103,43 @@ const renderMoneyChart = (moneyCtx, chartsData) => {
 
   return new Chart(moneyCtx, {
     plugins: [ChartDataLabels],
-    type: `horizontalBar`,
+    type: CHART_TYPE,
     data: {
       labels: chartsData.types,
       datasets: [{
         data: chartsData.money,
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`,
-        barThickness: 44,
-        minBarLength: 50,
+        backgroundColor: BAR_BG_COLOR,
+        hoverBackgroundColor: BAR_HOVER_BG_COLOR,
+        anchor: LABEL_POSITION,
+        barThickness: BAR_THICKNESS,
+        minBarLength: MIN_BAR_LENGTH,
       }]
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: IN_BAR_FONT_SIZE
           },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
+          color: IN_BAR_TEXT_COLOR,
+          anchor: IN_BAR_TEXT_POSITION,
+          align: IN_BAR_TEXT_ALIGN,
           formatter: (val) => `€ ${val}`
         }
       },
       title: {
         display: true,
-        text: `MONEY`,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`
+        text: ChartTitle.MONEY,
+        fontColor: TITLE_FONT_COLOR,
+        fontSize: TITLE_FONT_SIZE,
+        position: TITLE_POSITION,
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            fontColor: Y_LABELS_FONT_COLOR,
+            padding: Y_LABELS_PADDING,
+            fontSize: Y_LABELS_FONT_SIZE,
           },
           gridLines: {
             display: false,
@@ -151,43 +173,43 @@ const renderTransportChart = (transportCtx, chartsData) => {
 
   return new Chart(transportCtx, {
     plugins: [ChartDataLabels],
-    type: `horizontalBar`,
+    type: CHART_TYPE,
     data: {
       labels: chartsData.transport.types,
       datasets: [{
         data: chartsData.transport.counts,
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`,
-        barThickness: 44,
-        minBarLength: 50,
+        backgroundColor: BAR_BG_COLOR,
+        hoverBackgroundColor: BAR_HOVER_BG_COLOR,
+        anchor: LABEL_POSITION,
+        barThickness: BAR_THICKNESS,
+        minBarLength: MIN_BAR_LENGTH,
       }]
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: IN_BAR_FONT_SIZE
           },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
+          color: IN_BAR_TEXT_COLOR,
+          anchor: IN_BAR_TEXT_POSITION,
+          align: IN_BAR_TEXT_ALIGN,
           formatter: (val) => `${val}x`
         }
       },
       title: {
         display: true,
-        text: `TRANSPORT`,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`
+        text: ChartTitle.TRANSPORT,
+        fontColor: TITLE_FONT_COLOR,
+        fontSize: TITLE_FONT_SIZE,
+        position: TITLE_POSITION,
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            fontColor: Y_LABELS_FONT_COLOR,
+            padding: Y_LABELS_PADDING,
+            fontSize: Y_LABELS_FONT_SIZE,
           },
           gridLines: {
             display: false,
@@ -221,43 +243,43 @@ const renderTimeSpentChart = (timeSpentCtx, chartsData) => {
 
   return new Chart(timeSpentCtx, {
     plugins: [ChartDataLabels],
-    type: `horizontalBar`,
+    type: CHART_TYPE,
     data: {
       labels: chartsData.types,
       datasets: [{
         data: chartsData.time,
-        backgroundColor: `#ffffff`,
-        hoverBackgroundColor: `#ffffff`,
-        anchor: `start`,
-        barThickness: 44,
-        minBarLength: 50,
+        backgroundColor: BAR_BG_COLOR,
+        hoverBackgroundColor: BAR_HOVER_BG_COLOR,
+        anchor: LABEL_POSITION,
+        barThickness: BAR_THICKNESS,
+        minBarLength: MIN_BAR_LENGTH,
       }]
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: IN_BAR_FONT_SIZE
           },
-          color: `#000000`,
-          anchor: `end`,
-          align: `start`,
+          color: IN_BAR_TEXT_COLOR,
+          anchor: IN_BAR_TEXT_POSITION,
+          align: IN_BAR_TEXT_ALIGN,
           formatter: (val) => getDuration(val)
         }
       },
       title: {
         display: true,
-        text: `TIME SPENT`,
-        fontColor: `#000000`,
-        fontSize: 23,
-        position: `left`
+        text: ChartTitle.TIME,
+        fontColor: TITLE_FONT_COLOR,
+        fontSize: TITLE_FONT_SIZE,
+        position: TITLE_POSITION,
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            fontColor: Y_LABELS_FONT_COLOR,
+            padding: Y_LABELS_PADDING,
+            fontSize: Y_LABELS_FONT_SIZE,
           },
           gridLines: {
             display: false,

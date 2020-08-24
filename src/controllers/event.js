@@ -24,6 +24,7 @@ const DeleteButtonValue = {
 const IS_NO_CLOSE = true;
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
+const MS_IN_SECOND = 1000;
 
 const EmptyEvent = {
   id: Math.random(),
@@ -164,8 +165,8 @@ class Event {
   }
 
   shake() {
-    this._editEventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    this._eventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._editEventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / MS_IN_SECOND}s`;
+    this._eventComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / MS_IN_SECOND}s`;
 
     setTimeout(() => {
       this._editEventComponent.getElement().style.animation = ``;
