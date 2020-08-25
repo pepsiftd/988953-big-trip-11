@@ -7,6 +7,7 @@ const URL = {
   EVENTS: `points`,
   OFFERS: `offers`,
   DESTINATIONS: `destinations`,
+  SYNC: `points/sync`,
 };
 
 const Method = {
@@ -67,6 +68,16 @@ export default class API {
 
   deleteEvent(id) {
     return this._load(`${URL.EVENTS}/${id}`, Method.DELETE);
+  }
+
+  sync(data) {
+    return this._load(
+        URL.SYNC,
+        Method.POST,
+        JSON.stringify(data),
+        new Headers({"Content-Type": `application/json`})
+    )
+      .then((response) => response.json());
   }
 
   _load(sub, method = Method.GET, body = null, headers = new Headers()) {

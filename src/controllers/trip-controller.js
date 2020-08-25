@@ -40,7 +40,7 @@ export default class TripController {
       // если при создании нажали Cancel
       if (newData === null) {
         eventController.destroy();
-        this._updateEvents();
+        this.updateEvents();
       // если при создании нажали Save
       } else {
         eventController.toggleSaveSaving();
@@ -50,13 +50,14 @@ export default class TripController {
             eventController.toggleSaveSaving();
             eventController.destroy();
             this._eventsModel.addEvent(eventModel);
-            this._updateEvents();
+            this.updateEvents();
             this._eventControllers = [].concat(eventController, this._eventControllers);
           })
-          .catch(() => {
+          .catch((err) => {
             eventController.enableForm();
             eventController.toggleSaveSaving();
             eventController.shake();
+            throw err;
           });
       }
 
@@ -70,12 +71,13 @@ export default class TripController {
         .then(() => {
           eventController.toggleDeleteDeleting();
           this._eventsModel.removeEvent(oldData.id);
-          this._updateEvents();
+          this.updateEvents();
         })
-        .catch(() => {
+        .catch((err) => {
           eventController.enableForm();
           eventController.toggleDeleteDeleting();
           eventController.shake();
+          throw err;
         });
 
     // при редактировании существующего
@@ -96,13 +98,14 @@ export default class TripController {
 
           if (!isNoClose) {
             eventController.setDefaultView();
-            this._updateEvents();
+            this.updateEvents();
           }
         })
-        .catch(() => {
+        .catch((err) => {
           eventController.enableForm();
           eventController.toggleSaveSaving();
           eventController.shake();
+          throw err;
         });
     }
   }
@@ -122,13 +125,13 @@ export default class TripController {
   }
 
   _onFilterChange() {
-    this._updateEvents();
+    this.updateEvents();
     this._sortController.resetSortType();
   }
 
   _onSortingChange(sortType) {
     this._activeSortType = sortType;
-    this._updateEvents();
+    this.updateEvents();
   }
 
   createEvent() {
@@ -230,7 +233,7 @@ export default class TripController {
     }
   }
 
-  _updateEvents() {
+  updateEvents() {
     this._clearEvents();
     this._renderEvents();
   }

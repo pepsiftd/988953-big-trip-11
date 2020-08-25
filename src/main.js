@@ -11,7 +11,7 @@ import LoadingComponent from '@/components/loading';
 import EventsModel from '@/models/events-model';
 
 import {RenderPosition, render, remove} from '@/utils/render';
-import {disableNewEventButton, enableNewEventButton} from '@/utils/common';
+import {disableNewEventButton, enableNewEventButton, isOnline} from '@/utils/common';
 import TripController from '@/controllers/trip-controller';
 import {FilterType, TabName} from '@/const';
 
@@ -95,18 +95,23 @@ Promise.all([
 });
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
-      // Действие, в случае успешной регистрации ServiceWorker
-    }).catch(() => {
-      // Действие, в случае ошибки при регистрации ServiceWorker
-    });
+  navigator.serviceWorker.register(`/sw.js`);
+
+  if (!isOnline()) {
+    document.title += ` [offline]`;
+  }
 });
 
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(`[offline]`, ``);
-  // apiWithProvider.sync();
 
+  if (apiWithProvider.isSyncRequired) {
+    apiWithProvider.sync()
+      .then((syncedEvents) => {
+        eventsModel.setEvents(syncedEvents);
+        tripController.updateEvents();
+      });
+  }
 });
 
 window.addEventListener(`offline`, () => {

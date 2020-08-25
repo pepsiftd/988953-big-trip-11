@@ -14,7 +14,6 @@ const Mode = {
 const IS_NO_CLOSE = true;
 
 const EmptyEvent = {
-  id: Math.random(),
   type: EventType.TRANSFER[1],
   isFavorite: false,
   destination: undefined,

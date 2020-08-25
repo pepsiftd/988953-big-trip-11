@@ -1,5 +1,9 @@
 import moment from 'moment';
 
+const isOnline = () => {
+  return window.navigator.onLine;
+};
+
 const generateId = () => {
   return Math.random();
 };
@@ -59,4 +63,5 @@ export {
   enableNewEventButton,
   disableNewEventButton,
   generateId,
+  isOnline,
 };

@@ -26,12 +26,12 @@ export default class Store {
     })));
   }
 
-  getEvent(id) {
-    return this.getEvents()[id];
-  }
-
   getEvents() {
     return this._getItems()[Key.EVENTS];
+  }
+
+  getEventsInArray() {
+    return Object.values(this.getEvents());
   }
 
   getDestinations() {
