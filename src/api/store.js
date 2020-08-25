@@ -5,21 +5,6 @@ const Key = {
 };
 
 export default class Store {
-  // {
-//   big-trip-localstorage-v1: {
-//     events: {
-//      [id]: {},
-//      [id]: {},
-//     },
-//     offers: [],
-//     destinations: [],
-//   }
-// }
-
-  /**
-   * @param  {string} key - storage key of the app
-   * @param  {Storage} storage - most likely window.localStorage or such
-   */
   constructor(key, storage) {
     this._storeKey = key;
     this._storage = storage;

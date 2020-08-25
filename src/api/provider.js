@@ -5,16 +5,6 @@ const isOnlineCheck = () => {
   return window.navigator.onLine;
 };
 
-// {
-//   big-trip-localstorage-v1: {
-//     events: {
-//      [id]: {},
-//      [id]: {},
-//     },
-//     offers: [],
-//     destinations: [],
-//   }
-// }
 
 export default class Provider {
   constructor(api, store) {
@@ -105,7 +95,7 @@ export default class Provider {
         .then((response) => {
           this._store.removeEvent(id);
           return response;
-        })
+        });
     }
 
     this._store.removeEvent(id);
