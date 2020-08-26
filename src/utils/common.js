@@ -1,11 +1,12 @@
 import moment from 'moment';
+import {nanoid} from 'nanoid';
 
 const isOnline = () => {
   return window.navigator.onLine;
 };
 
 const generateId = () => {
-  return Math.random();
+  return nanoid();
 };
 
 const parseDate = (dateString) => {
