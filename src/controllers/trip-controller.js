@@ -240,6 +240,7 @@ export default class TripController {
 
   _clearEvents() {
     this._eventControllers.forEach((controller) => controller.destroy());
+    this._eventControllers = [];
     remove(this._daysListComponent);
   }
 }
