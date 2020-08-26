@@ -62,8 +62,14 @@ export default class TripSort extends AbstractSmartComponent {
   }
 
   setSortType(type) {
+    if (type === this._activeSortType) {
+      return false;
+    }
+
     this._activeSortType = type;
     this.rerender();
+
+    return true;
   }
 
   recoverListeners() {

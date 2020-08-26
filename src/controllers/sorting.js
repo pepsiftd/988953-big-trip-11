@@ -12,8 +12,11 @@ export default class Sorting {
   }
 
   resetSortType() {
-    this._sortingComponent.setSortType(this._initialSortType);
-    this._onSortTypeChange(this._initialSortType);
+    const isSuccess = this._sortingComponent.setSortType(this._initialSortType);
+
+    if (isSuccess) {
+      this._onSortTypeChange(this._initialSortType);
+    }
   }
 
   render() {
