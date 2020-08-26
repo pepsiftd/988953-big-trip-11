@@ -33,105 +33,12 @@ export default class TripController {
     this._eventsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
-  _onDataChange(eventController, oldData, newData, isNoClose) {
-    // если изменение данных при создании нового
-    if (oldData === EmptyEvent) {
-      this._creatingEvent = null;
-      // если при создании нажали Cancel
-      if (newData === null) {
-        eventController.destroy();
-        this.updateEvents();
-      // если при создании нажали Save
-      } else {
-        eventController.toggleSaveSaving();
-        eventController.disableForm();
-        this._api.createEvent(newData)
-          .then((eventModel) => {
-            eventController.toggleSaveSaving();
-            eventController.destroy();
-            this._eventsModel.addEvent(eventModel);
-            this.updateEvents();
-            this._eventControllers = [].concat(eventController, this._eventControllers);
-          })
-          .catch((err) => {
-            eventController.enableForm();
-            eventController.toggleSaveSaving();
-            eventController.shake();
-            throw err;
-          });
-      }
-
-      enableNewEventButton();
-    // если изменение данных в существующем событии
-    // если нажали Delete при редактировании существующего
-    } else if (newData === null) {
-      eventController.toggleDeleteDeleting();
-      eventController.disableForm();
-      this._api.deleteEvent(oldData.id)
-        .then(() => {
-          eventController.toggleDeleteDeleting();
-          this._eventsModel.removeEvent(oldData.id);
-          this.updateEvents();
-        })
-        .catch((err) => {
-          eventController.enableForm();
-          eventController.toggleDeleteDeleting();
-          eventController.shake();
-          throw err;
-        });
-
-    // при редактировании существующего
-    } else {
-      eventController.toggleSaveSaving();
-      eventController.disableForm();
-      this._api.updateEvent(oldData.id, newData)
-        .then((eventModel) => {
-          eventController.toggleSaveSaving();
-
-          const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
-
-          if (!isSuccess) {
-            return;
-          }
-
-          eventController.render(eventModel, this._offersData, this._destinations);
-
-          if (!isNoClose) {
-            eventController.setDefaultView();
-            this.updateEvents();
-          }
-        })
-        .catch((err) => {
-          eventController.enableForm();
-          eventController.toggleSaveSaving();
-          eventController.shake();
-          throw err;
-        });
-    }
-  }
-
   show() {
     this._container.classList.remove(HIDDEN_CLASS);
   }
 
   hide() {
     this._container.classList.add(HIDDEN_CLASS);
-  }
-
-  _onViewChange() {
-    this._eventControllers.forEach((it) => {
-      it.setDefaultView();
-    });
-  }
-
-  _onFilterChange() {
-    this.updateEvents();
-    this._sortController.resetSortType();
-  }
-
-  _onSortingChange(sortType) {
-    this._activeSortType = sortType;
-    this.updateEvents();
   }
 
   createEvent() {
@@ -176,13 +83,9 @@ export default class TripController {
         render(this._container, this._noEventsComponent, RenderPosition.BEFOREEND);
       }
       return;
-    } else {
-      this._sortController.render();
     }
 
-    if (eventsAll.length === 0) {
-      return;
-    }
+    this._sortController.render();
 
     // days and events container
     render(this._container, this._daysListComponent, RenderPosition.BEFOREEND);
@@ -242,5 +145,97 @@ export default class TripController {
     this._eventControllers.forEach((controller) => controller.destroy());
     this._eventControllers = [];
     remove(this._daysListComponent);
+  }
+
+  _onDataChange(eventController, oldData, newData, isNoClose) {
+    // если изменение данных при создании нового
+    if (oldData === EmptyEvent) {
+      this._creatingEvent = null;
+      // если при создании нажали Cancel
+      if (newData === null) {
+        eventController.destroy();
+        this.updateEvents();
+      // если при создании нажали Save
+      } else {
+        eventController.toggleSaveSaving();
+        eventController.disableForm();
+        this._api.createEvent(newData)
+          .then((eventModel) => {
+            eventController.toggleSaveSaving();
+            eventController.destroy();
+            this._eventsModel.addEvent(eventModel);
+            this.updateEvents();
+          })
+          .catch((err) => {
+            eventController.enableForm();
+            eventController.toggleSaveSaving();
+            eventController.shake();
+            throw err;
+          });
+      }
+
+      enableNewEventButton();
+    // если изменение данных в существующем событии
+    // если нажали Delete при редактировании существующего
+    } else if (newData === null) {
+      eventController.toggleDeleteDeleting();
+      eventController.disableForm();
+      this._api.deleteEvent(oldData.id)
+        .then(() => {
+          eventController.toggleDeleteDeleting();
+          this._eventsModel.removeEvent(oldData.id);
+          this.updateEvents();
+        })
+        .catch((err) => {
+          eventController.enableForm();
+          eventController.toggleDeleteDeleting();
+          eventController.shake();
+          throw err;
+        });
+
+    // при редактировании существующего
+    } else {
+      eventController.toggleSaveSaving();
+      eventController.disableForm();
+      this._api.updateEvent(oldData.id, newData)
+        .then((eventModel) => {
+          eventController.toggleSaveSaving();
+
+          const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
+
+          if (!isSuccess) {
+            return;
+          }
+
+          eventController.render(eventModel, this._offersData, this._destinations);
+
+          if (!isNoClose) {
+            eventController.setDefaultView();
+            this.updateEvents();
+          }
+        })
+        .catch((err) => {
+          eventController.enableForm();
+          eventController.toggleSaveSaving();
+          eventController.shake();
+          throw err;
+        });
+    }
+  }
+
+  _onViewChange() {
+    this._eventControllers.forEach((it) => {
+      it.setDefaultView();
+    });
+  }
+
+  _onFilterChange() {
+    this.updateEvents();
+    this._sortController.resetSortType();
+  }
+
+  _onSortingChange(sortType) {
+    this._activeSortType = sortType;
+    this.updateEvents();
   }
 }
