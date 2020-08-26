@@ -86,6 +86,10 @@ class Event {
     this._eventComponent.setRollupButtonClickHandler(() => {
       this.replaceDefaultWithEdit();
     });
+    this._editEventComponent.setRollupButtonClickHandler(() => {
+      this._editEventComponent.reset();
+      this.replaceEditWithDefault();
+    });
 
     this._editEventComponent.setSubmitHandler((evt) => {
       evt.preventDefault();

@@ -25,6 +25,10 @@ export default class Filters {
   }
 
   setFilter(filterType) {
+    if (filterType === this._activeFilter) {
+      return;
+    }
+
     this._activeFilter = filterType;
     this._onFilterChange({target: {id: filterType}});
     this.render();

@@ -290,6 +290,14 @@ export default class TripEdit extends AbstractSmartComponent {
     });
   }
 
+  setRollupButtonClickHandler(handler) {
+    this._rollupButtonClickHandler = handler;
+
+    if (!this._isNewEvent) {
+      this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    }
+  }
+
   reset() {
     this._isFavorite = this._event.isFavorite;
     this._eventType = this._event.type;
@@ -305,6 +313,7 @@ export default class TripEdit extends AbstractSmartComponent {
   recoverListeners() {
     this.setSubmitHandler(this._submitHandler);
     this.setDeleteClickHandler(this._deleteClickHandler);
+    this.setRollupButtonClickHandler(this._rollupButtonClickHandler);
     this._subscribeOnEvents();
   }
 
