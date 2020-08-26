@@ -69,7 +69,7 @@ tripTabsComponent.setChangeTabHandler((activeTab) => {
 });
 
 Promise.all([
-  apiWithProvider.getEvents(),
+  (apiWithProvider.isSyncRequired && isOnline() ? apiWithProvider.sync() : apiWithProvider.getEvents()),
   apiWithProvider.getOffers(),
   apiWithProvider.getDestinations()
 ]).then(([events, offers, destinations]) => {

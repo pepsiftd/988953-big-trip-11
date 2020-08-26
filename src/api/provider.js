@@ -27,11 +27,17 @@ export default class Provider {
   }
 
   get isSyncRequired() {
+    const storedSyncFlag = this._store.getSyncFlag();
+    if (storedSyncFlag) {
+      this._isSyncRequired = storedSyncFlag;
+    }
+
     return this._isSyncRequired;
   }
 
   set isSyncRequired(value) {
     this._isSyncRequired = value;
+    this._store.setSyncFlag(value);
   }
 
   getEvents() {

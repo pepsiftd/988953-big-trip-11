@@ -2,6 +2,7 @@ const Key = {
   EVENTS: `events`,
   OFFERS: `offers`,
   DESTINATIONS: `destinations`,
+  SYNC: `sync_required`,
 };
 
 export default class Store {
@@ -42,6 +43,10 @@ export default class Store {
     return this._getItems()[Key.OFFERS];
   }
 
+  getSyncFlag() {
+    return this._getItems()[Key.SYNC];
+  }
+
   removeEvent(id) {
     const storedEvents = this.getEvents();
     delete storedEvents[id];
@@ -66,5 +71,9 @@ export default class Store {
 
   setDestinations(destinations) {
     this._setItem(Key.DESTINATIONS, destinations);
+  }
+
+  setSyncFlag(value) {
+    this._setItem(Key.SYNC, value);
   }
 }
