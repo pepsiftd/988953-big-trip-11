@@ -29,9 +29,15 @@ class Event {
   constructor(container, onDataChange, onViewChange, mode) {
     this._container = container;
     this._mode = mode ? mode : Mode.DEFAULT;
+    this._event = null;
     this._eventComponent = null;
     this._editEventComponent = null;
     this._escPressHandler = this._escPressHandler.bind(this);
+    this._normalModeRollupButtonClickHandler = this._normalModeRollupButtonClickHandler.bind(this);
+    this._editModeRollupButtonClickHandler = this._editModeRollupButtonClickHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._submitHandler = this._submitHandler.bind(this);
 
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
@@ -50,16 +56,14 @@ class Event {
     document.removeEventListener(`keydown`, this._escPressHandler);
   }
 
-  _escPressHandler(evt) {
-    if (evt.key === Key.ESC) {
-      if (this._mode === Mode.ADDING) {
-        this._onDataChange(this, EmptyEvent, null);
-        document.removeEventListener(`keydown`, this._escPressHandler);
-        return;
-      }
+  _setEventListeners() {
+    this._eventComponent.setRollupButtonClickHandler(this._normalModeRollupButtonClickHandler);
+    this._editEventComponent.setRollupButtonClickHandler(this._editModeRollupButtonClickHandler);
+    this._editEventComponent.setSubmitHandler(this._submitHandler);
+    this._editEventComponent.setDeleteClickHandler(this._deleteClickHandler);
 
-      this._editEventComponent.reset();
-      this.replaceEditWithDefault();
+    if (this._mode !== Mode.ADDING) {
+      this._editEventComponent.setFavoriteClickHandler(this._favoriteClickHandler);
     }
   }
 
@@ -78,52 +82,20 @@ class Event {
   }
 
   render(event, offersData, destinations, isFirst) {
+    this._event = event;
     const oldEventComponent = this._eventComponent;
     const oldEditEventComponent = this._editEventComponent;
 
     this._eventComponent = new EventComponent(event, offersData);
     this._editEventComponent = new EditEventComponent(event, offersData, destinations, this._mode === Mode.ADDING);
-    this._eventComponent.setRollupButtonClickHandler(() => {
-      this.replaceDefaultWithEdit();
-    });
-    this._editEventComponent.setRollupButtonClickHandler(() => {
-      this._editEventComponent.reset();
-      this.replaceEditWithDefault();
-    });
 
-    this._editEventComponent.setSubmitHandler((evt) => {
-      evt.preventDefault();
-      const isValid = this._editEventComponent.validateForm();
-      if (isValid) {
-        this._editEventComponent.parseForm();
-
-        if (this._mode === Mode.ADDING) {
-          this._mode = Mode.DEFAULT;
-        }
-
-        this._onDataChange(this, event, this._editEventComponent.getData());
-      } else {
-        this.shake();
-      }
-    });
-
-    this._editEventComponent.setDeleteClickHandler(() => {
-      this._onDataChange(this, event, null);
-      if (this._mode === Mode.ADDING) {
-        enableNewEventButton();
-      }
-    });
-
-    if (this._mode !== Mode.ADDING) {
-      this._editEventComponent.setFavoriteClickHandler(() => {
-        this._onDataChange(this, event, EventModel.create(Object.assign({}, event, {isFavorite: !event.isFavorite})), IS_NO_CLOSE);
-      });
-    }
+    this._setEventListeners();
 
     if (oldEventComponent && oldEditEventComponent) {
       replace(this._eventComponent, oldEventComponent);
       replace(this._editEventComponent, oldEditEventComponent);
     } else if (this._mode === Mode.ADDING) {
+      document.addEventListener(`keydown`, this._escPressHandler);
 
       if (isFirst) {
         render(this._container, this._editEventComponent, RenderPosition.BEFOREEND);
@@ -131,8 +103,6 @@ class Event {
         const sortingElement = this._container.querySelector(`.trip-sort`);
         render(sortingElement, this._editEventComponent, RenderPosition.AFTER);
       }
-
-      document.addEventListener(`keydown`, this._escPressHandler);
     } else {
       render(this._container, this._eventComponent, RenderPosition.BEFOREEND);
     }
@@ -154,6 +124,55 @@ class Event {
     remove(this._eventComponent);
     remove(this._editEventComponent);
     document.removeEventListener(`keydown`, this._escPressHandler);
+  }
+
+  _escPressHandler(evt) {
+    if (evt.key === Key.ESC) {
+      if (this._mode === Mode.ADDING) {
+        this._onDataChange(this, EmptyEvent, null);
+        document.removeEventListener(`keydown`, this._escPressHandler);
+        return;
+      }
+
+      this._editEventComponent.reset();
+      this.replaceEditWithDefault();
+    }
+  }
+
+  _normalModeRollupButtonClickHandler() {
+    this.replaceDefaultWithEdit();
+  }
+
+  _editModeRollupButtonClickHandler() {
+    this._editEventComponent.reset();
+    this.replaceEditWithDefault();
+  }
+
+  _deleteClickHandler() {
+    this._onDataChange(this, this._event, null);
+    if (this._mode === Mode.ADDING) {
+      enableNewEventButton();
+    }
+  }
+
+  _favoriteClickHandler() {
+    this._onDataChange(this, this._event, EventModel.create(Object.assign({}, this._event, {isFavorite: !this._event.isFavorite})), IS_NO_CLOSE);
+  }
+
+  _submitHandler(evt) {
+    evt.preventDefault();
+    const isValid = this._editEventComponent.validateForm();
+    if (isValid) {
+      this._editEventComponent.parseForm();
+
+      if (this._mode === Mode.ADDING) {
+        this._mode = Mode.DEFAULT;
+      }
+
+      this._onDataChange(this, this._event, this._editEventComponent.getData());
+    } else {
+      this.shake();
+    }
   }
 }
 
