@@ -54,6 +54,12 @@ const disableNewEventButton = () => {
   document.querySelector(`.trip-main__event-add-btn`).disabled = true;
 };
 
+const getUniqueItems = (itemsList) => {
+  return itemsList.filter((item, index, array) => {
+    return array.indexOf(item) === index;
+  });
+};
+
 export {
   parseDate,
   getDuration,
@@ -65,4 +71,5 @@ export {
   disableNewEventButton,
   generateId,
   isOnline,
+  getUniqueItems,
 };
