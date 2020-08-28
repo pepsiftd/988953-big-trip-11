@@ -7,7 +7,7 @@ import NoEventsComponent from '@/components/no-events';
 import EventController, {EmptyEvent, Mode as EventMode} from '@/controllers/event';
 import {splitEventsByDays, sortByStartDate} from '@/utils/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
-import {enableNewEventButton} from '@/utils/common';
+import {enableNewEventButton, getDifferenceInDays} from '@/utils/common';
 import {HIDDEN_CLASS} from '@/const';
 
 export default class TripController {
@@ -41,7 +41,7 @@ export default class TripController {
     this._container.classList.add(HIDDEN_CLASS);
   }
 
-  createEvent() {
+  showNewEventForm() {
     if (this._creatingEvent) {
       return;
     }
@@ -71,11 +71,74 @@ export default class TripController {
     this._renderEvents();
   }
 
+  _createEvent(eventController, event) {
+    eventController.toggleSaveSaving();
+    eventController.disableForm();
+    this._api.createEvent(event)
+      .then((eventModel) => {
+        eventController.toggleSaveSaving();
+        eventController.destroy();
+        this._eventsModel.addEvent(eventModel);
+        this.updateEvents();
+      })
+      .catch((err) => {
+        eventController.enableForm();
+        eventController.toggleSaveSaving();
+        eventController.shake();
+        throw err;
+      });
+  }
+
+  _deleteEvent(eventController, id) {
+    eventController.toggleDeleteDeleting();
+    eventController.disableForm();
+    this._api.deleteEvent(id)
+      .then(() => {
+        eventController.toggleDeleteDeleting();
+        this._eventsModel.removeEvent(id);
+        this.updateEvents();
+      })
+      .catch((err) => {
+        eventController.enableForm();
+        eventController.toggleDeleteDeleting();
+        eventController.shake();
+        throw err;
+      });
+  }
+
+  _saveChanges(eventController, oldData, newData, isNoClose) {
+    eventController.toggleSaveSaving();
+    eventController.disableForm();
+    this._api.updateEvent(oldData.id, newData)
+      .then((eventModel) => {
+        const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
+
+        eventController.toggleSaveSaving();
+
+        if (!isSuccess) {
+          return;
+        }
+
+        eventController.render(eventModel, this._offersData, this._destinations);
+
+        if (!isNoClose) {
+          eventController.setDefaultView();
+        }
+      })
+      .catch((err) => {
+        eventController.enableForm();
+        eventController.toggleSaveSaving();
+        eventController.shake();
+        throw err;
+      });
+  }
+
   _renderEvents() {
-    const isNoEvents = this._eventsModel.getEventsAll().length === 0;
+    const eventsAll = this._eventsModel.getEventsAll();
+    const isNoEvents = eventsAll.length === 0;
     const isSortedByDays = this._activeSortType === SortType.EVENT;
     const events = this._eventsModel.getEvents();
-    const eventsAll = this._eventsModel.getEventsAll();
+
 
     if (isNoEvents) {
       this._sortController.destroy();
@@ -98,12 +161,6 @@ export default class TripController {
       const tripStartDate = new Date(sortByStartDate(eventsAll)[0].dateStart.toISOString().slice(0, 10));
 
       dates.forEach((day) => {
-        const getDifferenceInDays = (start, end) => {
-          const MS_IN_DAY = 86400000;
-
-          return Math.floor((end - start) / MS_IN_DAY);
-        };
-
         const counter = getDifferenceInDays(tripStartDate, day);
 
         render(tripDaysListElement, new DayComponent(day, counter + 1), RenderPosition.BEFOREEND);
@@ -151,75 +208,21 @@ export default class TripController {
     // если изменение данных при создании нового
     if (oldData === EmptyEvent) {
       this._creatingEvent = null;
-      // если при создании нажали Cancel
+      // если при создании нажали Cancel или ESC
       if (newData === null) {
         eventController.destroy();
-        this.updateEvents();
       // если при создании нажали Save
       } else {
-        eventController.toggleSaveSaving();
-        eventController.disableForm();
-        this._api.createEvent(newData)
-          .then((eventModel) => {
-            eventController.toggleSaveSaving();
-            eventController.destroy();
-            this._eventsModel.addEvent(eventModel);
-            this.updateEvents();
-          })
-          .catch((err) => {
-            eventController.enableForm();
-            eventController.toggleSaveSaving();
-            eventController.shake();
-            throw err;
-          });
+        this._createEvent(eventController, newData);
       }
 
       enableNewEventButton();
-    // если изменение данных в существующем событии
     // если нажали Delete при редактировании существующего
     } else if (newData === null) {
-      eventController.toggleDeleteDeleting();
-      eventController.disableForm();
-      this._api.deleteEvent(oldData.id)
-        .then(() => {
-          eventController.toggleDeleteDeleting();
-          this._eventsModel.removeEvent(oldData.id);
-          this.updateEvents();
-        })
-        .catch((err) => {
-          eventController.enableForm();
-          eventController.toggleDeleteDeleting();
-          eventController.shake();
-          throw err;
-        });
-
-    // при редактировании существующего
+      this._deleteEvent(eventController, oldData.id);
+    // при сохранении изменений существующего
     } else {
-      eventController.toggleSaveSaving();
-      eventController.disableForm();
-      this._api.updateEvent(oldData.id, newData)
-        .then((eventModel) => {
-          eventController.toggleSaveSaving();
-
-          const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
-
-          if (!isSuccess) {
-            return;
-          }
-
-          eventController.render(eventModel, this._offersData, this._destinations);
-
-          if (!isNoClose) {
-            eventController.setDefaultView();
-            this.updateEvents();
-          }
-        })
-        .catch((err) => {
-          eventController.enableForm();
-          eventController.toggleSaveSaving();
-          eventController.shake();
-          throw err;
-        });
+      this._saveChanges(eventController, oldData, newData, isNoClose);
     }
   }
 

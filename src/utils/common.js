@@ -60,6 +60,12 @@ const getUniqueItems = (itemsList) => {
   });
 };
 
+const getDifferenceInDays = (start, end) => {
+  const MS_IN_DAY = 86400000;
+
+  return Math.floor((end - start) / MS_IN_DAY);
+};
+
 export {
   parseDate,
   getDuration,
@@ -72,4 +78,5 @@ export {
   generateId,
   isOnline,
   getUniqueItems,
+  getDifferenceInDays,
 };

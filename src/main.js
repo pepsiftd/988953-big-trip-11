@@ -38,7 +38,7 @@ const filtersController = new FiltersController(tripControlsElement, eventsModel
 //   new event button
 const newEventButton = tripMainElement.querySelector(`.trip-main__event-add-btn`);
 newEventButton.addEventListener(`click`, () => {
-  tripController.createEvent();
+  tripController.showNewEventForm();
   disableNewEventButton();
   filtersController.setFilter(FilterType.EVERYTHING);
 });
@@ -51,7 +51,7 @@ render(tripEventsElement, loadingComponent, RenderPosition.BEFOREEND);
 
 const tripController = new TripController(tripEventsElement, eventsModel, apiWithProvider);
 
-const mainContainer = document.querySelector(`.page-main .page-body__container`);
+const mainContainerElement = document.querySelector(`.page-main .page-body__container`);
 const statsComponent = new StatsComponent(eventsModel);
 
 tripTabsComponent.setChangeTabHandler((activeTab) => {
@@ -82,7 +82,7 @@ Promise.all([
   filtersController.render();
   tripController.render();
   tripInfoController.render();
-  render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
+  render(mainContainerElement, statsComponent, RenderPosition.BEFOREEND);
   enableNewEventButton();
 })
 .catch(() => {
@@ -90,7 +90,7 @@ Promise.all([
   filtersController.render();
   tripController.render();
   tripInfoController.render();
-  render(mainContainer, statsComponent, RenderPosition.BEFOREEND);
+  render(mainContainerElement, statsComponent, RenderPosition.BEFOREEND);
   enableNewEventButton();
 });
 
