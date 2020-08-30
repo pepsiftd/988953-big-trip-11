@@ -194,27 +194,36 @@ export default class TripEdit extends AbstractSmartComponent {
   }
 
   parseForm() {
-    const formData = new FormData(this.getElement());
+    const eventForm = this.getElement();
 
-    this._startTime = parseDate(formData.get(`event-start-time`));
-    this._endTime = parseDate(formData.get(`event-end-time`));
-    this._price = parseInt(encode(formData.get(`event-price`)), 10);
-    this._isFavorite = formData.get(`event-favorite`) ? formData.get(`event-favorite`) : false;
+    const dateStartElement = eventForm.querySelector(`[name=event-start-time]`);
+    const dateEndElement = eventForm.querySelector(`[name=event-end-time]`);
+    const priceElement = eventForm.querySelector(`[name=event-price]`);
+    const favoriteButton = eventForm.querySelector(`[name=event-favorite]`);
+
+    this._startTime = parseDate(dateStartElement.value);
+    this._endTime = parseDate(dateEndElement.value);
+    this._price = parseInt(encode(priceElement.value), 10);
+    this._isFavorite = favoriteButton ? favoriteButton.checked : false;
   }
 
   validateForm() {
-    const formData = new FormData(this.getElement());
+    const eventForm = this.getElement();
 
-    const destinationValue = encode(formData.get(`event-destination`));
-    const priceValue = parseInt(encode(formData.get(`event-price`)), 10);
+    const destinationInput = eventForm.querySelector(`[name=event-destination]`);
+    const priceInput = eventForm.querySelector(`[name=event-price]`);
+    const dateStartElement = eventForm.querySelector(`[name=event-start-time]`);
+    const dateEndElement = eventForm.querySelector(`[name=event-end-time]`);
+
+    const destinationValue = encode(destinationInput.value);
+    const priceValue = parseInt(encode(priceInput.value), 10);
 
     if (!this._destinations.some((it) => it.name === destinationValue)) {
-      const destinationInput = this.getElement().querySelector(`.event__input--destination`);
       destinationInput.setCustomValidity(`Unknown destination. Please choose from list.`);
       return false;
     }
 
-    if (!this._eventType || !formData.get(`event-start-time`) || !formData.get(`event-end-time`) || !priceValue) {
+    if (!this._eventType || !dateStartElement.value || !dateEndElement.value || !priceValue) {
       return false;
     }
 
@@ -382,9 +391,11 @@ export default class TripEdit extends AbstractSmartComponent {
     });
 
     const destinationInput = element.querySelector(`.event__input--destination`);
-    destinationInput.addEventListener(`change`, () => {
+    destinationInput.addEventListener(`input`, () => {
       this._destination = destinationInput.value ? encode(destinationInput.value) : ``;
-      this.rerender();
+      if (this._destinations.some((it) => it.name === this._destination)) {
+        this.rerender();
+      }
     });
 
     const offersSelectElement = element.querySelector(`.event__available-offers`);
