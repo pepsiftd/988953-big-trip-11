@@ -346,7 +346,7 @@ export default class TripEdit extends AbstractSmartComponent {
       enableTime: true,
       minuteIncrement: 1,
       dateFormat: `d/m/y H:i`,
-      defaultDate: this._event.dateStart || `today`,
+      defaultDate: this._startTime || `today`,
       onChange: (selectedDates) => {
         this._startTime = selectedDates[0];
 
@@ -363,7 +363,7 @@ export default class TripEdit extends AbstractSmartComponent {
       minuteIncrement: 1,
       dateFormat: `d/m/y H:i`,
       minDate: this._startTime,
-      defaultDate: this._event.dateEnd || `today`,
+      defaultDate: this._endTime || `today`,
       onChange: (selectedDates) => {
         this._endTime = selectedDates[0];
       },
@@ -383,6 +383,10 @@ export default class TripEdit extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     const element = this.getElement();
+
+    element.querySelector(`.event__input--price`).addEventListener(`change`, (evt) => {
+      this._price = parseInt(evt.target.value, 10) ? parseInt(evt.target.value, 10) : ``;
+    });
 
     element.querySelector(`.event__type-list`).addEventListener(`change`, (evt) => {
       this._eventType = evt.target.value;
