@@ -42,7 +42,7 @@ const getAvailableOffersByType = (offersData, type) => {
   return offersData.TRANSFER.get(type) ? offersData.TRANSFER.get(type) : offersData.ACTIVITY.get(type);
 };
 
-const getRandomIntegerNumber = (min, max) => {
+const getRandomInteger = (min, max) => {
   return min + Math.round(Math.random() * (max - min));
 };
 
@@ -72,7 +72,7 @@ export {
   addLeadingZero,
   getEventTypeMarkup,
   getAvailableOffersByType,
-  getRandomIntegerNumber,
+  getRandomInteger,
   enableNewEventButton,
   disableNewEventButton,
   generateId,

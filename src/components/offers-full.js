@@ -1,4 +1,4 @@
-import {getRandomIntegerNumber} from '@/utils/common';
+import {getRandomInteger} from '@/utils/common';
 
 const createOfferSelectorMarkup = (offer, selectedOffers) => {
   const {title, price} = offer;
@@ -7,7 +7,7 @@ const createOfferSelectorMarkup = (offer, selectedOffers) => {
     return x.length > y.length ? x : y;
   });
 
-  const id = name + ` - ` + getRandomIntegerNumber(0, 99);
+  const id = name + ` - ` + getRandomInteger(0, 99);
   const isCheckedMarkup = selectedOffers.some((it) => {
     return it.title === offer.title && it.price === offer.price;
   }) ? `checked` : ``;

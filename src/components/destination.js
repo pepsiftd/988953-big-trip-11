@@ -1,5 +1,5 @@
-const createPhotoMarkup = (photosArray) => {
-  return photosArray.map((photo) => {
+const createPhotoMarkup = (photos) => {
+  return photos.map((photo) => {
     return `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`;
   }).join(`\n`);
 };
