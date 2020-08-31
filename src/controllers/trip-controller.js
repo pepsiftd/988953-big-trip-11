@@ -38,6 +38,7 @@ export default class TripController {
   }
 
   hide() {
+    this._sortController.resetSortType();
     this._container.classList.add(HIDDEN_CLASS);
   }
 
