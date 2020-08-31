@@ -28,8 +28,12 @@ const addLeadingZero = (time) => {
   return (`00` + time).slice(-2);
 };
 
+const capitalizeFirstLetter = (word) => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};
+
 const getEventTypeMarkup = (offersData, type) => {
-  const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+  const capitalizedType = capitalizeFirstLetter(type);
 
   return capitalizedType + (offersData.TRANSFER.has(type) ? ` to` : ` in`);
 };
@@ -70,6 +74,7 @@ export {
   parseDate,
   getDuration,
   addLeadingZero,
+  capitalizeFirstLetter,
   getEventTypeMarkup,
   getAvailableOffersByType,
   getRandomInteger,

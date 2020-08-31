@@ -4,7 +4,7 @@ import {sortByTime, sortByPrice} from '@/utils/sort';
 import DaysListComponent from '@/components/days-list';
 import DayComponent from '@/components/trip-day';
 import NoEventsComponent from '@/components/no-events';
-import EventController, {EmptyEvent, Mode as EventMode} from '@/controllers/event';
+import EventController, {EMPTY_EVENT, Mode as EventMode} from '@/controllers/event';
 import {splitEventsByDays, sortByStartDate} from '@/utils/sort';
 import {RenderPosition, render, remove} from '@/utils/render';
 import {enableNewEventButton, getDifferenceInDays} from '@/utils/common';
@@ -56,7 +56,7 @@ export default class TripController {
     this._creatingEvent = new EventController(this._container, this._onDataChange, this._onViewChange, EventMode.ADDING);
     const isFirst = this._eventsModel.getEventsAll().length === 0;
 
-    this._creatingEvent.render(EmptyEvent, this._offersData, this._destinations, isFirst);
+    this._creatingEvent.render(EMPTY_EVENT, this._offersData, this._destinations, isFirst);
     remove(this._noEventsComponent);
   }
 
@@ -207,7 +207,7 @@ export default class TripController {
 
   _onDataChange(eventController, oldData, newData, isNoClose) {
     // если изменение данных при создании нового
-    if (oldData === EmptyEvent) {
+    if (oldData === EMPTY_EVENT) {
       this._creatingEvent = null;
       // если при создании нажали Cancel или ESC
       if (newData === null) {

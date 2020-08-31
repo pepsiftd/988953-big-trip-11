@@ -3,8 +3,8 @@ import {getRandomInteger} from '@/utils/common';
 const createOfferSelectorMarkup = (offer, selectedOffers) => {
   const {title, price} = offer;
 
-  const name = title.split(` `).reduce(function (x, y) {
-    return x.length > y.length ? x : y;
+  const name = title.split(` `).reduce((result, nextWord) => {
+    return result.length > nextWord.length ? result : nextWord;
   });
 
   const id = name + ` - ` + getRandomInteger(0, 99);

@@ -13,7 +13,7 @@ const Mode = {
 
 const IS_NO_CLOSE = true;
 
-const EmptyEvent = {
+const EMPTY_EVENT = {
   type: EventType.TRANSFER[1],
   isFavorite: false,
   destination: undefined,
@@ -129,7 +129,7 @@ class Event {
   _escPressHandler(evt) {
     if (evt.key === Key.ESC) {
       if (this._mode === Mode.ADDING) {
-        this._onDataChange(this, EmptyEvent, null);
+        this._onDataChange(this, EMPTY_EVENT, null);
         document.removeEventListener(`keydown`, this._escPressHandler);
         return;
       }
@@ -177,4 +177,4 @@ class Event {
 }
 
 export default Event;
-export {Mode, EmptyEvent};
+export {Mode, EMPTY_EVENT};
